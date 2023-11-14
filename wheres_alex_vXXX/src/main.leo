@@ -1,3 +1,5 @@
+import puzzle_pieces_v007.leo;
+
 // todo: wait we're going to use alice's credits to send to multisig? need to add credits.leo but not supported yet per https://github.com/AleoHQ/leo/pull/2881
 // imports deployed to separate address: https://t.me/c/1766615939/3581
 
