@@ -91,12 +91,6 @@ program wheres_alex_v001.aleo {
     mapping puzz_supply: field => u128;
     mapping games: address => u32;
 
-
-    transition mint_token (private amount: u64, private to: address) -> cflip_testing_123_token.leo/Piece.record {
-        let piece_token: Piece = cflip_testing_123_token.leo/mint(amount, to);
-        return piece_token;
-    }
-
     // todo: do we want to limit this fn call only to users or will we allow contracts to call?
     // todo: do we need to pass credits as input?
     // player one proposes game
