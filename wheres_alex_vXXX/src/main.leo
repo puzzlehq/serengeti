@@ -1,4 +1,5 @@
 import puzzle_pieces_v007.leo;
+import multiparty_pvp_utils_v001.leo;
 
 // todo: wait we're going to use alice's credits to send to multisig? need to add credits.leo but not supported yet per https://github.com/AleoHQ/leo/pull/2881
 // imports deployed to separate address: https://t.me/c/1766615939/3581
@@ -87,9 +88,42 @@ program wheres_alex_v001.aleo {
         // 1 -> accept game
         // 2 -> game finished
     }
-
+    
     mapping puzz_supply: field => u128;
     mapping games: address => u32;
+
+    // New propose game
+    transition propose_game_v2(
+        //puzzle_pieces.stake_transfer_in() data
+        piece_token: puzzle_pieces_v007.leo/Piece.record, //
+        sender: address, // Challenger address proposing game
+        challenger: address, 
+        opponent: address,
+        game_multisig: address,
+        amount: u64,
+        message_1: field, //from output of useSignature
+        message_2: field,
+        message_3: field,
+        message_4: field,
+        message_5: field,
+        sig: signature, //from output of useSignature
+        //multiparty_pvp_utils data
+        nonce: field,
+        answer: field,
+        //wheres_alex data
+        seed: field, //game_multisig seed to send to user
+    ) -> (
+        puzzle_pieces_v007.leo/PieceClaim.record,
+        puzzle_pieces_v007.leo/PieceStake.record,
+        puzzle_pieces_v007.leo/ClaimSignature.record,
+        puzzle_pieces_v007.leo/Piece.record,
+        puzzle_pieces_v007.leo/AuditStakeIn.record,
+
+    ) {
+
+    };
+
+
 
     // todo: do we want to limit this fn call only to users or will we allow contracts to call?
     // todo: do we need to pass credits as input?

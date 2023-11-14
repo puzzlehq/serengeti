@@ -9,7 +9,7 @@ program multiparty_pvp_utils_v001.aleo {
     }
     
     record Answer {
-        owner: address, //challenger
+        owner: address,
         challenger_address: address,
         opponent_address: address,
         game_address: address,
@@ -39,24 +39,6 @@ program multiparty_pvp_utils_v001.aleo {
         message_4: field,
         message_5: field,
         sig: signature
-    }
-
-    record Key {
-        owner: address, //opponent
-        seed: field,
-        amount: u64,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
-    }
-
-    record AuditKey {
-        owner: address, //puzzle issuer
-        seed: field,
-        amount: u64,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
     }
 
     // Created by challenger at start of the game
@@ -128,44 +110,6 @@ program multiparty_pvp_utils_v001.aleo {
 
         return (answer_record, audit_record);
     }
-
-    transition mint_multisig_key(
-        owner: address,
-        seed: field,
-        amount: u64,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
-    ) -> (Key, AuditKey) {
-        // TODO -- could add a check here turning seed into multisig
-        // not doing because need to turn SK_SIG_DOMAIN in keygen into
-        // fields. Can do easier after string support
-
-        // set puzzle issuing address as issuer:
-        let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
-        let key_record: Key = Key {
-            owner: owner,
-            seed: seed,
-            amount: amount,
-            challenger: challenger,
-            opponent: opponent,
-            game_multisig: game_multisig,
-        };
-
-        let audit_key_record: AuditKey = AuditKey {
-            owner: puzzle_issuer,
-            seed: seed,
-            amount: amount,
-            challenger: challenger,
-            opponent: opponent,
-            game_multisig: game_multisig,
-        };
-
-        return (key_record, audit_key_record);
-    }
-
-
 
     // Only callable by the challenger. 
     // Enforced by checkinig that owner == challenger (and caller when fixed)
