@@ -130,7 +130,6 @@ program multiparty_pvp_utils_v001.aleo {
     }
 
     transition mint_multisig_key(
-        owner: address,
         seed: field,
         amount: u64,
         challenger: address,
@@ -145,7 +144,7 @@ program multiparty_pvp_utils_v001.aleo {
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
         let key_record: Key = Key {
-            owner: owner,
+            owner: opponent,
             seed: seed,
             amount: amount,
             challenger: challenger,

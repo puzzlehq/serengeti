@@ -13,6 +13,7 @@ program puzzle_pieces_v007.aleo {
         field_5: field,
     }
 
+    // Never owned by multisig
     // ix: 0u32
     record Piece {
         owner: address,
@@ -35,8 +36,9 @@ program puzzle_pieces_v007.aleo {
         receiver: address,
         amount: u64,
         ix: u32,
-    }
+    }    
 
+    // owned by multisig
     // ix: 3u32
     record PieceStake {
         owner: address,
@@ -68,6 +70,7 @@ program puzzle_pieces_v007.aleo {
         ix: u32,
     }
 
+    // owned by multisig
     // ix: 6u32
     record PieceClaim {
         owner: address,
@@ -83,6 +86,7 @@ program puzzle_pieces_v007.aleo {
         ix: u32,
     }
 
+    // owned by individual
     // ix: 7u32
     record ClaimSignature {
         owner: address,
@@ -94,6 +98,7 @@ program puzzle_pieces_v007.aleo {
         ix: u32
     }
 
+    // owned by multsig
     // ix: 8u32
     record JointPieceTimeClaim {
         owner: address,
@@ -112,13 +117,14 @@ program puzzle_pieces_v007.aleo {
         ix: u32,
     }
 
+    // owned by multisig
     // ix: 9u32
     record PieceJointStake {
         owner: address,
         amount: u64,
         time_claimer_address: address,
         state_updater_address: address,
-        block_ht: u32,
+        block_ht: u32, 
         ix: u32,
     }
     // Todo: can't pull block.height from chain without finalize to store block height on record (investigate more @Abhin and write up)
@@ -129,6 +135,7 @@ program puzzle_pieces_v007.aleo {
     // and set JointPieceCreator: address (challenger or opponent) ---> question about what is field vulnerabilities for msg
     // TODO -- think on above more
 
+    // owned by challenger only
     // ix: 10u32
     record JointPieceState {
         owner: address,
@@ -152,19 +159,20 @@ program puzzle_pieces_v007.aleo {
         amount: u64,
         time_claimer_address: address,
         state_updater_address: address,
-        block_ht: u32,
+        block_ht: u32, 
         challenger: address,
         opponent: address,
         game_multisig: address,
         ix: u32,
     }
 
+    // owned by multisig
     // ix: 12u32
     record JointPieceWinner {
         owner: address,
         amount: u64,
         time_claimer_address: address,
-        state_updater_address: address,
+        state_updater_address: address, 
         challenger: address,
         opponent: address,
         game_multisig: address,
@@ -177,7 +185,7 @@ program puzzle_pieces_v007.aleo {
         owner: address,
         amount: u64,
         time_claimer_address: address,
-        state_updater_address: address,
+        state_updater_address: address, 
         challenger: address,
         opponent: address,
         game_multisig: address,
@@ -249,7 +257,7 @@ program puzzle_pieces_v007.aleo {
         };
 
         return (remaining, transferred, audit_record);
-
+        
     }
 
     // transferring pieces into multisig for a 1v1 game between a challenger and an opponent
@@ -260,12 +268,13 @@ program puzzle_pieces_v007.aleo {
     // Exit states exist such that
     // challenger or opponent can retrieve their respective stake before locked in joint-stake
     // if challenger never reveals answer, after time T then joint-stake is awarded to opponent (ie an auto win)
-    //
+    // 
     // Winner gets all the puzzle pieces.
+    // called by each individual key
     transition stake_transfer_in (
         piece_token: Piece,
         sender: address, // can't use self.caller or self.signer until leo fixed
-        challenger: address,
+        challenger: address, 
         opponent: address,
         game_multisig: address,
         amount: u64,
@@ -352,6 +361,7 @@ program puzzle_pieces_v007.aleo {
     // Unstaking PieceStake from Multisig to Staker
     // Staker key signs message on Claim Record then
     // calls this function with Multisig key and signature as input
+    //
     // stake amount returned is equal to amount in claim and returned to staking key
     transition stake_transfer_out (
         piece_stake: PieceStake,
@@ -360,7 +370,7 @@ program puzzle_pieces_v007.aleo {
     ) -> (Piece, AuditStakeOut) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
+        
         // 1. Check Claim & Stake are from same game_multisig
         assert_eq(piece_stake.owner,piece_claim.owner);
 
@@ -416,10 +426,10 @@ program puzzle_pieces_v007.aleo {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
-        // 0. Add a self.signer check against
+        // 0. Add a self.signer check against 
         let owner: address = piece_stake_challenger.owner;
         // assert_eq(owner, self.signer);
-
+        
         // 1. Check that all are from the same multisig
         assert_eq(piece_claim_challenger.owner,owner);
         assert_eq(piece_stake_opponent.owner,owner);
@@ -455,7 +465,7 @@ program puzzle_pieces_v007.aleo {
             ix: 9u32
         };
 
-        // Create JointPieceState such that challenger can update state and send to
+        // Create JointPieceState such that challenger can update state and send to 
         let joint_piece_state: JointPieceState = JointPieceState {
             owner: challenger,
             amount: amount + amount,
@@ -469,7 +479,7 @@ program puzzle_pieces_v007.aleo {
             challenger: challenger,
             opponent: opponent,
             game_multisig: owner,
-            ix: 10u32,
+            ix: 10u32, 
         };
 
         // Create JointPieceTimeClaim -- note current block production is ~ 1 block/5 sec --> 12 blocks/min
@@ -509,7 +519,7 @@ program puzzle_pieces_v007.aleo {
     // Challenger calls this function with the challenger key
     // revealing answer and creating record with winner on it
     // Sends winner record to multisig to use to finish game
-    //
+    // 
     // This call is nested inside Reveal Answer in where's alex game
     //
     // Burns their claim signature record here
@@ -550,7 +560,7 @@ program puzzle_pieces_v007.aleo {
         // The logic for the answer and computing winner is in wheres_alex program
         // The enforcement to prevent the challenger calling this function without going through
         // where's alex is via the Piece Keepers
-        //
+        // 
         // Logic is if a piece keeper sees that there is an address that is different from the answer record for the game,
         // then can submit to public mapping then person can not spend pieces again. Also lets you mint their amount
         // You also get a receipt to mint more pieces that you see their address has -- maybe?
@@ -567,7 +577,7 @@ program puzzle_pieces_v007.aleo {
             owner: joint_piece_state.game_multisig,
             amount: joint_piece_state.amount,
             time_claimer_address: joint_piece_state.time_claimer_address,
-            state_updater_address: joint_piece_state.state_updater_address,
+            state_updater_address: joint_piece_state.state_updater_address, 
             challenger: joint_piece_state.challenger,
             opponent: joint_piece_state.opponent,
             game_multisig: joint_piece_state.game_multisig,
@@ -580,7 +590,7 @@ program puzzle_pieces_v007.aleo {
             owner: joint_piece_state.game_multisig,
             amount: joint_piece_state.amount,
             time_claimer_address: joint_piece_state.time_claimer_address,
-            state_updater_address: joint_piece_state.state_updater_address,
+            state_updater_address: joint_piece_state.state_updater_address, 
             challenger: joint_piece_state.challenger,
             opponent: joint_piece_state.opponent,
             game_multisig: joint_piece_state.game_multisig,
@@ -591,6 +601,7 @@ program puzzle_pieces_v007.aleo {
         return (joint_piece_winner, audit_record);
     }
 
+    // Called with multisig key
     // Any multisig member calls this function to end the game and transfer the pieces
     transition joint_stake_transfer_to_winner(
         joint_piece_winner: JointPieceWinner,
@@ -599,11 +610,11 @@ program puzzle_pieces_v007.aleo {
     ) -> (Piece,AuditTransferToWinner) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
-        // 0. Add a self.signer check against
+        
+        // 0. Add a self.signer check against 
         let game_multisig: address = joint_piece_winner.owner;
         // assert_eq(owner, self.signer);
-
+        
         // 1. Check that all are from the same multisig
         assert_eq(piece_joint_stake.owner,game_multisig);
         assert_eq(joint_piece_time_claim.owner,game_multisig);
