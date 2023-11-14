@@ -270,6 +270,7 @@ program puzzle_pieces_v007.aleo {
     // if challenger never reveals answer, after time T then joint-stake is awarded to opponent (ie an auto win)
     // 
     // Winner gets all the puzzle pieces.
+    // called by each individual key
     transition stake_transfer_in (
         piece_token: Piece,
         sender: address, // can't use self.caller or self.signer until leo fixed
@@ -360,6 +361,7 @@ program puzzle_pieces_v007.aleo {
     // Unstaking PieceStake from Multisig to Staker
     // Staker key signs message on Claim Record then
     // calls this function with Multisig key and signature as input
+    //
     // stake amount returned is equal to amount in claim and returned to staking key
     transition stake_transfer_out (
         piece_stake: PieceStake,
@@ -599,6 +601,7 @@ program puzzle_pieces_v007.aleo {
         return (joint_piece_winner, audit_record);
     }
 
+    // Called with multisig key
     // Any multisig member calls this function to end the game and transfer the pieces
     transition joint_stake_transfer_to_winner(
         joint_piece_winner: JointPieceWinner,
