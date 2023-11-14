@@ -13,6 +13,7 @@ program puzzle_pieces_v007.aleo {
         field_5: field,
     }
 
+    // Never owned by multisig
     // ix: 0u32
     record Piece {
         owner: address,
@@ -37,6 +38,7 @@ program puzzle_pieces_v007.aleo {
         ix: u32,
     }    
 
+    // owned by multisig
     // ix: 3u32
     record PieceStake {
         owner: address,
@@ -68,6 +70,7 @@ program puzzle_pieces_v007.aleo {
         ix: u32,
     }
 
+    // owned by multisig
     // ix: 6u32
     record PieceClaim {
         owner: address,
@@ -83,6 +86,7 @@ program puzzle_pieces_v007.aleo {
         ix: u32,
     }
 
+    // owned by individual
     // ix: 7u32
     record ClaimSignature {
         owner: address,
@@ -94,6 +98,7 @@ program puzzle_pieces_v007.aleo {
         ix: u32
     }
 
+    // owned by multsig
     // ix: 8u32
     record JointPieceTimeClaim {
         owner: address,
@@ -112,6 +117,7 @@ program puzzle_pieces_v007.aleo {
         ix: u32,
     }
 
+    // owned by multisig
     // ix: 9u32
     record PieceJointStake {
         owner: address,
@@ -129,6 +135,7 @@ program puzzle_pieces_v007.aleo {
     // and set JointPieceCreator: address (challenger or opponent) ---> question about what is field vulnerabilities for msg
     // TODO -- think on above more
 
+    // owned by challenger only
     // ix: 10u32
     record JointPieceState {
         owner: address,
@@ -159,6 +166,7 @@ program puzzle_pieces_v007.aleo {
         ix: u32,
     }
 
+    // owned by multisig
     // ix: 12u32
     record JointPieceWinner {
         owner: address,
