@@ -1,13 +1,13 @@
 // The 'multiparty_pvp_utils_v001' program.
 program multiparty_pvp_utils_v001.aleo {
-    struct Message {
+    struct Mssage {
         field_1: field,
         field_2: field,
         field_3: field,
         field_4: field,
         field_5: field,
     }
-    
+
     record Answer {
         owner: address, //challenger
         challenger_address: address,
@@ -38,6 +38,28 @@ program multiparty_pvp_utils_v001.aleo {
         message_3: field,
         message_4: field,
         message_5: field,
+        sig: signature
+    }
+
+    record RevealAnswer {
+        owner: address, //challenger
+        challenger_address: address,
+        opponent_address: address,
+        game_address: address,
+        amount: u64,
+        nonce: field,
+        answer: field,
+        sig: signature
+    }
+
+    record AuditRevealAnswer {
+        owner: address, //challenger
+        challenger_address: address,
+        opponent_address: address,
+        game_address: address,
+        amount: u64,
+        nonce: field,
+        answer: field,
         sig: signature
     }
 
@@ -79,14 +101,14 @@ program multiparty_pvp_utils_v001.aleo {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
-        let msg: Message = Message {
+        let msg: Mssage = Mssage {
             field_1: message_1,
             field_2: message_2,
             field_3: message_3,
             field_4: message_4,
             field_5: message_5
         };
-        
+
         // Verify signature against message to guarantee challenger is caller
         let signature_check: bool = true;
         let is_valid_sig: bool = sig.verify(challenger_address, msg);
@@ -166,49 +188,66 @@ program multiparty_pvp_utils_v001.aleo {
 
 
 
-    // Only callable by the challenger. 
+    // Only callable by the challenger.
     // Enforced by checkinig that owner == challenger (and caller when fixed)
     // a signature from the ClaimSignature record from the token is used here
-    // transition consume_answer(
-    //     answer: Answer,
-    //     sig: signature,
-    // ) -> (address, address, address, address, u64, field, field) {
-    //     // Verify that owner is challenger
-    //     assert_eq(answer.owner, answer.challenger_address);
+    transition reveal_answer (
+        answer: Answer,
+        sig: signature,
+    ) -> (RevealAnswer, AuditRevealAnswer)
+    {
+        // set puzzle issuing address as issuer:
+        let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
+        // Verify that owner is challenger
+        assert_eq(answer.owner, answer.challenger_address);
 
-    //     // Verify signature from Cagainst message to guarantee challenger is caller
-    //     let msg: Message = Message {
-    //         field_1: answer.message_1,
-    //         field_2: answer.message_2,
-    //         field_3: answer.message_3,
-    //         field_4: answer.message_4,
-    //         field_5: answer.message_5
-    //     };
+        // Verify signature from Cagainst message to guarantee challenger is caller
+        let msg: Mssage = Mssage {
+            field_1: answer.message_1,
+            field_2: answer.message_2,
+            field_3: answer.message_3,
+            field_4: answer.message_4,
+            field_5: answer.message_5
+        };
 
-    //     let signature_check: bool = true;
-    //     let is_valid_sig: bool = sig.verify(answer.challenger_address, msg);
-    //     assert_eq(signature_check,is_valid_sig);
+        let signature_check: bool = true;
+        let is_valid_sig: bool = sig.verify(answer.challenger_address, msg);
+        assert_eq(signature_check,is_valid_sig);
 
-    //     // Verify signature matches the same signature from the Answer record
-    //     assert_eq(sig, answer.sig);
+        // Verify signature matches the same signature from the Answer record
+        assert_eq(sig, answer.sig);
 
-    //     let answer_owner: address = answer.owner;
-    //     let answer_challenger_address: address = answer.challenger_address;
-    //     let answer_opponent_address: address = answer.opponent_address;
-    //     let answer_game_address: address = answer.game_address;
-    //     let answer_amount: u64 = answer.amount;
-    //     let answer_nonce: field = answer.nonce;
-    //     let answer_answer: field = answer.answer;
+        let answer_owner: address = answer.owner;
+        let answer_challenger_address: address = answer.challenger_address;
+        let answer_opponent_address: address = answer.opponent_address;
+        let answer_game_address: address = answer.game_address;
+        let answer_amount: u64 = answer.amount;
+        let answer_nonce: field = answer.nonce;
+        let answer_answer: field = answer.answer;
 
-    //     return (
-    //         answer_owner,
-    //         answer_challenger_address,
-    //         answer_opponent_address,
-    //         answer_game_address,
-    //         answer_amount,
-    //         answer_nonce,
-    //         answer_answer
-    //     );
-    // }
+        let revealed_answer_record: RevealAnswer = RevealAnswer {
+            owner: answer_game_address,
+            challenger_address: answer_challenger_address,
+            opponent_address: answer_opponent_address,
+            game_address: answer_game_address,
+            amount: answer_amount,
+            nonce: answer_nonce,
+            answer: answer_answer,
+            sig: sig,
+        };
+
+        let audit_record: AuditRevealAnswer = AuditRevealAnswer {
+            owner: puzzle_issuer,
+            challenger_address: answer_challenger_address,
+            opponent_address: answer_opponent_address,
+            game_address: answer_game_address,
+            amount: answer_amount,
+            nonce: answer_nonce,
+            answer: answer_answer,
+            sig: sig,
+        };
+
+        return (revealed_answer_record, audit_record);
+    }
 }

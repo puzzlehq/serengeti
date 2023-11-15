@@ -23,6 +23,8 @@ program wheres_alex_v001.aleo;
 
 
 
+
+
 record Game:
     owner as address.private;
     challenger_commit as field.private;
@@ -43,6 +45,24 @@ record GameReqNotification:
     opponent_address as address.private;
 
 record WaitingAcceptanceNotification:
+    owner as address.private;
+    game_multisig as address.private;
+    game_state as field.private;
+    your_turn as boolean.private;
+    total_pot as u64.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+
+record ChallengerWagerNotification:
+    owner as address.private;
+    game_multisig as address.private;
+    game_state as field.private;
+    your_turn as boolean.private;
+    total_pot as u64.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+
+record OpponentWagerNotification:
     owner as address.private;
     game_multisig as address.private;
     game_state as field.private;
@@ -139,11 +159,17 @@ function submit_wager:
     gte r0.amount r5 into r13;
     assert.eq r13 true;
     call puzzle_pieces_v007.aleo/stake_transfer_in r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 into r14 r15 r16 r17 r18;
+    add r5 r5 into r19;
+    cast r2 r4 1field false r19 r2 r3 into r20 as ChallengerWagerNotification.record;
+    add r5 r5 into r21;
+    cast r3 r4 1field true r21 r2 r3 into r22 as OpponentWagerNotification.record;
     output r14 as puzzle_pieces_v007.aleo/PieceClaim.record;
     output r15 as puzzle_pieces_v007.aleo/PieceStake.record;
     output r16 as puzzle_pieces_v007.aleo/ClaimSignature.record;
     output r17 as puzzle_pieces_v007.aleo/Piece.record;
     output r18 as puzzle_pieces_v007.aleo/AuditStakeIn.record;
+    output r20 as ChallengerWagerNotification.record;
+    output r22 as OpponentWagerNotification.record;
 
 
 function accept_game:
@@ -157,14 +183,16 @@ function accept_game:
     call puzzle_pieces_v007.aleo/transfer_stakes_to_joint r2 r3 r4 r5 r6 into r7 r8 r9 r10;
     cast r0.opponent_address r0.owner 2field false r0.total_pot r0.challenger_address r0.opponent_address into r11 as WaitingRevealNotification.record;
     cast r0.challenger_address r0.owner 2field true r0.total_pot r0.challenger_address r0.opponent_address into r12 as RevealAnswerNotification.record;
-    async accept_game r6 into r13;
+    cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger_address r0.opponent_address r0.game_multisig 2field into r13 as Game.record;
+    async accept_game r6 into r14;
     output r7 as puzzle_pieces_v007.aleo/PieceJointStake.record;
     output r8 as puzzle_pieces_v007.aleo/JointPieceTimeClaim.record;
     output r9 as puzzle_pieces_v007.aleo/JointPieceState.record;
     output r10 as puzzle_pieces_v007.aleo/AuditJointStake.record;
     output r11 as WaitingRevealNotification.record;
     output r12 as RevealAnswerNotification.record;
-    output r13 as wheres_alex_v001.aleo/accept_game.future;
+    output r13 as Game.record;
+    output r14 as wheres_alex_v001.aleo/accept_game.future;
 
 finalize accept_game:
     input r0 as u32.public;

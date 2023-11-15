@@ -64,7 +64,7 @@ program wheres_alex_v001.aleo {
         //
         // ALTERNATE EXIT PATHS
         // 6 -> timeout finished game
-       
+
     // your turn:
         // true -> your turn or ms turn
         // false -> awaiting other party turn
@@ -81,7 +81,7 @@ program wheres_alex_v001.aleo {
         opponent_address: address,
     }
 
-    // sent to challenger on propose game for FE/cleint detection.
+    // sent to challenger on propose game for FE/client detection.
     // consumed in reveal answer
     record WaitingAcceptanceNotification {
         owner: address, //opponent
@@ -93,7 +93,29 @@ program wheres_alex_v001.aleo {
         opponent_address: address,
     }
 
-    // sent to opponent on accept game for FE/cleint detection.
+    // sent to challenger on submit wager for FE/client detection.
+    // consumed in reveal answer
+    record ChallengerWagerNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+    }
+
+    record OpponentWagerNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+    }
+
+    // sent to opponent on accept game for FE/client detection.
     // consumed in finish_game/claim total pot
     record WaitingRevealNotification {
         owner: address, //opponent
@@ -105,7 +127,7 @@ program wheres_alex_v001.aleo {
         opponent_address: address,
     }
 
-    // sent to challenger on accept game for FE/cleint detection.
+    // sent to challenger on accept game for FE/client detection.
     // consumed in reveal answer
     record RevealAnswerNotification {
         owner: address, //opponent
@@ -146,7 +168,7 @@ program wheres_alex_v001.aleo {
     // New propose game
     transition propose_game (
         //puzzle_pieces.stake_transfer_in() data
-        wager_record: puzzle_pieces_v007.leo/Piece.record, //
+        wager_record: puzzle_pieces_v007.leo/Piece.record,
         amount: u64,
         sender: address, // Challenger address proposing game
         challenger: address,
@@ -313,6 +335,8 @@ program wheres_alex_v001.aleo {
         puzzle_pieces_v007.leo/ClaimSignature.record,
         puzzle_pieces_v007.leo/Piece.record,
         puzzle_pieces_v007.leo/AuditStakeIn.record,
+        ChallengerWagerNotification,
+        OpponentWagerNotification,
     )
     {
 
@@ -352,18 +376,38 @@ program wheres_alex_v001.aleo {
             sig,
         );
 
+        let challenger_submitted_wager_notification_record: ChallengerWagerNotification = ChallengerWagerNotification {
+            owner: challenger,
+            game_multisig: game_multisig,
+            game_state: 1field,
+            your_turn: false,
+            total_pot: amount + amount,
+            challenger_address: challenger,
+            opponent_address: opponent,
+
+        };
+
+        let opponent_submitted_wager_notification_record: OpponentWagerNotification = OpponentWagerNotification {
+            owner: opponent,
+            game_multisig: game_multisig,
+            game_state: 1field,
+            your_turn: true,
+            total_pot: amount + amount,
+            challenger_address: challenger,
+            opponent_address: opponent,
+        };
+
         return (
             piece_claim,
             piece_stake,
             claim_signature,
             piece,
-            audit_stake_in_record
+            audit_stake_in_record,
+            challenger_submitted_wager_notification_record,
+            opponent_submitted_wager_notification_record,
         );
     }
-
-
     // todo: implement renege for opponent
-
 
     transition accept_game
     (
@@ -381,6 +425,7 @@ program wheres_alex_v001.aleo {
         puzzle_pieces_v007.leo/AuditJointStake.record,
         WaitingRevealNotification,
         RevealAnswerNotification,
+        Game,
     )
     {
 
@@ -425,6 +470,17 @@ program wheres_alex_v001.aleo {
             opponent_address: game_record.opponent_address,
         };
 
+        let updated_game_record: Game = Game {
+            owner: game_record.owner,
+            challenger_commit: game_record.challenger_commit,
+            opponent_answer: game_record.opponent_answer,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 2field,
+        };
+
         return (
             piece_joint_stake,
             joint_piece_time_claim,
@@ -432,6 +488,7 @@ program wheres_alex_v001.aleo {
             audit_joint_stake,
             waiting_reveal_answer_notifcation_record,
             reveal_answer_notification_record,
+            updated_game_record,
         ) then finalize (block_ht);
     }
 
@@ -453,11 +510,22 @@ program wheres_alex_v001.aleo {
         assert(block_ht <= current_block_ht + 100u32);
     }
 
+
+    // transition reveal_answer_game
+    // (
+    //     multiparty_pvp_utils_v001.leo/Answer.record,
+
+
+    // ) -> RevealedAnswerRecord
+    // {
+
+    // }
+
     // transition timeout_claim_finish_game(
     //     puzzle_pieces_v007.leo/JointPieceTimeClaim.record,
 
     // ) -> Game {
-        
+
     // }
 
     // finalize timeout_claim_finish_game(
