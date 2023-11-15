@@ -100,3 +100,55 @@ function propose_game:
     output r34 as Game.record;
     output r30 as GameReqNotification.record;
     output r32 as GameAcceptanceNotification.record;
+
+
+function submit_wager:
+    input r0 as puzzle_pieces_v007.aleo/Piece.record;
+    input r1 as address.private;
+    input r2 as address.private;
+    input r3 as address.private;
+    input r4 as address.private;
+    input r5 as u64.private;
+    input r6 as field.private;
+    input r7 as field.private;
+    input r8 as field.private;
+    input r9 as field.private;
+    input r10 as field.private;
+    input r11 as signature.private;
+    assert.eq self.caller self.signer;
+    gt r5 0u64 into r12;
+    assert.eq r12 true;
+    gte r0.amount r5 into r13;
+    assert.eq r13 true;
+    call puzzle_pieces_v007.aleo/stake_transfer_in r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 into r14 r15 r16 r17 r18;
+    output r14 as puzzle_pieces_v007.aleo/PieceClaim.record;
+    output r15 as puzzle_pieces_v007.aleo/PieceStake.record;
+    output r16 as puzzle_pieces_v007.aleo/ClaimSignature.record;
+    output r17 as puzzle_pieces_v007.aleo/Piece.record;
+    output r18 as puzzle_pieces_v007.aleo/AuditStakeIn.record;
+
+
+function accept_game:
+    input r0 as Game.record;
+    input r1 as field.private;
+    input r2 as PieceStake.record;
+    input r3 as PieceClaim.record;
+    input r4 as PieceStake.record;
+    input r5 as PieceClaim.record;
+    input r6 as u32.private;
+    call puzzle_pieces_v007.aleo/transfer_stakes_to_joint r2 r3 r4 r5 r6 into r7 r8 r9 r10;
+    async accept_game r6 into r11;
+    output r7 as PieceJointStake.record;
+    output r8 as JointPieceTimeClaim.record;
+    output r9 as JointPieceState.record;
+    output r10 as AuditJointStake.record;
+    output r11 as wheres_alex_v001.aleo/accept_game.future;
+
+finalize accept_game:
+    input r0 as u32.public;
+    sub block.height 100u32 into r1;
+    gte r0 r1 into r2;
+    assert.eq r2 true;
+    add block.height 100u32 into r3;
+    lte r0 r3 into r4;
+    assert.eq r4 true;

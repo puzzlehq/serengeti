@@ -98,8 +98,8 @@ program wheres_alex_v001.aleo {
     //     private nonce: field,
     // }
 
-    
-    
+
+
     // mapping puzz_supply: field => u128;
     // mapping games: address => u32;
 
@@ -109,7 +109,7 @@ program wheres_alex_v001.aleo {
         wager_record: puzzle_pieces_v007.leo/Piece.record, //
         amount: u64,
         sender: address, // Challenger address proposing game
-        challenger: address, 
+        challenger: address,
         opponent: address,
         game_multisig: address,
         message_1: field, //from output of useSignature
@@ -137,7 +137,7 @@ program wheres_alex_v001.aleo {
         GameReqNotification,
         GameAcceptanceNotification,
     ) {
-      
+
 
         // random edge case, maybe unnecessary
         assert_neq(game_multisig, opponent);
@@ -219,21 +219,21 @@ program wheres_alex_v001.aleo {
         };
 
         let (answer_record, audit_mint_answer_record):  (Answer, AuditMintAnswer) = multiparty_pvp_utils_v001.leo/mint_answer(
-                challenger, 
-                opponent, 
-                game_multisig, 
-                amount, 
+                challenger,
+                opponent,
+                game_multisig,
+                amount,
                 nonce,
                 answer,
-                message_1, 
-                message_2, 
-                message_3, 
-                message_4, 
-                message_5, 
+                message_1,
+                message_2,
+                message_3,
+                message_4,
+                message_5,
                 sig
         );
 
-        
+
         return (
             piece_claim,
             piece_stake,
@@ -254,122 +254,137 @@ program wheres_alex_v001.aleo {
     // todo: implement renege for challenger
 
 
-    // transition submit_wager (
-    //     wager_record: puzzle_pieces_v007.leo/Piece.record,
-    //     amount: u64,
-    //     sender: address,
-    //     challenger: address,
-    //     opponent: address,
-    //     game_multisig: address,
-    //     message_1: field, //from output of useSignature
-    //     message_2: field,
-    //     message_3: field,
-    //     message_4: field,
-    //     message_5: field,
-    //     sig: signature, //from output of useSignature
-    // ) -> (
-    //     puzzle_pieces_v007.leo/PieceClaim.record,
-    //     puzzle_pieces_v007.leo/PieceStake.record,
-    //     puzzle_pieces_v007.leo/ClaimSignature.record,
-    //     puzzle_pieces_v007.leo/Piece.record,
-    //     puzzle_pieces_v007.leo/AuditStakeIn.record,
-    // )
-    // {
+    transition submit_wager (
+        wager_record: puzzle_pieces_v007.leo/Piece.record,
+        sender: address,
+        challenger: address,
+        opponent: address,
+        game_multisig: address,
+        amount: u64,
+        message_1: field, //from output of useSignature
+        message_2: field,
+        message_3: field,
+        message_4: field,
+        message_5: field,
+        sig: signature, //from output of useSignature
+    ) -> (
+        puzzle_pieces_v007.leo/PieceClaim.record,
+        puzzle_pieces_v007.leo/PieceStake.record,
+        puzzle_pieces_v007.leo/ClaimSignature.record,
+        puzzle_pieces_v007.leo/Piece.record,
+        puzzle_pieces_v007.leo/AuditStakeIn.record,
+    )
+    {
 
-    //     // Logic Checks
-    //     // limit calls to only users
-    //     assert_eq(self.caller, self.signer);
+        // Logic Checks
+        // limit calls to only users
+        assert_eq(self.caller, self.signer);
 
-    //     // assert that the wager amount > 0 and wager inside credit == wager amt passed
-    //     let wager_record: Piece = wager;
-    //     assert(amount > 0u64);
-    //     // assert that the wager record has >= amount wagered
-    //     assert(wager_record.amount >= amount);
+        // assert that the wager amount > 0 and wager inside credit == wager amt passed
+        assert(amount > 0u64);
+        // assert that the wager record has >= amount wagered
+        assert(wager_record.amount >= amount);
 
-    //     let (
-    //         piece_claim,
-    //         piece_stake,
-    //         claim_signature,
-    //         piece,
-    //         audit_stake_in_record
-    //     ): (
-    //         PieceClaim,
-    //         PieceStake,
-    //         ClaimSignature,
-    //         Piece,
-    //         AuditStakeIn
-    //     ) = puzzle_pieces_v007.leo/stake_transfer_in(
-    //         wager_record,
-    //         sender,
-    //         challenger,
-    //         opponent,
-    //         game_multisig,
-    //         amount,
-    //         message_1,
-    //         message_2,
-    //         message_3,
-    //         message_4,
-    //         message_5,
-    //     );
+        let (
+            piece_claim,
+            piece_stake,
+            claim_signature,
+            piece,
+            audit_stake_in_record,
+        ): (
+            PieceClaim,
+            PieceStake,
+            ClaimSignature,
+            Piece,
+            AuditStakeIn
+        ) = puzzle_pieces_v007.leo/stake_transfer_in(
+            wager_record,
+            sender,
+            challenger,
+            opponent,
+            game_multisig,
+            amount,
+            message_1,
+            message_2,
+            message_3,
+            message_4,
+            message_5,
+            sig,
+        );
 
-    //     return (
-    //         piece_claim, 
-    //         piece_stake, 
-    //         claim_signature, 
-    //         piece, 
-    //         audit_stake_in_record
-    //     )
-    // };
-
-    
-    // // todo: implement renege for opponent
+        return (
+            piece_claim,
+            piece_stake,
+            claim_signature,
+            piece,
+            audit_stake_in_record
+        );
+    }
 
 
-    // transition accept_game 
-    // (
-    //     game_record: Game,
-    //     opponent_answer: field,
-    //     piece_stake_challenger: PieceStake,
-    //     piece_claim_challenger: PieceClaim,
-    //     piece_stake_opponent: PieceStake,
-    //     piece_claim_opponent: PieceClaim,
-    //     block_ht: u32,
+    // todo: implement renege for opponent
 
 
+    transition accept_game
+    (
+        game_record: Game,
+        opponent_answer: field,
+        piece_stake_challenger: PieceStake,
+        piece_claim_challenger: PieceClaim,
+        piece_stake_opponent: PieceStake,
+        piece_claim_opponent: PieceClaim,
+        block_ht: u32,
+    ) -> (
+        PieceJointStake,
+        JointPieceTimeClaim,
+        JointPieceState,
+        AuditJointStake,
+    )
+    {
 
-    // ) -> (
-    //     PieceJointStake, 
-    //     JointPieceTimeClaim,
-    //     JointPieceState,
-    //     AuditJointStake,
-    // )
-    // {
+        let (
+            piece_joint_stake,
+            joint_piece_time_claim,
+            joint_piece_state,
+            audit_joint_stake
+        ): (
+            PieceJointStake,
+            JointPieceTimeClaim,
+            JointPieceState,
+            AuditJointStake
+        ) = puzzle_pieces_v007.leo/transfer_stakes_to_joint(
+            piece_stake_challenger,
+            piece_claim_challenger,
+            piece_stake_opponent,
+            piece_claim_opponent,
+            block_ht,
+        );
 
-    //     let (
-    //         piece_joint_stake,
-    //         joint_piece_time_claim,
-    //         joint_piece_state,
-    //         audit_joint_stake
-    //     ): (
-    //         PieceJointStake,
-    //         JointPieceTimeClaim,
-    //         JointPieceState,
-    //         AuditJointStake
-    //     ) = puzzle_pieces_v007.leo/transfer_stakes_to_joint(
-    //         piece_stake_challenger,
-    //         piece_claim_challenger,
-    //         piece_stake_opponent,
-    //         piece_claim_opponent,
-    //         block_ht,
-    //     );
+        // todo: add WaitingRevealAnswerNotification
 
-    //     return (
-    //         piece_joint_stake,
-    //         joint_piece_time_claim,
-    //         joint_piece_state,
-    //         audit_joint_stake,
-    //     )
-    // };
+        return (
+            piece_joint_stake,
+            joint_piece_time_claim,
+            joint_piece_state,
+            audit_joint_stake,
+        ) then finalize (block_ht);
+    }
+
+
+    finalize accept_game
+    (
+        block_ht: u32,
+    )
+    {
+        // block every 5 seconds or so
+        // would need to wait for time between `accept_game` req. from client to being proved
+        // ~ 5s per block
+        // leeway of 100 blocks = 100 * 5 = 500 / 60 = ~8.33 mins.
+        // assert that block_ht passed in is within 100 blocks of current block ht.
+        let current_block_ht: u32 = block.height;
+        assert(block_ht >= current_block_ht - 100u32);
+        assert(block_ht <= current_block_ht + 100u32);
+    }
 
 
     // // todo: do we want to limit this fn call only to users or will we allow contracts to call?
