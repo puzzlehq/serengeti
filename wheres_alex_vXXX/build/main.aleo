@@ -42,7 +42,7 @@ record GameReqNotification:
     challenger_address as address.private;
     opponent_address as address.private;
 
-record GameAcceptanceNotification:
+record WaitingAcceptanceNotification:
     owner as address.private;
     game_multisig as address.private;
     game_state as field.private;
@@ -84,7 +84,7 @@ function propose_game:
     add r1 r1 into r29;
     cast r4 r5 1field true r29 r3 r4 into r30 as GameReqNotification.record;
     add r1 r1 into r31;
-    cast r3 r5 1field false r31 r3 r4 into r32 as GameAcceptanceNotification.record;
+    cast r3 r5 1field false r31 r3 r4 into r32 as WaitingAcceptanceNotification.record;
     add r1 r1 into r33;
     cast r5 r19 r13 r33 r3 r4 r5 1field into r34 as Game.record;
     call multiparty_pvp_utils_v001.aleo/mint_answer r3 r4 r5 r1 r12 r13 r6 r7 r8 r9 r10 r11 into r35 r36;
@@ -99,7 +99,7 @@ function propose_game:
     output r28 as multiparty_pvp_utils_v001.aleo/AuditKey.record;
     output r34 as Game.record;
     output r30 as GameReqNotification.record;
-    output r32 as GameAcceptanceNotification.record;
+    output r32 as WaitingAcceptanceNotification.record;
 
 
 function submit_wager:

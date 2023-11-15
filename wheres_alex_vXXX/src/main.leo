@@ -67,7 +67,7 @@ program wheres_alex_v001.aleo {
 
     // sent to challenger on propose game for FE/cleint detection.
     // consumed in reveal answer
-    record GameAcceptanceNotification {
+    record WaitingAcceptanceNotification {
         owner: address, //opponent
         game_multisig: address,
         game_state: field,
@@ -135,7 +135,7 @@ program wheres_alex_v001.aleo {
         multiparty_pvp_utils_v001.leo/AuditKey.record,
         Game,
         GameReqNotification,
-        GameAcceptanceNotification,
+        WaitingAcceptanceNotification,
     ) {
 
 
@@ -197,7 +197,7 @@ program wheres_alex_v001.aleo {
             opponent_address: opponent,
         };
 
-        let game_waiting_acceptance_notification_record: GameAcceptanceNotification = GameAcceptanceNotification {
+        let game_waiting_acceptance_notification_record: WaitingAcceptanceNotification = WaitingAcceptanceNotification {
             owner: challenger, //challenger
             game_multisig: game_multisig,
             game_state: 1field,
