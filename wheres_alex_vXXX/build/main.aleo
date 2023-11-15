@@ -88,6 +88,7 @@ record RevealAnswerNotification:
     total_pot as u64.private;
     challenger_address as address.private;
     opponent_address as address.private;
+    opponent_answer as field.private;
 
 
 function propose_game:
@@ -182,10 +183,9 @@ function accept_game:
     input r6 as u32.private;
     call puzzle_pieces_v007.aleo/transfer_stakes_to_joint r2 r3 r4 r5 r6 into r7 r8 r9 r10;
     cast r0.opponent_address r0.owner 2field false r0.total_pot r0.challenger_address r0.opponent_address into r11 as WaitingRevealNotification.record;
-    cast r0.challenger_address r0.owner 2field true r0.total_pot r0.challenger_address r0.opponent_address into r12 as RevealAnswerNotification.record;
+    cast r0.challenger_address r0.owner 2field true r0.total_pot r0.challenger_address r0.opponent_address r1 into r12 as RevealAnswerNotification.record;
     cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger_address r0.opponent_address r0.game_multisig 2field into r13 as Game.record;
-    async accept_game r6 into r14;
-    output r7 as puzzle_pieces_v007.aleo/PieceJointStake.record;
+    async accept_game r6 into r14;    output r7 as puzzle_pieces_v007.aleo/PieceJointStake.record;
     output r8 as puzzle_pieces_v007.aleo/JointPieceTimeClaim.record;
     output r9 as puzzle_pieces_v007.aleo/JointPieceState.record;
     output r10 as puzzle_pieces_v007.aleo/AuditJointStake.record;
@@ -202,3 +202,24 @@ finalize accept_game:
     add block.height 100u32 into r3;
     lte r0 r3 into r4;
     assert.eq r4 true;
+
+
+
+
+function reveal_answer_game:
+    input r0 as RevealAnswerNotification.record;
+    input r1 as multiparty_pvp_utils_v001.aleo/Answer.record;
+    input r2 as puzzle_pieces_v007.aleo/JointPieceState.record;
+    input r3 as puzzle_pieces_v007.aleo/ClaimSignature.record;
+    input r4 as signature.private;
+    is.eq r0.opponent_answer r1.answer into r5;
+    ternary r5 r1.opponent_address r1.challenger_address into r6;
+    call multiparty_pvp_utils_v001.aleo/reveal_answer r1 r4 into r7 r8;
+    call puzzle_pieces_v007.aleo/joint_stake_state_update r2 r3 r6 into r9 r10;
+    output r7 as multiparty_pvp_utils_v001.aleo/RevealAnswer.record;
+    output r8 as multiparty_pvp_utils_v001.aleo/AuditRevealAnswer.record;
+    output r9 as puzzle_pieces_v007.aleo/JointPieceWinner.record;
+    output r10 as puzzle_pieces_v007.aleo/AuditJointPieceWinner.record;
+
+
+function finish_game:
