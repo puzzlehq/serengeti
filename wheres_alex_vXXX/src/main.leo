@@ -329,16 +329,16 @@ program wheres_alex_v001.aleo {
     (
         game_record: Game,
         opponent_answer: field,
-        piece_stake_challenger: PieceStake,
-        piece_claim_challenger: PieceClaim,
-        piece_stake_opponent: PieceStake,
-        piece_claim_opponent: PieceClaim,
+        piece_stake_challenger: puzzle_pieces_v007.leo/PieceStake.record,
+        piece_claim_challenger: puzzle_pieces_v007.leo/PieceClaim.record,
+        piece_stake_opponent: puzzle_pieces_v007.leo/PieceStake.record,
+        piece_claim_opponent: puzzle_pieces_v007.leo/PieceClaim.record,
         block_ht: u32,
     ) -> (
-        PieceJointStake,
-        JointPieceTimeClaim,
-        JointPieceState,
-        AuditJointStake,
+        puzzle_pieces_v007.leo/PieceJointStake.record,
+        puzzle_pieces_v007.leo/JointPieceTimeClaim.record,
+        puzzle_pieces_v007.leo/JointPieceState.record,
+        puzzle_pieces_v007.leo/AuditJointStake.record
     )
     {
 

@@ -131,17 +131,17 @@ function submit_wager:
 function accept_game:
     input r0 as Game.record;
     input r1 as field.private;
-    input r2 as PieceStake.record;
-    input r3 as PieceClaim.record;
-    input r4 as PieceStake.record;
-    input r5 as PieceClaim.record;
+    input r2 as puzzle_pieces_v007.aleo/PieceStake.record;
+    input r3 as puzzle_pieces_v007.aleo/PieceClaim.record;
+    input r4 as puzzle_pieces_v007.aleo/PieceStake.record;
+    input r5 as puzzle_pieces_v007.aleo/PieceClaim.record;
     input r6 as u32.private;
     call puzzle_pieces_v007.aleo/transfer_stakes_to_joint r2 r3 r4 r5 r6 into r7 r8 r9 r10;
     async accept_game r6 into r11;
-    output r7 as PieceJointStake.record;
-    output r8 as JointPieceTimeClaim.record;
-    output r9 as JointPieceState.record;
-    output r10 as AuditJointStake.record;
+    output r7 as puzzle_pieces_v007.aleo/PieceJointStake.record;
+    output r8 as puzzle_pieces_v007.aleo/JointPieceTimeClaim.record;
+    output r9 as puzzle_pieces_v007.aleo/JointPieceState.record;
+    output r10 as puzzle_pieces_v007.aleo/AuditJointStake.record;
     output r11 as wheres_alex_v001.aleo/accept_game.future;
 
 finalize accept_game:
