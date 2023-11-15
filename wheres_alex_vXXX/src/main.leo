@@ -168,7 +168,7 @@ program wheres_alex_v001.aleo {
     // New propose game
     transition propose_game (
         //puzzle_pieces.stake_transfer_in() data
-        wager_record: puzzle_pieces_v007.leo/Piece.record, //
+        wager_record: puzzle_pieces_v007.leo/Piece.record,
         amount: u64,
         sender: address, // Challenger address proposing game
         challenger: address,
@@ -511,13 +511,15 @@ program wheres_alex_v001.aleo {
     }
 
 
-    transition reveal_answer
-    (
+    // transition reveal_answer_game
+    // (
+    //     multiparty_pvp_utils_v001.leo/Answer.record,
 
-    )
-    {
 
-    }
+    // ) -> RevealedAnswerRecord
+    // {
+
+    // }
 
     // transition timeout_claim_finish_game(
     //     puzzle_pieces_v007.leo/JointPieceTimeClaim.record,

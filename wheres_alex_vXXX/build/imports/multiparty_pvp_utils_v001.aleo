@@ -38,6 +38,26 @@ record AuditMintAnswer:
     message_5 as field.private;
     sig as signature.private;
 
+record RevealAnswer:
+    owner as address.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+    game_address as address.private;
+    amount as u64.private;
+    nonce as field.private;
+    answer as field.private;
+    sig as signature.private;
+
+record AuditRevealAnswer:
+    owner as address.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+    game_address as address.private;
+    amount as u64.private;
+    nonce as field.private;
+    answer as field.private;
+    sig as signature.private;
+
 record Key:
     owner as address.private;
     seed as field.private;
@@ -87,3 +107,17 @@ function mint_multisig_key:
     cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r0 r1 r2 r3 r4 into r6 as AuditKey.record;
     output r5 as Key.record;
     output r6 as AuditKey.record;
+
+
+function reveal_answer:
+    input r0 as Answer.record;
+    input r1 as signature.private;
+    assert.eq r0.owner r0.challenger_address;
+    cast r0.message_1 r0.message_2 r0.message_3 r0.message_4 r0.message_5 into r2 as Mssage;
+    sign.verify r1 r0.challenger_address r2 into r3;
+    assert.eq true r3;
+    assert.eq r1 r0.sig;
+    cast r0.game_address r0.challenger_address r0.opponent_address r0.game_address r0.amount r0.nonce r0.answer r1 into r4 as RevealAnswer.record;
+    cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r0.challenger_address r0.opponent_address r0.game_address r0.amount r0.nonce r0.answer r1 into r5 as AuditRevealAnswer.record;
+    output r4 as RevealAnswer.record;
+    output r5 as AuditRevealAnswer.record;

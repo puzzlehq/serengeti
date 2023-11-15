@@ -23,6 +23,8 @@ program wheres_alex_v001.aleo;
 
 
 
+
+
 record Game:
     owner as address.private;
     challenger_commit as field.private;
@@ -200,6 +202,3 @@ finalize accept_game:
     add block.height 100u32 into r3;
     lte r0 r3 into r4;
     assert.eq r4 true;
-
-
-function reveal_answer:
