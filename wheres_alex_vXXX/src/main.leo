@@ -407,10 +407,7 @@ program wheres_alex_v001.aleo {
             opponent_submitted_wager_notification_record,
         );
     }
-
-
     // todo: implement renege for opponent
-
 
     transition accept_game
     (
@@ -428,6 +425,7 @@ program wheres_alex_v001.aleo {
         puzzle_pieces_v007.leo/AuditJointStake.record,
         WaitingRevealNotification,
         RevealAnswerNotification,
+        Game,
     )
     {
 
@@ -472,6 +470,17 @@ program wheres_alex_v001.aleo {
             opponent_address: game_record.opponent_address,
         };
 
+        let updated_game_record: Game = Game {
+            owner: game_record.owner,
+            challenger_commit: game_record.challenger_commit,
+            opponent_answer: game_record.opponent_answer,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 2field,
+        };
+
         return (
             piece_joint_stake,
             joint_piece_time_claim,
@@ -479,6 +488,7 @@ program wheres_alex_v001.aleo {
             audit_joint_stake,
             waiting_reveal_answer_notifcation_record,
             reveal_answer_notification_record,
+            updated_game_record,
         ) then finalize (block_ht);
     }
 
