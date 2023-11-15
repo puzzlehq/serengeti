@@ -1,6 +1,6 @@
 program multiparty_pvp_utils_v001.aleo;
 
-struct Message:
+struct Mssage:
     field_1 as field;
     field_2 as field;
     field_3 as field;
@@ -68,7 +68,7 @@ function mint_answer:
     input r9 as field.private;
     input r10 as field.private;
     input r11 as signature.private;
-    cast r6 r7 r8 r9 r10 into r12 as Message;
+    cast r6 r7 r8 r9 r10 into r12 as Mssage;
     sign.verify r11 r0 r12 into r13;
     assert.eq true r13;
     cast r0 r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 into r14 as Answer.record;

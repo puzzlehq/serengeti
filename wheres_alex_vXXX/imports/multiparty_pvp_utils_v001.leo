@@ -1,6 +1,6 @@
 // The 'multiparty_pvp_utils_v001' program.
 program multiparty_pvp_utils_v001.aleo {
-    struct Message {
+    struct Mssage {
         field_1: field,
         field_2: field,
         field_3: field,
@@ -79,7 +79,7 @@ program multiparty_pvp_utils_v001.aleo {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
-        let msg: Message = Message {
+        let msg: Mssage = Mssage {
             field_1: message_1,
             field_2: message_2,
             field_3: message_3,
@@ -178,7 +178,7 @@ program multiparty_pvp_utils_v001.aleo {
 
 
     //     // Verify signature from Cagainst message to guarantee challenger is caller
-    //     let msg: Message = Message {
+    //     let msg: Mssage = Mssage {
     //         field_1: answer.message_1,
     //         field_2: answer.message_2,
     //         field_3: answer.message_3,

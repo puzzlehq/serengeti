@@ -1,9 +1,102 @@
+import puzzle_pieces_v007.aleo;
+import multiparty_pvp_utils_v001.aleo;
 program wheres_alex_v001.aleo;
 
 
 
-function main:
-    input r0 as u32.public;
-    input r1 as u32.private;
-    add r0 r1 into r2;
-    output r2 as u32.private;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+record Game:
+    owner as address.private;
+    challenger_commit as field.private;
+    opponent_answer as field.private;
+    total_pot as u64.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+    game_multisig as address.private;
+    game_state as field.private;
+
+record GameReqNotification:
+    owner as address.private;
+    game_multisig as address.private;
+    game_state as field.private;
+    your_turn as boolean.private;
+    total_pot as u64.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+
+record GameAcceptanceNotification:
+    owner as address.private;
+    game_multisig as address.private;
+    game_state as field.private;
+    your_turn as boolean.private;
+    total_pot as u64.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+
+
+function propose_game:
+    input r0 as puzzle_pieces_v007.aleo/Piece.record;
+    input r1 as u64.private;
+    input r2 as address.private;
+    input r3 as address.private;
+    input r4 as address.private;
+    input r5 as address.private;
+    input r6 as field.private;
+    input r7 as field.private;
+    input r8 as field.private;
+    input r9 as field.private;
+    input r10 as field.private;
+    input r11 as signature.private;
+    input r12 as field.private;
+    input r13 as field.private;
+    input r14 as field.private;
+    assert.neq r5 r4;
+    is.eq r13 0field into r15;
+    is.eq r13 1field into r16;
+    or r15 r16 into r17;
+    assert.eq r17 true;
+    cast r12 into r18 as scalar;
+    commit.bhp256 r13 r18 into r19 as field;
+    gt r1 0u64 into r20;
+    assert.eq r20 true;
+    gte r0.amount r1 into r21;
+    assert.eq r21 true;
+    call puzzle_pieces_v007.aleo/stake_transfer_in r0 r2 r3 r4 r5 r1 r6 r7 r8 r9 r10 r11 into r22 r23 r24 r25 r26;
+    call multiparty_pvp_utils_v001.aleo/mint_multisig_key r14 r1 r3 r4 r5 into r27 r28;
+    add r1 r1 into r29;
+    cast r4 r5 1field true r29 r3 r4 into r30 as GameReqNotification.record;
+    add r1 r1 into r31;
+    cast r3 r5 1field false r31 r3 r4 into r32 as GameAcceptanceNotification.record;
+    add r1 r1 into r33;
+    cast r5 r19 r13 r33 r3 r4 r5 1field into r34 as Game.record;
+    call multiparty_pvp_utils_v001.aleo/mint_answer r3 r4 r5 r1 r12 r13 r6 r7 r8 r9 r10 r11 into r35 r36;
+    output r22 as puzzle_pieces_v007.aleo/PieceClaim.record;
+    output r23 as puzzle_pieces_v007.aleo/PieceStake.record;
+    output r24 as puzzle_pieces_v007.aleo/ClaimSignature.record;
+    output r25 as puzzle_pieces_v007.aleo/Piece.record;
+    output r26 as puzzle_pieces_v007.aleo/AuditStakeIn.record;
+    output r35 as multiparty_pvp_utils_v001.aleo/Answer.record;
+    output r36 as multiparty_pvp_utils_v001.aleo/AuditMintAnswer.record;
+    output r27 as multiparty_pvp_utils_v001.aleo/Key.record;
+    output r28 as multiparty_pvp_utils_v001.aleo/AuditKey.record;
+    output r34 as Game.record;
+    output r30 as GameReqNotification.record;
+    output r32 as GameAcceptanceNotification.record;
