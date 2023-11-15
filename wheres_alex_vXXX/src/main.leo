@@ -77,6 +77,30 @@ program wheres_alex_v001.aleo {
         opponent_address: address,
     }
 
+    // sent to opponent on accept game for FE/cleint detection.
+    // consumed in finish_game/claim total pot
+    record WaitingRevealNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+    }
+
+    // sent to challenger on accept game for FE/cleint detection.
+    // consumed in reveal answer
+    record RevealAnswerNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+    }
+
     // record NotifyGameOver {
     //     private owner: address,
     //     private winner: address,
@@ -338,7 +362,9 @@ program wheres_alex_v001.aleo {
         puzzle_pieces_v007.leo/PieceJointStake.record,
         puzzle_pieces_v007.leo/JointPieceTimeClaim.record,
         puzzle_pieces_v007.leo/JointPieceState.record,
-        puzzle_pieces_v007.leo/AuditJointStake.record
+        puzzle_pieces_v007.leo/AuditJointStake.record,
+        WaitingRevealNotification,
+        RevealAnswerNotification,
     )
     {
 
@@ -360,13 +386,36 @@ program wheres_alex_v001.aleo {
             block_ht,
         );
 
-        // todo: add WaitingRevealAnswerNotification
+        // sent to opponent on accept_game
+        // todo: how will user know they can claim if challenger never reveals answer?
+        let waiting_reveal_answer_notifcation_record: WaitingRevealNotification = WaitingRevealNotification {
+            owner: game_record.opponent_address,
+            game_multisig: game_record.owner,
+            game_state: 2field,
+            your_turn: false,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+        };
+
+        // sent to challenger on accept_game
+        let reveal_answer_notification_record: RevealAnswerNotification = RevealAnswerNotification {
+            owner: game_record.challenger_address,
+            game_multisig: game_record.owner,
+            game_state: 2field,
+            your_turn: true,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+        };
 
         return (
             piece_joint_stake,
             joint_piece_time_claim,
             joint_piece_state,
             audit_joint_stake,
+            waiting_reveal_answer_notifcation_record,
+            reveal_answer_notification_record,
         ) then finalize (block_ht);
     }
 
