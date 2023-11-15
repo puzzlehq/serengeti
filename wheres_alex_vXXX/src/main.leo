@@ -48,10 +48,26 @@ program wheres_alex_v001.aleo {
         game_multisig: address,
         game_state: field,
         // private game_state: field,
-        // 0 -> propose game
-        // 1 -> accept game
-        // 2 -> game finished
+        // 1 -> proposed game
+        // 2 -> accepted game
+        // 3 -> finished game
     }
+
+    // GAME STATE RECORDED ON NOTIFICATIONS
+    // private game_state: field,
+        // NORMAL FLOW
+        // 1 -> challenger proposed game
+        // 2 -> opponent matched wager
+        // 3 -> accepted game
+        // 4 -> challenger revealed answer
+        // 5 -> finished game
+        //
+        // ALTERNATE EXIT PATHS
+        // 6 -> timeout finished game
+       
+    // your turn:
+        // true -> your turn or ms turn
+        // false -> awaiting other party turn
 
     // sent to opponent on propose game for FE/client detection.
     // consumed in match wager
@@ -430,10 +446,25 @@ program wheres_alex_v001.aleo {
         // ~ 5s per block
         // leeway of 100 blocks = 100 * 5 = 500 / 60 = ~8.33 mins.
         // assert that block_ht passed in is within 100 blocks of current block ht.
+        //
+        // Check legit block height as input
         let current_block_ht: u32 = block.height;
         assert(block_ht >= current_block_ht - 100u32);
         assert(block_ht <= current_block_ht + 100u32);
     }
+
+    // transition timeout_claim_finish_game(
+    //     puzzle_pieces_v007.leo/JointPieceTimeClaim.record,
+
+    // ) -> Game {
+        
+    // }
+
+    // finalize timeout_claim_finish_game(
+    //     claim_blockheight
+    // ) {
+    //     assert(block.height > claim_blockheight + 720)
+    // }
 
 
     // // todo: do we want to limit this fn call only to users or will we allow contracts to call?
