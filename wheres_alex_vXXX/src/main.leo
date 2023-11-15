@@ -137,6 +137,7 @@ program wheres_alex_v001.aleo {
         total_pot: u64,
         challenger_address: address,
         opponent_address: address,
+        opponent_answer: field,
     }
 
     // record NotifyGameOver {
@@ -468,6 +469,7 @@ program wheres_alex_v001.aleo {
             total_pot: game_record.total_pot,
             challenger_address: game_record.challenger_address,
             opponent_address: game_record.opponent_address,
+            opponent_answer: opponent_answer,
         };
 
         let updated_game_record: Game = Game {
@@ -511,30 +513,52 @@ program wheres_alex_v001.aleo {
     }
 
 
-    // transition reveal_answer_game
-    // (
-    //     answer_record: multiparty_pvp_utils_v001.leo/Answer.record,
-    //     joint_piece_state: puzzle_pieces_v007.leo/JointPieceState.record,
-    //     claim_signature: puzzle_pieces_v007.leo/ClaimSignature.record,
-    //     sig: signature,
-    // ) -> (
-    //     multiparty_pvp_utils_v001.leo/RevealAnswer.record,
-    //     multiparty_pvp_utils_v001.leo/AuditRevealAnswer.record,
-    //     puzzle_pieces_v007.leo/JointPieceWinner.record,
-    //     puzzle_pieces_v007.leo/AuditJointPieceWinner.record
-    // )
-    // {
-    //     // retrieve revealedanswer record
-    //     let (revealed_answer_record, audit_revealed_answer_record): (RevealAnswer, AuditRevealAnswer) = multiparty_pvp_utils_v0001.leo/reveal_answer(answer_record, sig);
+    transition reveal_answer_game
+    (
+        reveal_answer_notification_record: RevealAnswerNotification,
+        answer_record: multiparty_pvp_utils_v001.leo/Answer.record,
+        joint_piece_state: puzzle_pieces_v007.leo/JointPieceState.record,
+        claim_signature: puzzle_pieces_v007.leo/ClaimSignature.record,
+        sig: signature
+    ) -> (
+        multiparty_pvp_utils_v001.leo/RevealAnswer.record,
+        multiparty_pvp_utils_v001.leo/AuditRevealAnswer.record,
+        puzzle_pieces_v007.leo/JointPieceWinner.record,
+        puzzle_pieces_v007.leo/AuditJointPieceWinner.record,
+    )
+    {
 
-    //     let (joint_piece_winner, audit_joint_piece_winner): (JointPieceWinner, AuditJointPieceWinner) = puzzle_pieces_v007.leo/joint_stake_state_update(joint_piece_state, sig, );
+        let is_opponent_winner: bool = reveal_answer_notification_record.opponent_answer == answer_record.answer;
+
+        let winner_address: address = determine_winner(is_opponent_winner, answer_record.challenger_address, answer_record.opponent_address);
+
+        // retrieve revealedanswer record
+        let (revealed_answer_record, audit_revealed_answer_record): (RevealAnswer, AuditRevealAnswer) = multiparty_pvp_utils_v001.leo/reveal_answer(answer_record, sig);
+
+        let (joint_piece_winner, audit_joint_piece_winner): (JointPieceWinner, AuditJointPieceWinner) = puzzle_pieces_v007.leo/joint_stake_state_update(joint_piece_state, claim_signature, winner_address);
 
 
+        return (revealed_answer_record, audit_revealed_answer_record, joint_piece_winner, audit_joint_piece_winner);
+    }
 
-    //     return (revealed_answer_record, audit_revealed_answer_record);
+    inline determine_winner (is_opponent_winner: bool, challenger_address: address, opponent_address: address) -> address {
+        if (is_opponent_winner) {
+            return opponent_address;
+        } else {
+            return challenger_address;
+        }
+    }
+
+    transition finish_game
+    (
+
+    )
+    {
+
+    }
 
 
-    // }
+    // inline
 
     // transition timeout_claim_finish_game(
     //     puzzle_pieces_v007.leo/JointPieceTimeClaim.record,
