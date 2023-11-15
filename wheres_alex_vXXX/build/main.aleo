@@ -51,6 +51,24 @@ record WaitingAcceptanceNotification:
     challenger_address as address.private;
     opponent_address as address.private;
 
+record ChallengerWagerNotification:
+    owner as address.private;
+    game_multisig as address.private;
+    game_state as field.private;
+    your_turn as boolean.private;
+    total_pot as u64.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+
+record OpponentWagerNotification:
+    owner as address.private;
+    game_multisig as address.private;
+    game_state as field.private;
+    your_turn as boolean.private;
+    total_pot as u64.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+
 record WaitingRevealNotification:
     owner as address.private;
     game_multisig as address.private;
@@ -139,11 +157,17 @@ function submit_wager:
     gte r0.amount r5 into r13;
     assert.eq r13 true;
     call puzzle_pieces_v007.aleo/stake_transfer_in r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 into r14 r15 r16 r17 r18;
+    add r5 r5 into r19;
+    cast r2 r4 1field false r19 r2 r3 into r20 as ChallengerWagerNotification.record;
+    add r5 r5 into r21;
+    cast r3 r4 1field true r21 r2 r3 into r22 as OpponentWagerNotification.record;
     output r14 as puzzle_pieces_v007.aleo/PieceClaim.record;
     output r15 as puzzle_pieces_v007.aleo/PieceStake.record;
     output r16 as puzzle_pieces_v007.aleo/ClaimSignature.record;
     output r17 as puzzle_pieces_v007.aleo/Piece.record;
     output r18 as puzzle_pieces_v007.aleo/AuditStakeIn.record;
+    output r20 as ChallengerWagerNotification.record;
+    output r22 as OpponentWagerNotification.record;
 
 
 function accept_game:
@@ -174,3 +198,6 @@ finalize accept_game:
     add block.height 100u32 into r3;
     lte r0 r3 into r4;
     assert.eq r4 true;
+
+
+function reveal_answer:
