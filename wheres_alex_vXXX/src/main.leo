@@ -140,8 +140,19 @@ program wheres_alex_v001.aleo {
         opponent_answer: field,
     }
 
-    // sent to both opponent and challenger on reveal answer
-    record FinishGameNotification {
+    // sent to opponent on reveal answer for FE/client detection.
+    record GameFinishReqNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+    }
+
+    // sent to both opponent and challenger on finish game
+    record GameFinishedNotification {
         owner: address,
         game_multisig: address,
         game_state: field,
@@ -535,28 +546,39 @@ program wheres_alex_v001.aleo {
         multiparty_pvp_utils_v001.leo/AuditRevealAnswer.record,
         puzzle_pieces_v007.leo/JointPieceWinner.record,
         puzzle_pieces_v007.leo/AuditJointPieceWinner.record,
+        GameFinishReqNotification,
+        GameFinishReqNotification,
     )
     {
-
-        let is_opponent_winner: bool = reveal_answer_notification_record.opponent_answer == answer_record.answer;
-
-        let winner_address: address = determine_winner(is_opponent_winner, answer_record.challenger_address, answer_record.opponent_address);
+        // determine winner! If opponent correctly picked where the challenger hid alex, the opponent wins otherwise the challenger wins
+        let winner_address: address = reveal_answer_notification_record.opponent_answer == answer_record.answer ? answer_record.opponent_address : answer_record.challenger_address;
 
         // retrieve revealedanswer record
         let (revealed_answer_record, audit_revealed_answer_record): (RevealAnswer, AuditRevealAnswer) = multiparty_pvp_utils_v001.leo/reveal_answer(answer_record, sig);
 
         let (joint_piece_winner, audit_joint_piece_winner): (JointPieceWinner, AuditJointPieceWinner) = puzzle_pieces_v007.leo/joint_stake_state_update(joint_piece_state, claim_signature, winner_address);
 
+        let game_finish_req_notification_record_opponent: GameFinishReqNotification = GameFinishReqNotification {
+            owner: answer_record.opponent_address,
+            game_multisig: answer_record.game_address,
+            game_state: 2field,
+            your_turn: true,
+            total_pot: joint_piece_state.amount,
+            challenger_address: answer_record.challenger_address,
+            opponent_address: answer_record.opponent_address,
+        };
 
-        return (revealed_answer_record, audit_revealed_answer_record, joint_piece_winner, audit_joint_piece_winner);
-    }
+        let game_finish_req_notification_record_challenger: GameFinishReqNotification = GameFinishReqNotification{
+            owner: answer_record.challenger_address,
+            game_multisig: answer_record.game_address,
+            game_state: 2field,
+            your_turn: true,
+            total_pot: joint_piece_state.amount,
+            challenger_address: answer_record.challenger_address,
+            opponent_address: answer_record.opponent_address,
+        };
 
-    inline determine_winner (is_opponent_winner: bool, challenger_address: address, opponent_address: address) -> address {
-        if (is_opponent_winner) {
-            return opponent_address;
-        } else {
-            return challenger_address;
-        }
+        return (revealed_answer_record, audit_revealed_answer_record, joint_piece_winner, audit_joint_piece_winner, game_finish_req_notification_record_opponent, game_finish_req_notification_record_challenger);
     }
 
     // called by ms key to finish the game and get the total pot!
@@ -566,7 +588,7 @@ program wheres_alex_v001.aleo {
         joint_piece_winner: puzzle_pieces_v007.leo/JointPieceWinner.record,
         piece_joint_stake: puzzle_pieces_v007.leo/PieceJointStake.record,
         joint_piece_time_claim: puzzle_pieces_v007.leo/JointPieceTimeClaim.record,
-    ) -> (puzzle_pieces_v007.leo/Piece.record, puzzle_pieces_v007.leo/AuditTransferToWinner.record, Game)
+    ) -> (puzzle_pieces_v007.leo/Piece.record, puzzle_pieces_v007.leo/AuditTransferToWinner.record, Game, GameFinishedNotification, GameFinishedNotification)
     {
 
         let loser_address: address = joint_piece_winner.winner == game_record.challenger_address ? game_record.opponent_address : game_record.challenger_address;
@@ -588,7 +610,7 @@ program wheres_alex_v001.aleo {
             game_state: 3field
         };
 
-        let finish_game_notification_record_challenger: FinishGameNotification = FinishGameNotification {
+        let game_finished_notification_challenger_record: GameFinishedNotification = GameFinishedNotification {
             owner: game_record.challenger_address,
             game_multisig: game_record.game_multisig,
             game_state: 3field,
@@ -600,7 +622,7 @@ program wheres_alex_v001.aleo {
             loser: loser_address,
         };
 
-        let finish_game_notification_opponent: FinishGameNotification = FinishGameNotification {
+        let game_finished_notification_opponent_record: GameFinishedNotification = GameFinishedNotification {
             owner: game_record.opponent_address,
             game_multisig: game_record.game_multisig,
             game_state: 3field,
@@ -612,8 +634,7 @@ program wheres_alex_v001.aleo {
             loser: loser_address,
         };
 
-        return (piece_record, audit_transfer_to_winner_record, updated_game_record);
-
+        return (piece_record, audit_transfer_to_winner_record, updated_game_record, game_finished_notification_challenger_record, game_finished_notification_opponent_record);
     }
 
 
