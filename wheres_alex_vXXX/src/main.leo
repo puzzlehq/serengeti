@@ -140,6 +140,19 @@ program wheres_alex_v001.aleo {
         opponent_answer: field,
     }
 
+    // sent to both opponent and challenger on reveal answer
+    record FinishGameNotification {
+        owner: address,
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        winner: address,
+        loser: address,
+    }
+
     // record NotifyGameOver {
     //     private owner: address,
     //     private winner: address,
@@ -556,6 +569,8 @@ program wheres_alex_v001.aleo {
     ) -> (puzzle_pieces_v007.leo/Piece.record, puzzle_pieces_v007.leo/AuditTransferToWinner.record, Game)
     {
 
+        let loser_address: address = joint_piece_winner.winner == game_record.challenger_address ? game_record.opponent_address : game_record.challenger_address;
+
         let (piece_record, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v007.leo/joint_stake_transfer_to_winner(
             joint_piece_winner,
             piece_joint_stake,
@@ -571,6 +586,30 @@ program wheres_alex_v001.aleo {
             opponent_address: game_record.opponent_address,
             game_multisig: game_record.game_multisig,
             game_state: 3field
+        };
+
+        let finish_game_notification_record_challenger: FinishGameNotification = FinishGameNotification {
+            owner: game_record.challenger_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 3field,
+            your_turn: false,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.challenger_address,
+            winner: joint_piece_winner.winner,
+            loser: loser_address,
+        };
+
+        let finish_game_notification_opponent: FinishGameNotification = FinishGameNotification {
+            owner: game_record.opponent_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 3field,
+            your_turn: false,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.challenger_address,
+            winner: joint_piece_winner.winner,
+            loser: loser_address,
         };
 
         return (piece_record, audit_transfer_to_winner_record, updated_game_record);

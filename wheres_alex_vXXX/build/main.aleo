@@ -90,6 +90,17 @@ record RevealAnswerNotification:
     opponent_address as address.private;
     opponent_answer as field.private;
 
+record FinishGameNotification:
+    owner as address.private;
+    game_multisig as address.private;
+    game_state as field.private;
+    your_turn as boolean.private;
+    total_pot as u64.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+    winner as address.private;
+    loser as address.private;
+
 
 function propose_game:
     input r0 as puzzle_pieces_v007.aleo/Piece.record;
@@ -220,9 +231,16 @@ function reveal_answer_game:
 
 
 function finish_game:
-    input r0 as puzzle_pieces_v007.aleo/JointPieceWinner.record;
-    input r1 as puzzle_pieces_v007.aleo/PieceJointStake.record;
-    input r2 as puzzle_pieces_v007.aleo/JointPieceTimeClaim.record;
-    call puzzle_pieces_v007.aleo/joint_stake_transfer_to_winner r0 r1 r2 into r3 r4;
-    output r3 as puzzle_pieces_v007.aleo/Piece.record;
-    output r4 as puzzle_pieces_v007.aleo/AuditTransferToWinner.record;
+    input r0 as Game.record;
+    input r1 as puzzle_pieces_v007.aleo/JointPieceWinner.record;
+    input r2 as puzzle_pieces_v007.aleo/PieceJointStake.record;
+    input r3 as puzzle_pieces_v007.aleo/JointPieceTimeClaim.record;
+    is.eq r1.winner r0.challenger_address into r4;
+    ternary r4 r0.opponent_address r0.challenger_address into r5;
+    call puzzle_pieces_v007.aleo/joint_stake_transfer_to_winner r1 r2 r3 into r6 r7;
+    cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger_address r0.opponent_address r0.game_multisig 3field into r8 as Game.record;
+    cast r0.challenger_address r0.game_multisig 3field false r0.total_pot r0.challenger_address r0.challenger_address r1.winner r5 into r9 as FinishGameNotification.record;
+    cast r0.opponent_address r0.game_multisig 3field false r0.total_pot r0.challenger_address r0.challenger_address r1.winner r5 into r10 as FinishGameNotification.record;
+    output r6 as puzzle_pieces_v007.aleo/Piece.record;
+    output r7 as puzzle_pieces_v007.aleo/AuditTransferToWinner.record;
+    output r8 as Game.record;
