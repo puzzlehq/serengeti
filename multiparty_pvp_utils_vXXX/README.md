@@ -1,23 +1,14 @@
 # multiparty_pvp_utils_v001.aleo
 
-## NOTE: Different function executions require different keys (player 1, player 2, multisig keys). For testing purposes, you can run the below to switch execution keys.
-
-```
-echo "
-NETWORK=testnet3
-PRIVATE_KEY={MS_PK || P1_PK | P2_PK}
-" > .env
-```
-
 ## Functions
 
 ### stake_transfer_in
 
-`stake_transfer_in` to stake piece token into a game multisig/shared account.
+`mint_answer` mints answer record on propose_game, verifies a signature by the challenger
 
 Function:
 ```rust
-stake_transfer_in(
+mint_answer(
   piece_token: Piece,
   sender: address,
   challenger: address,
@@ -33,60 +24,29 @@ stake_transfer_in(
 )
 ```
 
-### stake_transfer_out
+### mint_multisig_key
 
-`stake_transfer_out` to stake piece token out of a game multisig/shared account.
+`mint_multisig_key` to mint the multisig key record with a seed
 
 Function:
 ```rust
-stake_transfer_out(
-  piece_stake: PieceStake,
-  piece_claim: PieceClaim,
+mint_multisig_key(
+  seed: field,
+  amount: u64,
+  challenger: address,
+  opponent: address,
+  game_multisig: address,
+)
+```
+
+## reveal_answer
+
+`reveal_answer` called by challenger to reveal the original answer to verify there was no cheating involved
+
+Function:
+```rust
+reveal_answer (
+  answer: Answer,
   sig: signature,
 )
 ```
-
-## transfer_stakes_to_joint
-
-`transfer_stakes_to_joint` to jointly stake piece token into the game multisig/shared account.
-
-Function:
-```rust
-transfer_stakes_to_joint (
-  piece_stake_challenger: PieceStake,
-  piece_claim_challenger: PieceClaim,
-  piece_stake_opponent: PieceStake,
-  piece_claim_opponent: PieceClaim,
-  block_ht: u32,
-)
-```
-
-### joint_stake_state_update
-
-`joint_stake_state_update` called by challenger to reveal answer in where's alex game
-
-Function:
-```rust
-joint_stake_state_update(
-  reveal_answer_notification_record: RevealAnswerNotification,
-  answer_record: multiparty_pvp_utils_v001.leo/Answer.record,
-  joint_piece_state: puzzle_pieces_v007.leo/JointPieceState.record,
-  claim_signature: puzzle_pieces_v007.leo/ClaimSignature.record,
-  sig: signature,
-)
-```
-
-
-### joint_stake_transfer_to_winner
-
-`joint_stake_transfer_to_winner` called by anyone with multisig key to end the game and transfer the pieces to the winner
-
-Function:
-```rust
-joint_stake_transfer_to_winner (
-  joint_piece_winner: JointPieceWinner,
-  piece_joint_stake: PieceJointStake,
-  joint_piece_time_claim: JointPieceTimeClaim,
-)
-```
-

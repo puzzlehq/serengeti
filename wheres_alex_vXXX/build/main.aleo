@@ -202,7 +202,8 @@ function accept_game:
     cast r0.opponent_address r0.owner 2field false r0.total_pot r0.challenger_address r0.opponent_address into r11 as WaitingRevealNotification.record;
     cast r0.challenger_address r0.owner 2field true r0.total_pot r0.challenger_address r0.opponent_address r1 into r12 as RevealAnswerNotification.record;
     cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger_address r0.opponent_address r0.game_multisig 2field into r13 as Game.record;
-    async accept_game r6 into r14;    output r7 as puzzle_pieces_v007.aleo/PieceJointStake.record;
+    async accept_game r6 into r14;
+    output r7 as puzzle_pieces_v007.aleo/PieceJointStake.record;
     output r8 as puzzle_pieces_v007.aleo/JointPieceTimeClaim.record;
     output r9 as puzzle_pieces_v007.aleo/JointPieceState.record;
     output r10 as puzzle_pieces_v007.aleo/AuditJointStake.record;
