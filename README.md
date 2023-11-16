@@ -1,5 +1,8 @@
 # wheres_alex_v001.aleo
 
+# ![image](https://github.com/puzzlehq/serengeti/assets/39972641/769497dc-308c-4a96-80a7-b3c0a92011cb)
+
+
 ## NOTE: Different function executions require different keys (player 1, player 2, multisig keys). For testing purposes, you can run the below to switch execution keys.
 
 
