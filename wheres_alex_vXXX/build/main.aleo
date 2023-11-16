@@ -227,6 +227,7 @@ function reveal_answer_game:
     input r2 as puzzle_pieces_v007.aleo/JointPieceState.record;
     input r3 as puzzle_pieces_v007.aleo/ClaimSignature.record;
     input r4 as signature.private;
+    assert.eq r2.state_updater_address self.signer;
     is.eq r0.opponent_answer r1.answer into r5;
     ternary r5 r1.opponent_address r1.challenger_address into r6;
     call multiparty_pvp_utils_v001.aleo/reveal_answer r1 r4 into r7 r8;

@@ -431,6 +431,7 @@ program wheres_alex_v001.aleo {
     }
     // todo: implement renege for opponent
 
+    // called by ms key after wager is confirmed on network
     transition accept_game
     (
         game_record: Game,
@@ -550,6 +551,8 @@ program wheres_alex_v001.aleo {
         GameFinishReqNotification,
     )
     {
+
+        assert_eq(joint_piece_state.state_updater_address, self.signer);
         // determine winner! If opponent correctly picked where the challenger hid alex, the opponent wins otherwise the challenger wins
         let winner_address: address = reveal_answer_notification_record.opponent_answer == answer_record.answer ? answer_record.opponent_address : answer_record.challenger_address;
 
