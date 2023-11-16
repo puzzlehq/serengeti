@@ -1,14 +1,5 @@
 # puzzle_pieces_v001.aleo
 
-## NOTE: Different function executions require different keys (player 1, player 2, multisig keys). For testing purposes, you can run the below to switch execution keys.
-
-```
-echo "
-NETWORK=testnet3
-PRIVATE_KEY={MS_PK || P1_PK | P2_PK}
-" > .env
-```
-
 ## Functions
 
 ### stake_transfer_in
