@@ -2,7 +2,7 @@
 
 ## NOTE: Different function executions require different keys (player 1, player 2, multisig keys). For testing purposes, you can run the below to switch execution keys.
 
-## We also have a `test.sh` script [here](https://github.com/puzzlehq/serengeti/blob/main/test.sh) that runs through all the flows.
+## We also have a `test.sh` script [here](https://github.com/puzzlehq/serengeti/blob/main/wheres_alex_vXXX/test.sh) that runs through all the flows.
 
 ```
 echo "
