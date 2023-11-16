@@ -2,6 +2,8 @@
 
 ## Functions
 
+## We also have a `test.sh` script [here](test.sh) that runs through all the flows.
+
 ### stake_transfer_in
 
 `mint_answer` mints answer record on propose_game, verifies a signature by the challenger

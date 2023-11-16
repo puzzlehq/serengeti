@@ -1,5 +1,7 @@
 # puzzle_pieces_v001.aleo
 
+## We also have a `test.sh` script [here](test.sh) that runs through all the flows.
+
 ## Functions
 
 ### stake_transfer_in
