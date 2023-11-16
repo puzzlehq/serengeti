@@ -220,3 +220,9 @@ function reveal_answer_game:
 
 
 function finish_game:
+    input r0 as puzzle_pieces_v007.aleo/JointPieceWinner.record;
+    input r1 as puzzle_pieces_v007.aleo/PieceJointStake.record;
+    input r2 as puzzle_pieces_v007.aleo/JointPieceTimeClaim.record;
+    call puzzle_pieces_v007.aleo/joint_stake_transfer_to_winner r0 r1 r2 into r3 r4;
+    output r3 as puzzle_pieces_v007.aleo/Piece.record;
+    output r4 as puzzle_pieces_v007.aleo/AuditTransferToWinner.record;

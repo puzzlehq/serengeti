@@ -509,7 +509,7 @@ program wheres_alex_v001.aleo {
         assert(block_ht <= current_block_ht + 100u32);
     }
 
-
+    // called by challenger to reveal answer record
     transition reveal_answer_game
     (
         reveal_answer_notification_record: RevealAnswerNotification,
@@ -546,29 +546,36 @@ program wheres_alex_v001.aleo {
         }
     }
 
+    // called by ms key to finish the game and get the total pot!
     transition finish_game
     (
-
-    )
+        game_record: Game,
+        joint_piece_winner: puzzle_pieces_v007.leo/JointPieceWinner.record,
+        piece_joint_stake: puzzle_pieces_v007.leo/PieceJointStake.record,
+        joint_piece_time_claim: puzzle_pieces_v007.leo/JointPieceTimeClaim.record,
+    ) -> (puzzle_pieces_v007.leo/Piece.record, puzzle_pieces_v007.leo/AuditTransferToWinner.record, Game)
     {
 
+        let (piece_record, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v007.leo/joint_stake_transfer_to_winner(
+            joint_piece_winner,
+            piece_joint_stake,
+            joint_piece_time_claim,
+        );
+
+        let updated_game_record: Game = Game {
+            owner: game_record.owner,
+            challenger_commit: game_record.challenger_commit,
+            opponent_answer: game_record.opponent_answer,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 3field
+        };
+
+        return (piece_record, audit_transfer_to_winner_record, updated_game_record);
+
     }
-
-
-    // inline
-
-    // transition timeout_claim_finish_game(
-    //     puzzle_pieces_v007.leo/JointPieceTimeClaim.record,
-
-    // ) -> Game {
-
-    // }
-
-    // finalize timeout_claim_finish_game(
-    //     claim_blockheight
-    // ) {
-    //     assert(block.height > claim_blockheight + 720)
-    // }
 
 
     // // todo: do we want to limit this fn call only to users or will we allow contracts to call?
