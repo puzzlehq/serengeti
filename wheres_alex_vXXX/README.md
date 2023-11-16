@@ -71,13 +71,13 @@ player_one_renege_proposal(
 Function:
 ```rust
 submit_wager(
-    private game_address: address,
-    private opponent: address,
-    private wager: puzzle_token.leo/Puzz.record,
-    private wager_amount: u64,
-    private nonce: field,
-    private msg: field,
-    private sig: signature,
+  game_address: address,
+  opponent: address,
+  wager: puzzle_token.leo/Puzz.record,
+  wager_amount: u64,
+  nonce: field,
+  msg: field,
+  sig: signature,
 )
 ```
 
