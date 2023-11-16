@@ -319,11 +319,8 @@ program wheres_alex_v001.aleo {
 
     transition submit_wager (
         wager_record: puzzle_pieces_v007.leo/Piece.record,
-        sender: address,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
-        amount: u64,
+        key_record: multiparty_pvp_utils_v001.leo/Key.record,
+        game_req_notification: GameReqNotification,
         message_1: field, //from output of useSignature
         message_2: field,
         message_3: field,
@@ -346,9 +343,9 @@ program wheres_alex_v001.aleo {
         assert_eq(self.caller, self.signer);
 
         // assert that the wager amount > 0 and wager inside credit == wager amt passed
-        assert(amount > 0u64);
-        // assert that the wager record has >= amount wagered
-        assert(wager_record.amount >= amount);
+        assert(wager_record.amount > 0u64);
+        // assert that the wager record has >= total pot / 2u64
+        assert(wager_record.amount >= game_req_notification.total_pot / 2u64);
 
         let (
             piece_claim,
@@ -364,11 +361,11 @@ program wheres_alex_v001.aleo {
             AuditStakeIn
         ) = puzzle_pieces_v007.leo/stake_transfer_in(
             wager_record,
-            sender,
-            challenger,
-            opponent,
-            game_multisig,
-            amount,
+            game_req_notification.opponent_address, // sender
+            game_req_notification.challenger_address, // challenger
+            game_req_notification.opponent_address,
+            game_req_notification.game_multisig,
+            game_req_notification.total_pot / 2u64, // divide total pot by 2
             message_1,
             message_2,
             message_3,
@@ -378,24 +375,24 @@ program wheres_alex_v001.aleo {
         );
 
         let challenger_submitted_wager_notification_record: ChallengerWagerNotification = ChallengerWagerNotification {
-            owner: challenger,
-            game_multisig: game_multisig,
+            owner: game_req_notification.challenger_address,
+            game_multisig: game_req_notification.game_multisig,
             game_state: 1field,
             your_turn: false,
-            total_pot: amount + amount,
-            challenger_address: challenger,
-            opponent_address: opponent,
+            total_pot: game_req_notification.total_pot,
+            challenger_address: game_req_notification.challenger_address,
+            opponent_address: game_req_notification.opponent_address,
 
         };
 
         let opponent_submitted_wager_notification_record: OpponentWagerNotification = OpponentWagerNotification {
-            owner: opponent,
-            game_multisig: game_multisig,
+            owner: game_req_notification.opponent_address,
+            game_multisig: game_req_notification.game_multisig,
             game_state: 1field,
             your_turn: true,
-            total_pot: amount + amount,
-            challenger_address: challenger,
-            opponent_address: opponent,
+            total_pot: game_req_notification.total_pot,
+            challenger_address: game_req_notification.challenger_address,
+            opponent_address: game_req_notification.opponent_address,
         };
 
         return (

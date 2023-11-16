@@ -143,34 +143,31 @@ function propose_game:
 
 function submit_wager:
     input r0 as puzzle_pieces_v007.aleo/Piece.record;
-    input r1 as address.private;
-    input r2 as address.private;
-    input r3 as address.private;
-    input r4 as address.private;
-    input r5 as u64.private;
+    input r1 as multiparty_pvp_utils_v001.aleo/Key.record;
+    input r2 as GameReqNotification.record;
+    input r3 as field.private;
+    input r4 as field.private;
+    input r5 as field.private;
     input r6 as field.private;
     input r7 as field.private;
-    input r8 as field.private;
-    input r9 as field.private;
-    input r10 as field.private;
-    input r11 as signature.private;
+    input r8 as signature.private;
     assert.eq self.caller self.signer;
-    gt r5 0u64 into r12;
-    assert.eq r12 true;
-    gte r0.amount r5 into r13;
-    assert.eq r13 true;
-    call puzzle_pieces_v007.aleo/stake_transfer_in r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 into r14 r15 r16 r17 r18;
-    add r5 r5 into r19;
-    cast r2 r4 1field false r19 r2 r3 into r20 as ChallengerWagerNotification.record;
-    add r5 r5 into r21;
-    cast r3 r4 1field true r21 r2 r3 into r22 as OpponentWagerNotification.record;
-    output r14 as puzzle_pieces_v007.aleo/PieceClaim.record;
-    output r15 as puzzle_pieces_v007.aleo/PieceStake.record;
-    output r16 as puzzle_pieces_v007.aleo/ClaimSignature.record;
-    output r17 as puzzle_pieces_v007.aleo/Piece.record;
-    output r18 as puzzle_pieces_v007.aleo/AuditStakeIn.record;
-    output r20 as ChallengerWagerNotification.record;
-    output r22 as OpponentWagerNotification.record;
+    gt r0.amount 0u64 into r9;
+    assert.eq r9 true;
+    div r2.total_pot 2u64 into r10;
+    gte r0.amount r10 into r11;
+    assert.eq r11 true;
+    div r2.total_pot 2u64 into r12;
+    call puzzle_pieces_v007.aleo/stake_transfer_in r0 r2.opponent_address r2.challenger_address r2.opponent_address r2.game_multisig r12 r3 r4 r5 r6 r7 r8 into r13 r14 r15 r16 r17;
+    cast r2.challenger_address r2.game_multisig 1field false r2.total_pot r2.challenger_address r2.opponent_address into r18 as ChallengerWagerNotification.record;
+    cast r2.opponent_address r2.game_multisig 1field true r2.total_pot r2.challenger_address r2.opponent_address into r19 as OpponentWagerNotification.record;
+    output r13 as puzzle_pieces_v007.aleo/PieceClaim.record;
+    output r14 as puzzle_pieces_v007.aleo/PieceStake.record;
+    output r15 as puzzle_pieces_v007.aleo/ClaimSignature.record;
+    output r16 as puzzle_pieces_v007.aleo/Piece.record;
+    output r17 as puzzle_pieces_v007.aleo/AuditStakeIn.record;
+    output r18 as ChallengerWagerNotification.record;
+    output r19 as OpponentWagerNotification.record;
 
 
 function accept_game:
