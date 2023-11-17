@@ -1,3 +1,8 @@
+<p align="center">
+  <img width="460" height="300" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/9650a6b8-5680-4a53-b6c6-608b8809d38e">
+</p>
+
+
 # About Where's Alex?
 Where's Alex is an experimental 1v1 game created by Puzzle to showcase how to solve issues with multiparty using multisigs and incentives!  <br />  <br />
 Challenge another address on Aleo to guess where you hid Alex and if they guess wrong, then you win! <br />  <br />
@@ -15,7 +20,7 @@ The game is split into 3 Leo Programs:
 2. Multiparty PVP utils program
 3. Where's Alex program
 
-<br /> <br />
+<br /> 
 
 If you're interested in building your own multiparty game on Aleo, fork this repo and give it a shot! 
 
@@ -26,7 +31,7 @@ If you're interested in building your own multiparty game on Aleo, fork this rep
 - hide alex in either the weeds or the bushes
 - set your wager amount to win if your opponent guesses wrong!
 
-<br /> <br />
+<br /> 
 
 2. Accepting a new game (opponent)
 - mint puzzle pieces if you don't have already
@@ -34,16 +39,12 @@ If you're interested in building your own multiparty game on Aleo, fork this rep
 - guess if alex is hiding in the weeds or the bushes
 - accept the game and lock in the wagers to win if you guess correct!
 
-<br /> <br />
+<br /> 
 
 3. Finishing a game (challenger)
 - Reveal your answer
 - Finish the geam and payout the wagers to you if the opponent guessed wrong or the opponent if they guessed right!
 
-
-
-
-<img width="1473" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/558600ef-7bec-4112-a081-c8b69ad9e64f">
 
 # How Where's Alex showcases how to solve issues in multiparty privacy
 
