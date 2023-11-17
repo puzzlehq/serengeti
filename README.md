@@ -149,7 +149,7 @@ player_one_renege_proposal(
 <img width="1001" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/6d2b5126-7c3d-4dd4-837b-629809d428a2">
 
 
-`submit_wager` to create a game with a friend.
+`submit_wager` to submit your wager to the game you received from the challenger.
 
 Function:
 ```rust
@@ -219,6 +219,11 @@ leo run player_two_renege_proposal "{
 ``` -->
 
 ### Step 3: multisig key used to lock wagers in accept_game()
+
+<img width="1418" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/129a3503-4f50-4f05-aac0-a599e589f040">
+
+`accept_game` to commit the wagers to the game and turn the game to the next step.
+
 ```rust
 accept_game (
   game_record: Game,
