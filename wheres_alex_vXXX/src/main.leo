@@ -93,6 +93,17 @@ program wheres_alex_v001.aleo {
         opponent_address: address,
     }
 
+    record StakeRenegedNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        renege_address: address,
+    }
+
     // sent to challenger on submit wager for FE/client detection.
     // consumed in reveal answer
     record ChallengerWagerNotification {
@@ -337,6 +348,49 @@ program wheres_alex_v001.aleo {
         );
     }
 
+    // challenger calls this function with Multisig key and signature as input
+    // that was submitted when proposing game and that exists on claim record
+    transition challenger_renege_stake
+    (
+        waiting_accept_game_notification: WaitingAcceptanceNotification,
+        piece_stake: puzzle_pieces_v007.leo/PieceStake.record,
+        piece_claim: puzzle_pieces_v007.leo/PieceClaim.record,
+        sig: signature,
+    ) -> (
+        puzzle_pieces_v007.leo/Piece.record,
+        puzzle_pieces_v007.leo/AuditStakeOut.record,
+        StakeRenegedNotification,
+        StakeRenegedNotification,
+        )
+    {
+        let (piece_record, audit_stake_out_record): (Piece, AuditStakeOut) = puzzle_pieces_v007.leo/stake_transfer_out(piece_stake, piece_claim, sig);
+
+        let notify_challenger_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
+            owner: waiting_accept_game_notification.challenger_address, //opponent
+            game_multisig: waiting_accept_game_notification.game_multisig,
+            game_state: 0field,
+            your_turn: false,
+            total_pot: waiting_accept_game_notification.total_pot,
+            challenger_address: waiting_accept_game_notification.challenger_address,
+            opponent_address: waiting_accept_game_notification.opponent_address,
+            renege_address: waiting_accept_game_notification.challenger_address,
+        };
+
+
+        let notify_opponent_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
+            owner: waiting_accept_game_notification.opponent_address, //opponent
+            game_multisig: waiting_accept_game_notification.game_multisig,
+            game_state: 0field,
+            your_turn: false,
+            total_pot: waiting_accept_game_notification.total_pot,
+            challenger_address: waiting_accept_game_notification.challenger_address,
+            opponent_address: waiting_accept_game_notification.opponent_address,
+            renege_address: waiting_accept_game_notification.challenger_address,
+        };
+
+        return (piece_record, audit_stake_out_record, notify_challenger_stake_reneged, notify_opponent_stake_reneged);
+
+    }
 
     // todo: implement renege for challenger
 

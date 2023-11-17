@@ -53,6 +53,16 @@ record WaitingAcceptanceNotification:
     challenger_address as address.private;
     opponent_address as address.private;
 
+record StakeRenegedNotification:
+    owner as address.private;
+    game_multisig as address.private;
+    game_state as field.private;
+    your_turn as boolean.private;
+    total_pot as u64.private;
+    challenger_address as address.private;
+    opponent_address as address.private;
+    renege_address as address.private;
+
 record ChallengerWagerNotification:
     owner as address.private;
     game_multisig as address.private;
@@ -159,6 +169,20 @@ function propose_game:
     output r34 as Game.record;
     output r30 as GameReqNotification.record;
     output r32 as WaitingAcceptanceNotification.record;
+
+
+function challenger_renege_stake:
+    input r0 as WaitingAcceptanceNotification.record;
+    input r1 as puzzle_pieces_v007.aleo/PieceStake.record;
+    input r2 as puzzle_pieces_v007.aleo/PieceClaim.record;
+    input r3 as signature.private;
+    call puzzle_pieces_v007.aleo/stake_transfer_out r1 r2 r3 into r4 r5;
+    cast r0.challenger_address r0.game_multisig 0field false r0.total_pot r0.challenger_address r0.opponent_address r0.challenger_address into r6 as StakeRenegedNotification.record;
+    cast r0.opponent_address r0.game_multisig 0field false r0.total_pot r0.challenger_address r0.opponent_address r0.challenger_address into r7 as StakeRenegedNotification.record;
+    output r4 as puzzle_pieces_v007.aleo/Piece.record;
+    output r5 as puzzle_pieces_v007.aleo/AuditStakeOut.record;
+    output r6 as StakeRenegedNotification.record;
+    output r7 as StakeRenegedNotification.record;
 
 
 function submit_wager:
