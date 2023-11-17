@@ -29,7 +29,7 @@ Multiparty privacy suffers from 3 problems
 We can understand these problems specifically by looking at a game of online poker in web2.
 ![image](https://github.com/puzzlehq/serengeti/assets/39972641/01ceabd7-abb1-41bb-ba2f-773e3b6be0d5)
 
-1. Guarantees on privacy of data
+1. Guarantees on privacy of data<br />
 The terms of service, the auditing by government, and the enforcement of law on that online poker business by the company's operating jurisdiction is the only guarantee you get that your hand is private to other players and the dealer to make sure the game is fair.
 
 The most common complaint of online poker is that the game is rigged because other players can see your cards somehow to know to increase wager or fold.
