@@ -1,12 +1,82 @@
 # wheres_alex_v001.aleo
 
-# ![image](https://github.com/puzzlehq/serengeti/assets/39972641/769497dc-308c-4a96-80a7-b3c0a92011cb)
+The first 1v1 game on Aleo where the entire game is private to the world!
+
+Challenge another address on Aleo to guess where you hid Alex and if they guess wrong, then you win!
+
+<img width="1473" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/558600ef-7bec-4112-a081-c8b69ad9e64f">
+
+# Where's Alex & showcases how to solve issues in multiparty privacy
+
+## Defining Multiparty Privacy
+Multiparty privacy is a broad category
+
+One category of multiparty privacy is n:1 is like a company's bank account
+You want to keep the account balance and action private to everyone outside of the _n_ people in the bank account.
+A company's bank account is multiparty and private -- _n_ people have ability to view/share an account and it requires _t_ approvals to do an action on one account.
 
 
-## NOTE: Different function executions require different keys (player 1, player 2, multisig keys). For testing purposes, you can run the below to switch execution keys.
+Another category of multiparty privacy is 1:1 is like a game like Guess Who?
+The game is multiparty and may/may not be private to others outside of the two players, but each player wants to keep certain information private from everyone else. 
+![image](https://github.com/puzzlehq/serengeti/assets/39972641/cf60c961-a96f-4814-8a6c-d1d9573c1f16)
+
+## The main issues with multiparty privacy
+Multiparty privacy suffers from 3 problems
+1. Guarantees on privacy of data
+2. Guarantees on routing of information between parties
+3. Multiparty computation attacks: timeout and denial of service
+
+We can understand these problems specifically by looking at a game of online poker in web2.
+![image](https://github.com/puzzlehq/serengeti/assets/39972641/01ceabd7-abb1-41bb-ba2f-773e3b6be0d5)
+
+1. Guarantees on privacy of data
+The terms of service, the auditing by government, and the enforcement of law on that online poker business by the company's operating jurisdiction is the only guarantee you get that your hand is private to other players and the dealer to make sure the game is fair.
+
+The most common complaint of online poker is that the game is rigged because other players can see your cards somehow to know to increase wager or fold.
+
+2. Guarantees on routing of information between parties
+The terms of service, the auditing by government, and the enforcement of law on that online poker business by the company's operating jurisdiction is the only guarantee you get that your actions to up a bet, match wager, or fold is actually carried out.
+
+Another common complaint of online poker is that the game lags or fails to record your action and folds your hand or matches your wager when you didn't want it to.
+
+3. Multiparty computation attacks: timeout and denial of service
+These attacks currently have no mitigation
+- if the online poker site shuts down, then you have no mitigation
+- if the opponent rage quits, then you have no mitigation
+
+These are the last most common complaints of an online poker game -- opponents will rage quit or the online poker service may fail/shut down mid game.
 
 
-## We also have a `test.sh` script [here](./wheres_alex_vXXX/test.sh) that runs through all the flows.
+## How Where's Alex solves the issues with multiparty privacy
+1. Guarantees on privacy of data
+In private/public ZKP blockchains like Aleo, your data is guaranteed to be private to other players in the game as long as they don't have your private keys and that the smart contract/program functions don't reveal your data to others.
+
+This alleviates the concern that the game is rigged because you have guarantees your information is hidden and can verify yourself.
+
+2. Guarantees on routing of information between parties
+Puzzle's SDK has operations to CreateSharedState and ImportSharedState that work with Puzzle Wallet to create multisig keys and import multisig keys for generating a place to send information to parties in a game.
+In private/public ZKP blockchains like Aleo, your information is recorded onchain and guaranteed to be available to anyone that runs or communicates with a node.
+Additionally, Puzzle wallet makes it easy for you to find your game state that's recorded on chain.
+
+This alleviates the concern that your actions will be carried out and reach the other parties -- you can verify that it has been processed on chain.
+
+3. Multiparty computation attacks: timeout and denial of service
+The secret sauce of Where's Alex is solving the rage-quit or denial of service problem with incentive engineering.
+
+This is done by forcing a challenger to commit a wager to a 2/2 multisig between the challenger & opponent when proposing a game.
+Once the opponent accepts the game and submits their guess -- the challenger's wager is locked and will be lost if the challenger rage quits or never reveals the answer.
+Importantly -- thanks to programmability of the multisig -- there are exit routes the challenger can take to retrieve their funds from the multisig if the opponent rejects or never responds so it's not stuck at the beginning as well.
+
+
+# Walking through the where's alex program step-by-step
+
+## High level overview of where's alex program
+<img width="792" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/b5c0f35c-a91f-4b9d-a233-3191ddbc8265">
+
+
+NOTE: Different function executions require different keys (player 1, player 2, multisig keys). For testing purposes, you can run the below to switch execution keys.
+
+We also have a `test.sh` script [here](./wheres_alex_vXXX/test.sh) that runs through all the flows.
 
 ```
 echo "
@@ -15,11 +85,15 @@ PRIVATE_KEY={MS_PK || P1_PK | P2_PK}
 " > .env
 ```
 
-## Functions
+## Steps
 
-### propose_game
+### Step 1: challenger calls propose_game
+<img width="917" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/70ebabdf-eab9-4c5e-ad69-e5eb0fa4f462">
+
 
 `propose_game` to create a game with a friend.
+
+This will involve creating a 2/2 multisig and staking funds to the private 2/2 multisig between the challenger and their opponent for the game (solving problem #3 mentioned above).
 
 Function:
 ```rust
@@ -70,7 +144,10 @@ player_one_renege_proposal(
 )
 ``` -->
 
-### submit_wager
+### Step 2: opponent starts to accept game by calling submit_wager()
+
+<img width="1001" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/6d2b5126-7c3d-4dd4-837b-629809d428a2">
+
 
 `submit_wager` to create a game with a friend.
 
@@ -141,7 +218,7 @@ leo run player_two_renege_proposal "{
 }" 1u64
 ``` -->
 
-## accept_game
+### Step 3: multisig key used to lock wagers in accept_game()
 ```rust
 accept_game (
   game_record: Game,
