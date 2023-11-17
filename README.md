@@ -1,4 +1,4 @@
-# wheres_alex_v001.aleo
+# About Where's Alex
 
 The first 1v1 game on Aleo where the entire game is private to the world!
 
