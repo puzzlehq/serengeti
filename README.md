@@ -1,7 +1,7 @@
 # About Where's Alex?
-Where's Alex is an experimental 1v1 game created by Puzzle to showcase how to solve issues with multiparty using multisigs and incentives!  <br />
-Challenge another address on Aleo to guess where you hid Alex and if they guess wrong, then you win! <br />
-It's the first 1v1 game on Aleo where the entire game is private to the world using programmable private multisigs. <br />
+Where's Alex is an experimental 1v1 game created by Puzzle to showcase how to solve issues with multiparty using multisigs and incentives!  <br />  <br />
+Challenge another address on Aleo to guess where you hid Alex and if they guess wrong, then you win! <br />  <br />
+It's the first 1v1 game on Aleo where the entire game is private to the world using programmable private multisigs. <br />  <br />
 
 ## So what's the point of the game?
 Have fun with other members of the Aleo community, rack up some wins and rack up some puzzle pieces! <br />
