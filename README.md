@@ -4,31 +4,37 @@ Challenge another address on Aleo to guess where you hid Alex and if they guess 
 It's the first 1v1 game on Aleo where the entire game is private to the world using programmable private multisigs. <br />  <br />
 
 ## So what's the point of the game?
-Have fun with other members of the Aleo community, rack up some wins and rack up some puzzle pieces! <br />
+Have fun with other members of the Aleo community, rack up some wins and rack up some puzzle pieces! <br />  <br />
 The puzzle pieces don't mean anything and can be minted if you are running low -- they are just for fun to experiment with Leo token standards on what's necessary for programmbale private multisigs.
 
 
 ## How does the game work?
-The FE for the game utilizes key multisig features using the Puzzle Wallet and Puzzle SDK. <br />
+The FE for the game utilizes key multisig features using the Puzzle Wallet and Puzzle SDK. <br /> <br />
 The game is split into 3 Leo Programs:
 1. Puzzle Pieces token program (with _n_ of _n_ programmable multisig functions)
 2. Multiparty PVP utils program
 3. Where's Alex program
 
+<br /> <br />
+
 If you're interested in building your own multiparty game on Aleo, fork this repo and give it a shot! 
 
 # How to play Where's Alex
 1. Starting a new game (challenger)
-- mint Puzzle Pieces if you don't already
+- mint Puzzle Pieces if you don't have already
 - challenge another Aleo address
 - hide alex in either the weeds or the bushes
 - set your wager amount to win if your opponent guesses wrong!
 
+<br /> <br />
+
 2. Accepting a new game (opponent)
-- mint puzzle pieces if you don't already
+- mint puzzle pieces if you don't have already
 - match wager from the challenger
 - guess if alex is hiding in the weeds or the bushes
 - accept the game and lock in the wagers to win if you guess correct!
+
+<br /> <br />
 
 3. Finishing a game (challenger)
 - Reveal your answer
