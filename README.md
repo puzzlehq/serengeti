@@ -24,48 +24,51 @@ The game is multiparty and may/may not be private to others outside of the two p
 Multiparty privacy suffers from 3 problems
 1. Guarantees on privacy of data
 2. Guarantees on routing of information between parties
-3. Multiparty computation attacks: timeout and denial of service
+3. Multiparty computation attacks: timeout, collusion, and denial of service
 
 We can understand these problems specifically by looking at a game of online poker in web2.
 ![image](https://github.com/puzzlehq/serengeti/assets/39972641/01ceabd7-abb1-41bb-ba2f-773e3b6be0d5)
 
-1. Guarantees on privacy of data<br />
+**1. Guarantees on privacy of data** <br />
 The terms of service, the auditing by government, and the enforcement of law on that online poker business by the company's operating jurisdiction is the only guarantee you get that your hand is private to other players and the dealer to make sure the game is fair.
 
 The most common complaint of online poker is that the game is rigged because other players can see your cards somehow to know to increase wager or fold.
 
-2. Guarantees on routing of information between parties
+**2. Guarantees on routing of information between parties** <br />
 The terms of service, the auditing by government, and the enforcement of law on that online poker business by the company's operating jurisdiction is the only guarantee you get that your actions to up a bet, match wager, or fold is actually carried out.
 
 Another common complaint of online poker is that the game lags or fails to record your action and folds your hand or matches your wager when you didn't want it to.
 
-3. Multiparty computation attacks: timeout and denial of service
+**3. Multiparty computation attacks: timeout and denial of service** <br />
 These attacks currently have no mitigation
 - if the online poker site shuts down, then you have no mitigation
 - if the opponent rage quits, then you have no mitigation
+- if players collude, you have no mitigation or recourse
 
 These are the last most common complaints of an online poker game -- opponents will rage quit or the online poker service may fail/shut down mid game.
 
 
 ## How Where's Alex solves the issues with multiparty privacy
-1. Guarantees on privacy of data
+**1. Guarantees on privacy of data** <br />
 In private/public ZKP blockchains like Aleo, your data is guaranteed to be private to other players in the game as long as they don't have your private keys and that the smart contract/program functions don't reveal your data to others.
 
 This alleviates the concern that the game is rigged because you have guarantees your information is hidden and can verify yourself.
 
-2. Guarantees on routing of information between parties
+**2. Guarantees on routing of information between parties** <br />
 Puzzle's SDK has operations to CreateSharedState and ImportSharedState that work with Puzzle Wallet to create multisig keys and import multisig keys for generating a place to send information to parties in a game.
 In private/public ZKP blockchains like Aleo, your information is recorded onchain and guaranteed to be available to anyone that runs or communicates with a node.
 Additionally, Puzzle wallet makes it easy for you to find your game state that's recorded on chain.
 
 This alleviates the concern that your actions will be carried out and reach the other parties -- you can verify that it has been processed on chain.
 
-3. Multiparty computation attacks: timeout and denial of service
-The secret sauce of Where's Alex is solving the rage-quit or denial of service problem with incentive engineering.
+**3. Multiparty computation attacks: timeout and denial of service** <br />
+The secret sauce of Where's Alex is solving the rage-quit, colllusion and denial of service problem with incentive engineering and game design..
 
 This is done by forcing a challenger to commit a wager to a 2/2 multisig between the challenger & opponent when proposing a game.
 Once the opponent accepts the game and submits their guess -- the challenger's wager is locked and will be lost if the challenger rage quits or never reveals the answer.
 Importantly -- thanks to programmability of the multisig -- there are exit routes the challenger can take to retrieve their funds from the multisig if the opponent rejects or never responds so it's not stuck at the beginning as well.
+Because the game is a simple 1v1 -- we also don't have to worry about the collusion risk as well.
+
 
 
 # Walking through the where's alex program step-by-step
