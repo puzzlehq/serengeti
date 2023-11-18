@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="460" height="300" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/9650a6b8-5680-4a53-b6c6-608b8809d38e">
+  <img width="800" height="400" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/9650a6b8-5680-4a53-b6c6-608b8809d38e">
 </p>
 
 
@@ -51,14 +51,17 @@ If you're interested in building your own multiparty game on Aleo, fork this rep
 ## Defining Multiparty Privacy
 Multiparty privacy is a broad category
 
-One category of multiparty privacy is n:1 is like a company's bank account
-You want to keep the account balance and action private to everyone outside of the _n_ people in the bank account.
+One category of multiparty privacy is n:1 like a company's bank account <br /> <br />
+You want to keep the account balance and action private to everyone outside of the _n_ people in the bank account. <br /> <br /
 A company's bank account is multiparty and private -- _n_ people have ability to view/share an account and it requires _t_ approvals to do an action on one account.
 
 
 Another category of multiparty privacy is 1:1 is like a game like Guess Who?
 The game is multiparty and may/may not be private to others outside of the two players, but each player wants to keep certain information private from everyone else. 
-![image](https://github.com/puzzlehq/serengeti/assets/39972641/cf60c961-a96f-4814-8a6c-d1d9573c1f16)
+
+<p align="center">
+  <img width="800" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/cf60c961-a96f-4814-8a6c-d1d9573c1f16">
+</p>
 
 ## The main issues with multiparty privacy
 Multiparty privacy suffers from 3 problems
@@ -67,7 +70,9 @@ Multiparty privacy suffers from 3 problems
 3. Multiparty computation attacks: timeout, collusion, and denial of service
 
 We can understand these problems specifically by looking at a game of online poker in web2.
-![image](https://github.com/puzzlehq/serengeti/assets/39972641/01ceabd7-abb1-41bb-ba2f-773e3b6be0d5)
+<p align="center">
+  <img width="800" height="400" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/01ceabd7-abb1-41bb-ba2f-773e3b6be0d5">
+</p>
 
 **1. Guarantees on privacy of data** <br />
 The terms of service, the auditing by government, and the enforcement of law on that online poker business by the company's operating jurisdiction is the only guarantee you get that your hand is private to other players and the dealer to make sure the game is fair.
