@@ -1,21 +1,25 @@
-<p align="center">
-  <img width="800" height="400" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/9650a6b8-5680-4a53-b6c6-608b8809d38e">
-</p>
+[<img src="https://github.com/puzzlehq/serengeti/assets/39972641/9650a6b8-5680-4a53-b6c6-608b8809d38e">](https://wheresalex.puzzle.online/)
 
 
 # About Where's Alex?
-Where's Alex is an experimental 1v1 game created by Puzzle to showcase how to solve issues with multiparty using multisigs and incentives!  <br />  <br />
-Challenge another address on Aleo to guess where you hid Alex and if they guess wrong, then you win! <br />  <br />
-It's the first 1v1 game on Aleo where the entire game is private to the world using programmable private multisigs. <br />  <br />
+Where's Alex? is a fun experiment that aims to be a fun 1v1 game to showcase how to have a completely private multiparty game on Aleo! This technical overview reviews the issues with multiparty privacy and how this is solved using programmable private multisigs and incentives!
+
+<br />  <br />
+
+## What is the "Where's Alex?" game?
+Challenge another person on Aleo with a wager to guess where you hid Alex and if they guess wrong, then you win the prize pot! 
 
 ## So what's the point of the game?
-Have fun with other members of the Aleo community, rack up some wins and rack up some puzzle pieces! <br />  <br />
+Have fun with other members of the Aleo community, rack up some wins and rack up some puzzle pieces! 
+
+<br />  <br />
+
 The puzzle pieces don't mean anything and can be minted if you are running low -- they are just for fun to experiment with Leo token standards on what's necessary for programmbale private multisigs.
 
 
 ## How does the game work?
-The FE for the game utilizes key multisig features using the Puzzle Wallet and Puzzle SDK. <br /> <br />
-The game is split into 3 Leo Programs:
+The FE for the game utilizes key multisig features using the Puzzle Wallet and Puzzle SDK described below. <br /> <br />
+The game is split into 3 Leo Programs described below:
 1. Puzzle Pieces token program (with _n_ of _n_ programmable multisig functions)
 2. Multiparty PVP utils program
 3. Where's Alex program
@@ -114,15 +118,15 @@ Once the opponent accepts the game and submits their guess -- the challenger's w
 Importantly -- thanks to programmability of the multisig -- there are exit routes the challenger can take to retrieve their funds from the multisig if the opponent rejects or never responds so it's not stuck at the beginning as well.
 Because the game is a simple 1v1 -- we also don't have to worry about the collusion risk as well.
 
+# How Where's Alex works
 
-
-# Walking through the where's alex program step-by-step
-
-## High level overview of where's alex program
+## High level overview of Where's Alex Leo program on Aleo
 <img width="792" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/b5c0f35c-a91f-4b9d-a233-3191ddbc8265">
 
 
 NOTE: Different function executions require different keys (player 1, player 2, multisig keys). For testing purposes, you can run the below to switch execution keys.
+
+<br /><br />
 
 We also have a `test.sh` script [here](./wheres_alex_vXXX/test.sh) that runs through all the flows.
 
@@ -132,10 +136,15 @@ NETWORK=testnet3
 PRIVATE_KEY={MS_PK || P1_PK | P2_PK}
 " > .env
 ```
+## High level overview of Where's Alex with the Puzzle Wallet and Puzzle SDK
 
-## Steps
 
-### Step 1: challenger calls propose_game
+
+# Walking through the Where's Alex Leo programs
+
+Note: There is additional technical functionality in the wheres_alex program for better FE UX and notification enablement that is not explained in detail below.
+
+## Step 1: challenger calls propose_game
 <img width="917" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/70ebabdf-eab9-4c5e-ad69-e5eb0fa4f462">
 
 
@@ -192,7 +201,7 @@ player_one_renege_proposal(
 )
 ``` -->
 
-### Step 2: opponent starts to accept game by calling submit_wager()
+## Step 2: Opponent starts to accept game by calling submit_wager() with their key
 
 <img width="1001" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/6d2b5126-7c3d-4dd4-837b-629809d428a2">
 
@@ -266,7 +275,7 @@ leo run player_two_renege_proposal "{
 }" 1u64
 ``` -->
 
-### Step 3: multisig key used to lock wagers in accept_game()
+## Step 3: Opponent uses multisig key to lock wagers in with accept_game()
 
 <img width="1418" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/129a3503-4f50-4f05-aac0-a599e589f040">
 
@@ -297,9 +306,11 @@ leo run accept_game "{
 }" 1field
 ``` -->
 
-### reveal_answer
+## Step 4: Challenger updates game & joint stake to finish state with reveal_answer()
+<img width="1183" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/288b92b5-9659-4fc7-a719-12ffb9be8f8a">
 
-`reveal_answer` to reveal answer record to prove player 1 won or lost.
+
+`reveal_answer` to reveal answer record and whether player 1 won or lost.
 
 Function:
 ```rust
@@ -335,7 +346,9 @@ leo run reveal_answer "{
 }" aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu aleo1muq22xpnzgaeqez0mgkdcau6kcjpk6ztey0u8yv34zcupk3hpczsmxeaww
 ``` -->
 
-### finish_game
+## Step 5: Challenger uses multisig key to send payouts to winner with finish_game()
+<img width="969" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/590e8fb4-c03f-4e5c-9a62-63608730b39b">
+
 
 `finish_game` to finish game
 
@@ -407,9 +420,13 @@ leo run claim_total_pot "{                                                      
 }"
 ``` -->
 
-# puzzle_pieces_v001.aleo
+# Functions in the puzzle_pieces_v001.leo Program
 
-## Functions
+All functions below are used in the wheres_alex program as multisig rules for puzzle pieces in the where's alex game.
+
+<br /><br />
+
+Note: There is additional technical functionality in the wheres_alex program for better FE UX and notification enablement that is not explained in detail below.
 
 ### stake_transfer_in
 
@@ -491,11 +508,15 @@ joint_stake_transfer_to_winner (
 ```
 
 
-# multiparty_pvp_utils_v001.aleo
+# Functions in the multiparty_pvp_utils_v001.leo Program
 
-## Functions
+All functions below are used in the wheres_alex program as multisig key routing and answer state function for game state in the where's alex game.
 
-### stake_transfer_in
+<br /><br />
+
+Note: There is additional technical functionality in the wheres_alex program for better FE UX and notification enablement that is not explained in detail below.
+
+### mint_answer
 
 `mint_answer` mints answer record on propose_game, verifies a signature by the challenger
 
