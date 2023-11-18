@@ -138,6 +138,9 @@ PRIVATE_KEY={MS_PK || P1_PK | P2_PK}
 ```
 ## High level overview of Where's Alex with the Puzzle Wallet and Puzzle SDK
 
+<img width="757" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/74b3a692-3b80-4c40-90b6-44307d9a4c1e">
+
+More information on the Puzzle Wallet and Puzzle SDK can be found [here](https://docs.puzzle.online/)
 
 
 # Walking through the Where's Alex Leo programs
