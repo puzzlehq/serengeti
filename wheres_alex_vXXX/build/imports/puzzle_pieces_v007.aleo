@@ -334,5 +334,13 @@ function joint_timeout_to_opponent:
     assert.eq r1.time_claimer_address r0.time_claimer_address;
     cast r1.time_claimer_address r1.amount 0u32 into r3 as Piece.record;
     cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r1.challenger r1.time_claimer_address r1.game_multisig r1.time_claimer_address r1.amount 14u32 into r4 as AuditTransferToWinner.record;
+    async joint_timeout_to_opponent r1.block_ht into r5;
     output r3 as Piece.record;
     output r4 as AuditTransferToWinner.record;
+    output r5 as puzzle_pieces_v007.aleo/joint_timeout_to_opponent.future;
+
+finalize joint_timeout_to_opponent:
+    input r0 as u32.public;
+    add r0 1000u32 into r1;
+    gte block.height r1 into r2;
+    assert.eq r2 true;

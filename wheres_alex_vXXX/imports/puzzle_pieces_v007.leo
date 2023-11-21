@@ -707,22 +707,18 @@ program puzzle_pieces_v007.aleo {
 
 
 
-        return (piece_to_winner, audit_record);
-
-        // todo: settle on finalize logic
-        // then finalize(joint_piece_time_claim.block_ht);
-
+        return (piece_to_winner, audit_record) then finalize(joint_piece_time_claim.block_ht);
     }
 
-    // mapping finalize joint_stake_timeout_transfer_to_opponent
-    // (
-
-    // )
-    // {
-    //     let current_block_ht: u32 = block.height;
-    //     assert(block_ht >= current_block_ht - 100u32);
-    //     assert(block_ht <= current_block_ht + 100u32);
-    // }
+    finalize joint_timeout_to_opponent
+    (
+        joint_time_claim_block_ht: u32,
+    )
+    {
+        // assert that 1000 blocks have passed (~ 83 minutes)
+        let current_block_ht: u32 = block.height;
+        assert(current_block_ht >= joint_time_claim_block_ht + 1000u32);
+    }
 
     // // TODO -- enforcement fxn against blockheight fraud for auditor to reclaim tokens and distribute
     // transition auditor_find_blockheight_fraud(
