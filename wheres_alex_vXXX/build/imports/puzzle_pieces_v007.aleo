@@ -328,12 +328,16 @@ function joint_stake_transfer_to_winner:
 
 
 function joint_timeout_to_opponent:
-    input r0 as PieceJointStake.record;
+    input r0 as JointPieceState.record;
     input r1 as JointPieceTimeClaim.record;
     input r2 as signature.private;
+    assert.eq r1.owner r0.owner;
+    assert.eq r1.amount r0.amount;
+    assert.eq r1.challenger r0.challenger;
+    assert.eq r1.opponent r0.opponent;
     assert.eq r1.time_claimer_address r0.time_claimer_address;
-    cast r1.time_claimer_address r1.amount 0u32 into r3 as Piece.record;
-    cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r1.challenger r1.time_claimer_address r1.game_multisig r1.time_claimer_address r1.amount 14u32 into r4 as AuditTransferToWinner.record;
+    cast r1.time_claimer_address r0.amount 0u32 into r3 as Piece.record;
+    cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r0.challenger r1.time_claimer_address r0.owner r1.time_claimer_address r0.amount 14u32 into r4 as AuditTransferToWinner.record;
     async joint_timeout_to_opponent r1.block_ht into r5;
     output r3 as Piece.record;
     output r4 as AuditTransferToWinner.record;

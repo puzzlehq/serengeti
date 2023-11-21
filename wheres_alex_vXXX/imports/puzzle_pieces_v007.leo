@@ -673,7 +673,7 @@ program puzzle_pieces_v007.aleo {
     // TODO: Also note audit view can enforce a block_ht that's faulty
     //
     transition joint_timeout_to_opponent (
-        piece_joint_stake: PieceJointStake,
+        joint_piece_state: JointPieceState,
         joint_piece_time_claim: JointPieceTimeClaim,
         sig: signature,
     ) -> (Piece, AuditTransferToWinner)
@@ -681,13 +681,25 @@ program puzzle_pieces_v007.aleo {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
+        // 1. Check that all are from the same multisig
+        let game_multisig: address = joint_piece_state.owner;
+        assert_eq(joint_piece_time_claim.owner, game_multisig);
 
-        assert_eq(joint_piece_time_claim.time_claimer_address, piece_joint_stake.time_claimer_address);
+        // 2. Check that the game state is the same for all
+        let amount: u64 = joint_piece_state.amount;
+        assert_eq(joint_piece_time_claim.amount, amount);
 
+        // 2. Check that the game state is the same for all
+        let challenger: address = joint_piece_state.challenger;
+        assert_eq(joint_piece_time_claim.challenger, challenger);
+
+        let opponent: address = joint_piece_state.opponent;
+        assert_eq(joint_piece_time_claim.opponent, opponent);
+
+        assert_eq(joint_piece_time_claim.time_claimer_address, joint_piece_state.time_claimer_address);
+
+        // Check that winner is challenger or opponent
         let winner: address = joint_piece_time_claim.time_claimer_address;
-        let amount: u64 = joint_piece_time_claim.amount;
-        let challenger: address = joint_piece_time_claim.challenger;
-        let game_multisig: address = joint_piece_time_claim.game_multisig;
 
         let piece_to_winner: Piece = Piece {
             owner: winner,
@@ -705,8 +717,6 @@ program puzzle_pieces_v007.aleo {
             ix: 14u32
         };
 
-
-
         return (piece_to_winner, audit_record) then finalize(joint_piece_time_claim.block_ht);
     }
 
@@ -719,17 +729,4 @@ program puzzle_pieces_v007.aleo {
         let current_block_ht: u32 = block.height;
         assert(current_block_ht >= joint_time_claim_block_ht + 1000u32);
     }
-
-    // // TODO -- enforcement fxn against blockheight fraud for auditor to reclaim tokens and distribute
-    // transition auditor_find_blockheight_fraud(
-    //     audit_piece_timeout_record: AuditJointStake,
-    //     audit_claim_record: PieceJointStake
-    // ) finalize check_mapping function block.height
-
-    // // TODO -- enforcement fxn against answer fraud for auditor to reclaim tokens and distribute
-    // transition auditor_find_answer_fraud(
-    //     audit_state_piece_update
-    //     audit_alkdjfalkjdalkjsd
-    // )
-
 }
