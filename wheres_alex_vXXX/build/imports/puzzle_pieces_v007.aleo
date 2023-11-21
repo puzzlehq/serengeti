@@ -325,3 +325,14 @@ function joint_stake_transfer_to_winner:
     cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r0.challenger r0.opponent r0.owner r0.winner r0.amount 14u32 into r12 as AuditTransferToWinner.record;
     output r11 as Piece.record;
     output r12 as AuditTransferToWinner.record;
+
+
+function joint_timeout_to_opponent:
+    input r0 as PieceJointStake.record;
+    input r1 as JointPieceTimeClaim.record;
+    input r2 as signature.private;
+    assert.eq r1.time_claimer_address r0.time_claimer_address;
+    cast r1.time_claimer_address r1.amount 0u32 into r3 as Piece.record;
+    cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r1.challenger r1.time_claimer_address r1.game_multisig r1.time_claimer_address r1.amount 14u32 into r4 as AuditTransferToWinner.record;
+    output r3 as Piece.record;
+    output r4 as AuditTransferToWinner.record;

@@ -672,23 +672,56 @@ program puzzle_pieces_v007.aleo {
     //
     // TODO: Also note audit view can enforce a block_ht that's faulty
     //
-    // transition joint_stake_timeout_transfer_to_opponent(
-    //     piece_joint_stake: PieceJointStake,
-    //     joint_piece_time_claim: JointPieceTimeClaim
-    // ) -> Piece
-    // {
+    transition joint_timeout_to_opponent (
+        piece_joint_stake: PieceJointStake,
+        joint_piece_time_claim: JointPieceTimeClaim,
+        sig: signature,
+    ) -> (Piece, AuditTransferToWinner)
+    {
+        // set puzzle issuing address as issuer:
+        let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
+
+
+        assert_eq(joint_piece_time_claim.time_claimer_address, piece_joint_stake.time_claimer_address);
+
+        let winner: address = joint_piece_time_claim.time_claimer_address;
+        let amount: u64 = joint_piece_time_claim.amount;
+        let challenger: address = joint_piece_time_claim.challenger;
+        let game_multisig: address = joint_piece_time_claim.game_multisig;
+
+        let piece_to_winner: Piece = Piece {
+            owner: winner,
+            amount: amount,
+            ix: 0u32,
+        };
+
+        let audit_record: AuditTransferToWinner = AuditTransferToWinner {
+            owner: puzzle_issuer,
+            challenger: challenger,
+            opponent: winner,
+            game_multisig: game_multisig,
+            receiver: winner,
+            amount: amount,
+            ix: 14u32
+        };
 
 
 
+        return (piece_to_winner, audit_record);
 
-    // }
+        // todo: settle on finalize logic
+        // then finalize(joint_piece_time_claim.block_ht);
+
+    }
 
     // mapping finalize joint_stake_timeout_transfer_to_opponent
     // (
 
     // )
     // {
-
+    //     let current_block_ht: u32 = block.height;
+    //     assert(block_ht >= current_block_ht - 100u32);
+    //     assert(block_ht <= current_block_ht + 100u32);
     // }
 
     // // TODO -- enforcement fxn against blockheight fraud for auditor to reclaim tokens and distribute
