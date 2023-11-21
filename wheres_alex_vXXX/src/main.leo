@@ -694,6 +694,15 @@ program wheres_alex_v001.aleo {
         return (piece_record, audit_transfer_to_winner_record, updated_game_record, game_finished_notification_challenger_record, game_finished_notification_opponent_record);
     }
 
+    // transition claim_timeout_wager
+    // (
+    // )
+    // {
+
+    //     puzzle_pieces_v007.leo/joint_stake_timeout_transfer_to_opponent()
+
+    // }
+
 
     // // todo: do we want to limit this fn call only to users or will we allow contracts to call?
     // // todo: do we need to pass credits as input?

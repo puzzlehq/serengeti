@@ -675,9 +675,19 @@ program puzzle_pieces_v007.aleo {
     // transition joint_stake_timeout_transfer_to_opponent(
     //     piece_joint_stake: PieceJointStake,
     //     joint_piece_time_claim: JointPieceTimeClaim
-    // ) -> Piece {
+    // ) -> Piece
+    // {
 
 
+
+
+    // }
+
+    // mapping finalize joint_stake_timeout_transfer_to_opponent
+    // (
+
+    // )
+    // {
 
     // }
 
