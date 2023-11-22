@@ -129,7 +129,8 @@ leo run stake_transfer_out "{
     amount: 100u64.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 1655204345351964767335996234098781246240223486571689598241259819963649259596group.public
+    ix: 3u32.private,
+    _nonce: 5546623805910936542111956375357286045058381276953348239036473112448064414911group.public
     }" "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 100u64.private,
@@ -141,7 +142,8 @@ leo run stake_transfer_out "{
     message_5: 478560413032field.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 745645465721350562629068451587778944368504286672337261358977975450896071254group.public
+    ix: 6u32.private,
+    _nonce: 1581604808320267599158086970118371523369918519049360962051611002304272439911group.public
     }" sign1h04lnsl0t4aau8lzp06rzcm5eqrzr9ew63ljnw43v2nr7nkmsqqcx8cksna2ajwgk80rv0s7prrndw5k56sey3nrl487552lvaukuq8xe0cgu6x809qetnn35ufm3gl6ecyvtpgaavu9y5754j27utrwq8amruqyq2x6dvqs790yqsrctwmjnh3k7thslm0r9c3hpdvjrywpzts24xr
 
 echo "
@@ -168,8 +170,9 @@ leo run stake_transfer_out "{
     amount: 100u64.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 419259104568521454794864948050600183386303537909565681186580743894609330834group.public
-    }" "{
+    ix: 3u32.private,
+    _nonce: 7597613748382358688796479735356838630107300224224966003778082015449691781571group.public
+        }" "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 100u64.private,
     claimer: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
@@ -180,7 +183,8 @@ leo run stake_transfer_out "{
     message_5: 478560413032field.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 2124618424603944039720874608813118196733568085220512653466889184432161897821group.public
+    ix: 6u32.private,
+    _nonce: 7068698170115610093647313018331847653570039595406910186751810964912876063230group.public
     }" sign1nfcgxxyqk5a2fkv3ncrey3pshy20sx66ghdu6mxl94yy75u6pvqhglvhgee7h3cletr2sfnln84q8jyu7060wd3krn5qrajr0jwacqslse2uz49ljzhxz82y28gy0un45z8w2jgwk7jhdgxqh58qgcvwqpcuf9estpjsv9n9jln3x08mzl2rc8z25j6s6r4uf8rq9r7ddkxqyhwu30c
 
 
@@ -212,7 +216,8 @@ leo run transfer_stakes_to_joint "{
     amount: 100u64.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 1655204345351964767335996234098781246240223486571689598241259819963649259596group.public
+    ix: 3u32.private,
+    _nonce: 3905695628549258996231504976644150611704896903336505283629712393764912147881group.public
     }" "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 100u64.private,
@@ -224,13 +229,15 @@ leo run transfer_stakes_to_joint "{
     message_5: 478560413032field.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 745645465721350562629068451587778944368504286672337261358977975450896071254group.public
+    ix: 6u32.private,
+    _nonce: 3659284411785173763655469676694256156580832627787914348759072583339004320462group.public
     }" "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 100u64.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 419259104568521454794864948050600183386303537909565681186580743894609330834group.public
+    ix: 3u32.private,
+    _nonce: 2091551707311829683057081961908092597682984023458416846802134854010256172992group.public
     }" "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 100u64.private,
@@ -242,7 +249,8 @@ leo run transfer_stakes_to_joint "{
     message_5: 478560413032field.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 2124618424603944039720874608813118196733568085220512653466889184432161897821group.public
+    ix: 6u32.private,
+    _nonce: 2646520178021872335709140905256437534246948180735119872182997801144216021745group.public
     }" 385600u32
 
 
@@ -298,15 +306,17 @@ leo run joint_stake_state_update "{
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-    _nonce: 2307201229731365235201793376922398003095015620060594633166789450861915199404group.public
+    ix: 10u32.private,
+    _nonce: 4854220735381631329294859919280502844214351686096777666857873722313764297377group.public
     }" "{
-        owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-        sig: sign1h04lnsl0t4aau8lzp06rzcm5eqrzr9ew63ljnw43v2nr7nkmsqqcx8cksna2ajwgk80rv0s7prrndw5k56sey3nrl487552lvaukuq8xe0cgu6x809qetnn35ufm3gl6ecyvtpgaavu9y5754j27utrwq8amruqyq2x6dvqs790yqsrctwmjnh3k7thslm0r9c3hpdvjrywpzts24xr.private,
-        amount: 100u64.private,
-        game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-        challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-        opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-        _nonce: 1255031667441139730916338994757892251789932357051213920077209699827051528047group.public
+    owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    sig: sign1h04lnsl0t4aau8lzp06rzcm5eqrzr9ew63ljnw43v2nr7nkmsqqcx8cksna2ajwgk80rv0s7prrndw5k56sey3nrl487552lvaukuq8xe0cgu6x809qetnn35ufm3gl6ecyvtpgaavu9y5754j27utrwq8amruqyq2x6dvqs790yqsrctwmjnh3k7thslm0r9c3hpdvjrywpzts24xr.private,
+    amount: 100u64.private,
+    game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+    challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+    ix: 7u32.private,
+    _nonce: 1117369446048084795887471758559779986210421151862901081628519228619183511648group.public
     }" aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a
 
 
@@ -364,14 +374,16 @@ leo run joint_stake_transfer_to_winner "{
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     winner: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 4684514922992384925796446687216492604358933062333997694402011141127511170394group.public
+    ix: 12u32.private,
+    _nonce: 819217470275539396656331726123427022950770708026893222204090462472778558761group.public
     }" "{
-        owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-        amount: 200u64.private,
-        time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-        state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-        block_ht: 385600u32.private,
-        _nonce: 2875450436324491794122029661845368016192073768704626215137806802711800044819group.public
+    owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+    amount: 200u64.private,
+    time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+    state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    block_ht: 385600u32.private,
+    ix: 9u32.private,
+    _nonce: 8424505377911656497167237030609757345140690015076937010580009679888038203300group.public
     }" "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 200u64.private,
@@ -386,7 +398,8 @@ leo run joint_stake_transfer_to_winner "{
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     block_ht: 385600u32.private,
-    _nonce: 2104899008573550129443254713473598530389330288782837014288797005059873877328group.public
+    ix: 8u32.private,
+    _nonce: 5872412729651615670150493387377488356135011849801053613442039319914903040739group.public
     }"
 
 echo "
@@ -419,3 +432,29 @@ echo "
 # #+#    #+# #+#        #+#                                        
 # ########  ###        ###                                         
 "
+
+leo run joint_timeout_to_opponent "{
+    owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+    amount: 200u64.private,
+    time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+    state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    block_ht: 385600u32.private,
+    ix: 9u32.private,
+    _nonce: 8424505377911656497167237030609757345140690015076937010580009679888038203300group.public
+    }" "{
+    owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+    amount: 200u64.private,
+    time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+    state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    message_1: 1776434703100582373204662861254489704580562394216162942464580870040464243050field.private,
+    message_2: 251561861986387641133995513088278466362266230978294643355666629668300490271field.private,
+    message_3: 1152742118437172617676919179607096353215168002720611159713055309066048881777field.private,
+    message_4: 6965356107999508170054292104522311809055538516545196583411503498743541220125field.private,
+    message_5: 478560413032field.private,
+    game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+    challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+    block_ht: 385600u32.private,
+    ix: 8u32.private,
+    _nonce: 5872412729651615670150493387377488356135011849801053613442039319914903040739group.public
+    }" sign1nfcgxxyqk5a2fkv3ncrey3pshy20sx66ghdu6mxl94yy75u6pvqhglvhgee7h3cletr2sfnln84q8jyu7060wd3krn5qrajr0jwacqslse2uz49ljzhxz82y28gy0un45z8w2jgwk7jhdgxqh58qgcvwqpcuf9estpjsv9n9jln3x08mzl2rc8z25j6s6r4uf8rq9r7ddkxqyhwu30c

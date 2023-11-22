@@ -673,6 +673,7 @@ program puzzle_pieces_v008.aleo {
     // TODO: Also note audit view can enforce a block_ht that's faulty
     //
     transition joint_timeout_to_opponent (
+        piece_joint_stake: PieceJointStake,
         joint_piece_time_claim: JointPieceTimeClaim,
         sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
     ) -> (Piece, AuditTransferToWinner)
@@ -681,19 +682,19 @@ program puzzle_pieces_v008.aleo {
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
         // 1. Check that all are from the same multisig
-        let game_multisig: address = joint_piece_state.owner;
-        assert_eq(joint_piece_time_claim.owner, game_multisig);
+        let game_multisig: address = joint_piece_time_claim.owner;
+        assert_eq(piece_joint_stake.owner, game_multisig);
 
         // 2. Check that the game state is the same for all
-        let amount: u64 = joint_piece_state.amount;
-        assert_eq(joint_piece_time_claim.amount, amount);
+        let amount: u64 = joint_piece_time_claim.amount;
+        assert_eq(piece_joint_stake.amount, amount);
 
         // 2. Check that the game state is the same for all
-        let challenger: address = joint_piece_state.challenger;
-        assert_eq(joint_piece_time_claim.challenger, challenger);
+        let challenger: address = joint_piece_time_claim.challenger;
+        assert_eq(piece_joint_stake.state_updater_address, challenger);
 
-        let opponent: address = joint_piece_state.opponent;
-        assert_eq(joint_piece_time_claim.opponent, opponent);
+        let opponent: address = joint_piece_time_claim.opponent;
+        assert_eq(piece_joint_stake.time_claimer_address, opponent);
 
         // 3. Check Claimer has verified this with a signature against the message from beginning
         // FE -- use the claim signature record for opponent address here to fill in
@@ -719,9 +720,9 @@ program puzzle_pieces_v008.aleo {
         let audit_record: AuditTransferToWinner = AuditTransferToWinner {
             owner: puzzle_issuer,
             challenger: challenger,
-            opponent: winner,
+            opponent: opponent,
             game_multisig: game_multisig,
-            receiver: winner,
+            receiver: opponent,
             amount: amount,
             ix: 14u32
         };
