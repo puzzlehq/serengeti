@@ -212,8 +212,6 @@ program multiparty_pvp_utils_v008.aleo {
         let is_valid_sig: bool = sig.verify(answer.challenger_address, msg);
         assert_eq(signature_check,is_valid_sig);
 
-        // Verify signature matches the same signature from the Answer record
-        assert_eq(sig, answer.sig);
 
         let answer_owner: address = answer.owner;
         let answer_challenger_address: address = answer.challenger_address;
