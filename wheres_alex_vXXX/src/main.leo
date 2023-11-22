@@ -675,7 +675,7 @@ program wheres_alex_v008.aleo {
             your_turn: false,
             total_pot: game_record.total_pot,
             challenger_address: game_record.challenger_address,
-            opponent_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
             winner: joint_piece_winner.winner,
             loser: loser_address,
         };
@@ -687,7 +687,7 @@ program wheres_alex_v008.aleo {
             your_turn: false,
             total_pot: game_record.total_pot,
             challenger_address: game_record.challenger_address,
-            opponent_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
             winner: joint_piece_winner.winner,
             loser: loser_address,
         };
@@ -729,7 +729,7 @@ program wheres_alex_v008.aleo {
             your_turn: false,
             total_pot: game_record.total_pot,
             challenger_address: game_record.challenger_address,
-            opponent_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
             winner: game_record.opponent_address,
             loser: game_record.challenger_address,
         };
@@ -742,7 +742,7 @@ program wheres_alex_v008.aleo {
             your_turn: false,
             total_pot: game_record.total_pot,
             challenger_address: game_record.challenger_address,
-            opponent_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
             winner: game_record.opponent_address,
             loser: game_record.challenger_address,
         };
@@ -762,15 +762,6 @@ program wheres_alex_v008.aleo {
             game_finished_notification_opponent_record
         );
     }
-
-    // transition claim_timeout_wager
-    // (
-    // )
-    // {
-
-    //     puzzle_pieces_v008.leo/joint_stake_timeout_transfer_to_opponent()
-
-    // }
 
 
     // // todo: do we want to limit this fn call only to users or will we allow contracts to call?
