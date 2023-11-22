@@ -691,10 +691,10 @@ program puzzle_pieces_v008.aleo {
 
         // 2. Check that the game state is the same for all
         let challenger: address = joint_piece_time_claim.challenger;
-        assert_eq(piece_joint_stake.challenger, challenger);
+        assert_eq(piece_joint_stake.state_updater_address, challenger);
 
         let opponent: address = joint_piece_time_claim.opponent;
-        assert_eq(piece_joint_stake.opponent, opponent);
+        assert_eq(piece_joint_stake.time_claimer_address, opponent);
 
         // 3. Check Claimer has verified this with a signature against the message from beginning
         // FE -- use the claim signature record for opponent address here to fill in
