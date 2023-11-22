@@ -1,4 +1,4 @@
-import puzzle_pieces_v007.leo;
+import puzzle_pieces_v008.leo;
 import multiparty_pvp_utils_v001.leo;
 
 // todo: wait we're going to use alice's credits to send to multisig? need to add credits.leo but not supported yet per https://github.com/AleoHQ/leo/pull/2881
@@ -12,7 +12,7 @@ import multiparty_pvp_utils_v001.leo;
 // todo: can we do this with inline functions?
 
 // The 'coinflip' program.
-program wheres_alex_v001.aleo {
+program wheres_alex_v008.aleo {
 
     // record PlayerOneClaim {}
 
@@ -595,7 +595,7 @@ program wheres_alex_v001.aleo {
         answer_record: multiparty_pvp_utils_v001.leo/Answer.record,
         joint_piece_state: puzzle_pieces_v007.leo/JointPieceState.record,
         claim_signature: puzzle_pieces_v007.leo/ClaimSignature.record,
-        sig: signature
+        // sig: signature // using claimSignature record from beginning for this
     ) -> (
         multiparty_pvp_utils_v001.leo/RevealAnswer.record,
         multiparty_pvp_utils_v001.leo/AuditRevealAnswer.record,
@@ -609,6 +609,7 @@ program wheres_alex_v001.aleo {
         assert_eq(joint_piece_state.state_updater_address, self.signer);
         // determine winner! If opponent correctly picked where the challenger hid alex, the opponent wins otherwise the challenger wins
         let winner_address: address = reveal_answer_notification_record.opponent_answer == answer_record.answer ? answer_record.opponent_address : answer_record.challenger_address;
+        let sig: signature = claim_signature.sig;
 
         // retrieve revealedanswer record
         let (revealed_answer_record, audit_revealed_answer_record): (RevealAnswer, AuditRevealAnswer) = multiparty_pvp_utils_v001.leo/reveal_answer(answer_record, sig);
@@ -693,6 +694,9 @@ program wheres_alex_v001.aleo {
 
         return (piece_record, audit_transfer_to_winner_record, updated_game_record, game_finished_notification_challenger_record, game_finished_notification_opponent_record);
     }
+
+    // called by ms key via opponent to finish the game and get the total pot!
+    transition finish_game_by_timeout
 
     // transition claim_timeout_wager
     // (
