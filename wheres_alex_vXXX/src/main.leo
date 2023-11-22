@@ -1,5 +1,5 @@
 import puzzle_pieces_v008.leo;
-import multiparty_pvp_utils_v001.leo;
+import multiparty_pvp_utils_v008.leo;
 
 // todo: wait we're going to use alice's credits to send to multisig? need to add credits.leo but not supported yet per https://github.com/AleoHQ/leo/pull/2881
 // imports deployed to separate address: https://t.me/c/1766615939/3581
@@ -227,10 +227,10 @@ program wheres_alex_v008.aleo {
         puzzle_pieces_v008.leo/ClaimSignature.record,
         puzzle_pieces_v008.leo/Piece.record,
         puzzle_pieces_v008.leo/AuditStakeIn.record,
-        multiparty_pvp_utils_v001.leo/Answer.record,
-        multiparty_pvp_utils_v001.leo/AuditMintAnswer.record,
-        multiparty_pvp_utils_v001.leo/Key.record,
-        multiparty_pvp_utils_v001.leo/AuditKey.record,
+        multiparty_pvp_utils_v008.leo/Answer.record,
+        multiparty_pvp_utils_v008.leo/AuditMintAnswer.record,
+        multiparty_pvp_utils_v008.leo/Key.record,
+        multiparty_pvp_utils_v008.leo/AuditKey.record,
         Game,
         GameReqNotification,
         WaitingAcceptanceNotification,
@@ -283,7 +283,7 @@ program wheres_alex_v008.aleo {
         ) : (
             Key,
             AuditKey
-        ) = multiparty_pvp_utils_v001.leo/mint_multisig_key(seed,amount,challenger,opponent,game_multisig);
+        ) = multiparty_pvp_utils_v008.leo/mint_multisig_key(seed,amount,challenger,opponent,game_multisig);
 
         let game_request_notification_record: GameReqNotification = GameReqNotification {
             owner: opponent, //opponent
@@ -316,7 +316,7 @@ program wheres_alex_v008.aleo {
             game_state: 1field,
         };
 
-        let (answer_record, audit_mint_answer_record):  (Answer, AuditMintAnswer) = multiparty_pvp_utils_v001.leo/mint_answer(
+        let (answer_record, audit_mint_answer_record):  (Answer, AuditMintAnswer) = multiparty_pvp_utils_v008.leo/mint_answer(
                 challenger,
                 opponent,
                 game_multisig,
@@ -397,7 +397,7 @@ program wheres_alex_v008.aleo {
 
     transition submit_wager (
         wager_record: puzzle_pieces_v008.leo/Piece.record,
-        key_record: multiparty_pvp_utils_v001.leo/Key.record,
+        key_record: multiparty_pvp_utils_v008.leo/Key.record,
         game_req_notification: GameReqNotification,
         message_1: field, //from output of useSignature
         message_2: field,
@@ -592,13 +592,13 @@ program wheres_alex_v008.aleo {
     transition reveal_answer_game
     (
         reveal_answer_notification_record: RevealAnswerNotification,
-        answer_record: multiparty_pvp_utils_v001.leo/Answer.record,
+        answer_record: multiparty_pvp_utils_v008.leo/Answer.record,
         joint_piece_state: puzzle_pieces_v008.leo/JointPieceState.record,
         claim_signature: puzzle_pieces_v008.leo/ClaimSignature.record,
         // sig: signature // using claimSignature record from beginning for this
     ) -> (
-        multiparty_pvp_utils_v001.leo/RevealAnswer.record,
-        multiparty_pvp_utils_v001.leo/AuditRevealAnswer.record,
+        multiparty_pvp_utils_v008.leo/RevealAnswer.record,
+        multiparty_pvp_utils_v008.leo/AuditRevealAnswer.record,
         puzzle_pieces_v008.leo/JointPieceWinner.record,
         puzzle_pieces_v008.leo/AuditJointPieceWinner.record,
         GameFinishReqNotification,
@@ -612,7 +612,7 @@ program wheres_alex_v008.aleo {
         let sig: signature = claim_signature.sig;
 
         // retrieve revealedanswer record
-        let (revealed_answer_record, audit_revealed_answer_record): (RevealAnswer, AuditRevealAnswer) = multiparty_pvp_utils_v001.leo/reveal_answer(answer_record, sig);
+        let (revealed_answer_record, audit_revealed_answer_record): (RevealAnswer, AuditRevealAnswer) = multiparty_pvp_utils_v008.leo/reveal_answer(answer_record, sig);
 
         let (joint_piece_winner, audit_joint_piece_winner): (JointPieceWinner, AuditJointPieceWinner) = puzzle_pieces_v008.leo/joint_stake_state_update(joint_piece_state, claim_signature, winner_address);
 
