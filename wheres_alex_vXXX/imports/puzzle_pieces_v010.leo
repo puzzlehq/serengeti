@@ -1,8 +1,8 @@
-// The 'puzzle_pieces_v008' program.
+// The 'puzzle_pieces_v010' program.
 // import multiparty_pvp_utils_v001.leo;
 // Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
 
-program puzzle_pieces_v008.aleo {
+program puzzle_pieces_v010.aleo {
     mapping supply: field => u64;
 
     struct Message {
@@ -200,6 +200,15 @@ program puzzle_pieces_v008.aleo {
         opponent: address,
         game_multisig: address,
         receiver: address,
+        amount: u64,
+        ix: u32,
+    }
+
+    // ix: 15u32
+    // output on transfer_joint_stake_to_winner -- use auditTransferToWinner to solve tracking games & winners -- use this data pipe for easier tracking notes
+    record AuditPieceOwner {
+        owner: address,
+        piece_holder: address,
         amount: u64,
         ix: u32,
     }
@@ -607,7 +616,7 @@ program puzzle_pieces_v008.aleo {
         joint_piece_winner: JointPieceWinner,
         piece_joint_stake: PieceJointStake,
         joint_piece_time_claim: JointPieceTimeClaim,
-    ) -> (Piece,AuditTransferToWinner) {
+    ) -> (Piece,AuditTransferToWinner, AuditPieceOwner) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
@@ -656,7 +665,14 @@ program puzzle_pieces_v008.aleo {
             ix: 14u32
         };
 
-        return (piece_to_winner, audit_record);
+        let audit_piece_owner: AuditPieceOwner = AuditPieceOwner {
+            owner: puzzle_issuer,
+            piece_holder: winner,
+            amount: amount,
+            ix: 15u32
+        };
+
+        return (piece_to_winner, audit_record, audit_piece_owner);
     }
 
     // The challenger has not updated joint piece state for a winner in time of blockheight

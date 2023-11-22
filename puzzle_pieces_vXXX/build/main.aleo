@@ -153,6 +153,12 @@ record AuditTransferToWinner:
     amount as u64.private;
     ix as u32.private;
 
+record AuditPieceOwner:
+    owner as address.private;
+    piece_holder as address.private;
+    amount as u64.private;
+    ix as u32.private;
+
 
 mapping supply:
 	key as field.public;
@@ -323,8 +329,10 @@ function joint_stake_transfer_to_winner:
     assert.eq r10 true;
     cast r0.winner r0.amount 0u32 into r11 as Piece.record;
     cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r0.challenger r0.opponent r0.owner r0.winner r0.amount 14u32 into r12 as AuditTransferToWinner.record;
+    cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r0.winner r0.amount 15u32 into r13 as AuditPieceOwner.record;
     output r11 as Piece.record;
     output r12 as AuditTransferToWinner.record;
+    output r13 as AuditPieceOwner.record;
 
 
 function joint_timeout_to_opponent:
@@ -340,13 +348,5 @@ function joint_timeout_to_opponent:
     assert.eq true r4;
     cast r1.opponent r1.amount 0u32 into r5 as Piece.record;
     cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r1.challenger r1.opponent r1.owner r1.opponent r1.amount 14u32 into r6 as AuditTransferToWinner.record;
-    async joint_timeout_to_opponent r1.block_ht into r7;
     output r5 as Piece.record;
     output r6 as AuditTransferToWinner.record;
-    output r7 as puzzle_pieces_v008.aleo/joint_timeout_to_opponent.future;
-
-finalize joint_timeout_to_opponent:
-    input r0 as u32.public;
-    add r0 1000u32 into r1;
-    gte block.height r1 into r2;
-    assert.eq r2 true;
