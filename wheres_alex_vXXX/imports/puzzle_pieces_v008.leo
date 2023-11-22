@@ -727,6 +727,14 @@ program puzzle_pieces_v008.aleo {
             ix: 14u32
         };
 
-        return (piece_to_winner, audit_record);
+        return (piece_to_winner, audit_record) then finalize (joint_piece_time_claim.block_ht);
     }
+
+    finalize joint_timeout_to_opponent (joint_time_claim_block_ht: u32) {
+        // assert that 1000 blocks have passed (~ 83 minutes)
+        let current_block_ht: u32 = block.height;
+        let threshold_block_ht: u32 = joint_time_claim_block_ht + 1000u32;
+        assert(current_block_ht > threshold_block_ht);
+    }
+
 }
