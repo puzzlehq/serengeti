@@ -722,7 +722,7 @@ program puzzle_pieces_v008.aleo {
             challenger: challenger,
             opponent: winner,
             game_multisig: game_multisig,
-            receiver: winner,
+            receiver: opponent,
             amount: amount,
             ix: 14u32
         };
