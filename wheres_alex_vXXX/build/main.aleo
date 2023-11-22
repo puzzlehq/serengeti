@@ -1,5 +1,5 @@
 import puzzle_pieces_v010.aleo;
-import multiparty_pvp_utils_v008.aleo;
+import multiparty_pvp_utils_v010.aleo;
 program wheres_alex_v010.aleo;
 
 
@@ -150,23 +150,23 @@ function propose_game:
     gte r0.amount r1 into r21;
     assert.eq r21 true;
     call puzzle_pieces_v010.aleo/stake_transfer_in r0 r2 r3 r4 r5 r1 r6 r7 r8 r9 r10 r11 into r22 r23 r24 r25 r26;
-    call multiparty_pvp_utils_v008.aleo/mint_multisig_key r14 r1 r3 r4 r5 into r27 r28;
+    call multiparty_pvp_utils_v010.aleo/mint_multisig_key r14 r1 r3 r4 r5 into r27 r28;
     add r1 r1 into r29;
     cast r4 r5 1field true r29 r3 r4 into r30 as GameReqNotification.record;
     add r1 r1 into r31;
     cast r3 r5 1field false r31 r3 r4 into r32 as WaitingAcceptanceNotification.record;
     add r1 r1 into r33;
     cast r5 r19 r13 r33 r3 r4 r5 1field into r34 as Game.record;
-    call multiparty_pvp_utils_v008.aleo/mint_answer r3 r4 r5 r1 r12 r13 r6 r7 r8 r9 r10 r11 into r35 r36;
+    call multiparty_pvp_utils_v010.aleo/mint_answer r3 r4 r5 r1 r12 r13 r6 r7 r8 r9 r10 r11 into r35 r36;
     output r22 as puzzle_pieces_v010.aleo/PieceClaim.record;
     output r23 as puzzle_pieces_v010.aleo/PieceStake.record;
     output r24 as puzzle_pieces_v010.aleo/ClaimSignature.record;
     output r25 as puzzle_pieces_v010.aleo/Piece.record;
     output r26 as puzzle_pieces_v010.aleo/AuditStakeIn.record;
-    output r35 as multiparty_pvp_utils_v008.aleo/Answer.record;
-    output r36 as multiparty_pvp_utils_v008.aleo/AuditMintAnswer.record;
-    output r27 as multiparty_pvp_utils_v008.aleo/Key.record;
-    output r28 as multiparty_pvp_utils_v008.aleo/AuditKey.record;
+    output r35 as multiparty_pvp_utils_v010.aleo/Answer.record;
+    output r36 as multiparty_pvp_utils_v010.aleo/AuditMintAnswer.record;
+    output r27 as multiparty_pvp_utils_v010.aleo/Key.record;
+    output r28 as multiparty_pvp_utils_v010.aleo/AuditKey.record;
     output r34 as Game.record;
     output r30 as GameReqNotification.record;
     output r32 as WaitingAcceptanceNotification.record;
@@ -188,7 +188,7 @@ function challenger_renege_stake:
 
 function submit_wager:
     input r0 as puzzle_pieces_v010.aleo/Piece.record;
-    input r1 as multiparty_pvp_utils_v008.aleo/Key.record;
+    input r1 as multiparty_pvp_utils_v010.aleo/Key.record;
     input r2 as GameReqNotification.record;
     input r3 as field.private;
     input r4 as field.private;
@@ -249,18 +249,18 @@ finalize accept_game:
 
 function reveal_answer_game:
     input r0 as RevealAnswerNotification.record;
-    input r1 as multiparty_pvp_utils_v008.aleo/Answer.record;
+    input r1 as multiparty_pvp_utils_v010.aleo/Answer.record;
     input r2 as puzzle_pieces_v010.aleo/JointPieceState.record;
     input r3 as puzzle_pieces_v010.aleo/ClaimSignature.record;
     assert.eq r2.state_updater_address self.signer;
     is.eq r0.opponent_answer r1.answer into r4;
     ternary r4 r1.opponent_address r1.challenger_address into r5;
-    call multiparty_pvp_utils_v008.aleo/reveal_answer r1 r3.sig into r6 r7;
+    call multiparty_pvp_utils_v010.aleo/reveal_answer r1 r3.sig into r6 r7;
     call puzzle_pieces_v010.aleo/joint_stake_state_update r2 r3 r5 into r8 r9;
     cast r1.opponent_address r1.game_address 2field true r2.amount r1.challenger_address r1.opponent_address into r10 as GameFinishReqNotification.record;
     cast r1.challenger_address r1.game_address 2field true r2.amount r1.challenger_address r1.opponent_address into r11 as GameFinishReqNotification.record;
-    output r6 as multiparty_pvp_utils_v008.aleo/RevealAnswer.record;
-    output r7 as multiparty_pvp_utils_v008.aleo/AuditRevealAnswer.record;
+    output r6 as multiparty_pvp_utils_v010.aleo/RevealAnswer.record;
+    output r7 as multiparty_pvp_utils_v010.aleo/AuditRevealAnswer.record;
     output r8 as puzzle_pieces_v010.aleo/JointPieceWinner.record;
     output r9 as puzzle_pieces_v010.aleo/AuditJointPieceWinner.record;
     output r10 as GameFinishReqNotification.record;

@@ -1,4 +1,4 @@
-program puzzle_pieces_v008.aleo;
+program puzzle_pieces_v010.aleo;
 
 struct Message:
     field_1 as field;

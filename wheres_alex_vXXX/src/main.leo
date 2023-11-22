@@ -14,27 +14,6 @@ import multiparty_pvp_utils_v010.leo;
 // The 'coinflip' program.
 program wheres_alex_v010.aleo {
 
-    // record PlayerOneClaim {}
-
-    // record PlayerTwoClaim {}
-
-    // record Claim {
-    //     private owner: address,
-    //     private amount: u64,
-    // }
-
-    // may want this to be more like NotifyGameStarted record
-    // with the GameID on it
-    // for FE to easily find
-    //
-    // record NotifyKeyRecord {
-    //     private owner: address,
-    //     private keys: field,
-    //     private game_address: address,
-    //     private challenge_amount: u64,
-    //     private opponent: address,
-    // }
-
     // todo: this will likely need to store each player answer
     // todo: may be best to store players in the game here on game record
     // todo: add block height to game record?
