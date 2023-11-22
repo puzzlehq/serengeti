@@ -1,8 +1,8 @@
-// The 'puzzle_pieces_v001' program.
+// The 'puzzle_pieces_v008' program.
 // import multiparty_pvp_utils_v001.leo;
 // Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
 
-program puzzle_pieces_v007.aleo {
+program puzzle_pieces_v008.aleo {
     mapping supply: field => u64;
 
     struct Message {
@@ -673,9 +673,8 @@ program puzzle_pieces_v007.aleo {
     // TODO: Also note audit view can enforce a block_ht that's faulty
     //
     transition joint_timeout_to_opponent (
-        joint_piece_state: JointPieceState,
         joint_piece_time_claim: JointPieceTimeClaim,
-        sig: signature,
+        sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
     ) -> (Piece, AuditTransferToWinner)
     {
         // set puzzle issuing address as issuer:
@@ -696,13 +695,23 @@ program puzzle_pieces_v007.aleo {
         let opponent: address = joint_piece_state.opponent;
         assert_eq(joint_piece_time_claim.opponent, opponent);
 
-        assert_eq(joint_piece_time_claim.time_claimer_address, joint_piece_state.time_claimer_address);
+        // 3. Check Claimer has verified this with a signature against the message from beginning
+        // FE -- use the claim signature record for opponent address here to fill in
+        let msg: Message = Message {
+            field_1: joint_piece_time_claim.message_1,
+            field_2: joint_piece_time_claim.message_2,
+            field_3: joint_piece_time_claim.message_3,
+            field_4: joint_piece_time_claim.message_4,
+            field_5: joint_piece_time_claim.message_5
+        };
 
-        // Check that winner is challenger or opponent
-        let winner: address = joint_piece_time_claim.time_claimer_address;
+        let signature_check: bool = true;
+        let is_valid_sig: bool = sig.verify(joint_piece_time_claim.time_claimer_address, msg);
+        assert_eq(signature_check,is_valid_sig);
+
 
         let piece_to_winner: Piece = Piece {
-            owner: winner,
+            owner: opponent,
             amount: amount,
             ix: 0u32,
         };
