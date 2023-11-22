@@ -140,8 +140,7 @@ program multiparty_pvp_utils_v008.aleo {
             message_2: message_2,
             message_3: message_3,
             message_4: message_4,
-            message_5: message_5,
-            sig: sig,
+            message_5: message_5
         };
 
 
