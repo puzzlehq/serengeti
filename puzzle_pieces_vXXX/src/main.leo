@@ -2,7 +2,7 @@
 // import multiparty_pvp_utils_v001.leo;
 // Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
 
-program puzzle_pieces_v008.aleo {
+program puzzle_pieces_v009.aleo {
     mapping supply: field => u64;
 
     struct Message {
@@ -727,16 +727,6 @@ program puzzle_pieces_v008.aleo {
             ix: 14u32
         };
 
-        return (piece_to_winner, audit_record) then finalize(joint_piece_time_claim.block_ht);
-    }
-
-    finalize joint_timeout_to_opponent
-    (
-        joint_time_claim_block_ht: u32,
-    )
-    {
-        // assert that 1000 blocks have passed (~ 83 minutes)
-        let current_block_ht: u32 = block.height;
-        assert(current_block_ht >= joint_time_claim_block_ht + 1000u32);
+        return (piece_to_winner, audit_record);
     }
 }

@@ -748,11 +748,7 @@ program wheres_alex_v008.aleo {
         };
 
         // Payout to winner
-        let (piece_record, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v008.leo/joint_timeout_to_opponent(
-            piece_joint_stake,
-            joint_piece_time_claim,
-            sig
-        );
+        let (piece_record, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v008.leo/joint_timeout_to_opponent(piece_joint_stake, joint_piece_time_claim, sig);
 
         return (
             piece_record,
@@ -760,7 +756,14 @@ program wheres_alex_v008.aleo {
             updated_game_record,
             game_finished_notification_challenger_record,
             game_finished_notification_opponent_record
-        );
+        ) then finalize (joint_piece_time_claim.block_ht);
+    }
+
+    finalize finish_game_by_timeout (joint_time_claim_block_ht: u32) {
+        // assert that 1000 blocks have passed (~ 83 minutes)
+        let current_block_ht: u32 = block.height;
+        let threshold_block_ht: u32 = joint_time_claim_block_ht + 1000u32;
+        assert(current_block_ht > threshold_block_ht);
     }
 
 
