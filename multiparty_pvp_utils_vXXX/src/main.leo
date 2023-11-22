@@ -20,8 +20,7 @@ program multiparty_pvp_utils_v008.aleo {
         message_2: field,
         message_3: field,
         message_4: field,
-        message_5: field,
-        sig: signature
+        message_5: field
     }
 
     record AuditMintAnswer {
@@ -37,8 +36,7 @@ program multiparty_pvp_utils_v008.aleo {
         message_2: field,
         message_3: field,
         message_4: field,
-        message_5: field,
-        sig: signature
+        message_5: field
     }
 
     record RevealAnswer {
@@ -126,8 +124,7 @@ program multiparty_pvp_utils_v008.aleo {
             message_2: message_2,
             message_3: message_3,
             message_4: message_4,
-            message_5: message_5,
-            sig: sig,
+            message_5: message_5
         };
 
         let audit_record: AuditMintAnswer = AuditMintAnswer {
