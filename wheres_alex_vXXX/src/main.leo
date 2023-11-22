@@ -700,6 +700,7 @@ program wheres_alex_v008.aleo {
         game_record: Game,
         piece_joint_stake: puzzle_pieces_v008.leo/PieceJointStake.record,
         joint_piece_time_claim: puzzle_pieces_v008.leo/JointPieceTimeClaim.record,
+        sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
     ) -> (
         puzzle_pieces_v008.leo/Piece.record, 
         puzzle_pieces_v008.leo/AuditTransferToWinner.record, 
@@ -747,9 +748,17 @@ program wheres_alex_v008.aleo {
 
         // Payout to winner
         let (piece_record, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v008.leo/joint_timeout_to_opponent(
-            joint_piece_winner,
             piece_joint_stake,
             joint_piece_time_claim,
+            sig
+        );
+
+        return ( 
+            piece_record,
+            audit_transfer_to_winner_record,
+            updated_game_record,
+            game_finished_notification_challenger_record,
+            game_finished_notification_opponent_record
         );
     }
 
