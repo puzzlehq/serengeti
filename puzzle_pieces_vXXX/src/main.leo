@@ -1,8 +1,8 @@
-// The 'puzzle_pieces_v001' program.
+// The 'puzzle_pieces_v008' program.
 // import multiparty_pvp_utils_v001.leo;
 // Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
 
-program puzzle_pieces_v007.aleo {
+program puzzle_pieces_v008.aleo {
     mapping supply: field => u64;
 
     struct Message {
@@ -672,25 +672,61 @@ program puzzle_pieces_v007.aleo {
     //
     // TODO: Also note audit view can enforce a block_ht that's faulty
     //
-    // transition joint_stake_timeout_transfer_to_opponent(
-    //     piece_joint_stake: PieceJointStake,
-    //     joint_piece_time_claim: JointPieceTimeClaim
-    // ) -> Piece {
+    transition joint_timeout_to_opponent (
+        joint_piece_state: JointPieceState,
+        joint_piece_time_claim: JointPieceTimeClaim,
+        sig: signature,
+    ) -> (Piece, AuditTransferToWinner)
+    {
+        // set puzzle issuing address as issuer:
+        let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
+        // 1. Check that all are from the same multisig
+        let game_multisig: address = joint_piece_state.owner;
+        assert_eq(joint_piece_time_claim.owner, game_multisig);
 
+        // 2. Check that the game state is the same for all
+        let amount: u64 = joint_piece_state.amount;
+        assert_eq(joint_piece_time_claim.amount, amount);
 
-    // }
+        // 2. Check that the game state is the same for all
+        let challenger: address = joint_piece_state.challenger;
+        assert_eq(joint_piece_time_claim.challenger, challenger);
 
-    // // TODO -- enforcement fxn against blockheight fraud for auditor to reclaim tokens and distribute
-    // transition auditor_find_blockheight_fraud(
-    //     audit_piece_timeout_record: AuditJointStake,
-    //     audit_claim_record: PieceJointStake
-    // ) finalize check_mapping function block.height
+        let opponent: address = joint_piece_state.opponent;
+        assert_eq(joint_piece_time_claim.opponent, opponent);
 
-    // // TODO -- enforcement fxn against answer fraud for auditor to reclaim tokens and distribute
-    // transition auditor_find_answer_fraud(
-    //     audit_state_piece_update
-    //     audit_alkdjfalkjdalkjsd
-    // )
+        assert_eq(joint_piece_time_claim.time_claimer_address, joint_piece_state.time_claimer_address);
 
+        // Check that winner is challenger or opponent
+        let winner: address = joint_piece_time_claim.time_claimer_address;
+
+        let piece_to_winner: Piece = Piece {
+            owner: winner,
+            amount: amount,
+            ix: 0u32,
+        };
+
+        let audit_record: AuditTransferToWinner = AuditTransferToWinner {
+            owner: puzzle_issuer,
+            challenger: challenger,
+            opponent: winner,
+            game_multisig: game_multisig,
+            receiver: winner,
+            amount: amount,
+            ix: 14u32
+        };
+
+        return (piece_to_winner, audit_record) then finalize(joint_piece_time_claim.block_ht);
+    }
+
+    finalize joint_timeout_to_opponent
+    (
+        joint_time_claim_block_ht: u32,
+    )
+    {
+        // assert that 1000 blocks have passed (~ 83 minutes)
+        let current_block_ht: u32 = block.height;
+        assert(current_block_ht >= joint_time_claim_block_ht + 1000u32);
+    }
 }

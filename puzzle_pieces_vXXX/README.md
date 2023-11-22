@@ -1,4 +1,4 @@
-# puzzle_pieces_v001.aleo
+# puzzle_pieces_v008.aleo
 
 ## We also have a `test.sh` script [here](test.sh) that runs through all the flows.
 
@@ -80,5 +80,18 @@ joint_stake_transfer_to_winner (
   joint_piece_winner: JointPieceWinner,
   piece_joint_stake: PieceJointStake,
   joint_piece_time_claim: JointPieceTimeClaim,
+)
+```
+
+### joint_timeout_to_opponent
+
+`joint_timeout_to_opponent` called by opponent using multisig key and valid signature to end the game and transfer the pieces to the winner after a blockheight passes indicating challenger timeout
+
+Function:
+```rust
+joint_timeout_to_opponent (
+  joint_piece_state: JointPieceState,
+  joint_piece_time_claim: JointPieceTimeClaim,
+  sig: signature,
 )
 ```
