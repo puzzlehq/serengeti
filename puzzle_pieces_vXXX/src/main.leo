@@ -720,7 +720,7 @@ program puzzle_pieces_v008.aleo {
         let audit_record: AuditTransferToWinner = AuditTransferToWinner {
             owner: puzzle_issuer,
             challenger: challenger,
-            opponent: winner,
+            opponent: opponent,
             game_multisig: game_multisig,
             receiver: opponent,
             amount: amount,
