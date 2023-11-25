@@ -1,4 +1,4 @@
-# puzzle_pieces_v008.aleo
+# puzzle_pieces_v011.aleo
 
 ## We also have a `test.sh` script [here](test.sh) that runs through all the flows.
 

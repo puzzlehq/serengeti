@@ -1,8 +1,7 @@
-// The 'puzzle_pieces_v010' program.
-// import multiparty_pvp_utils_v001.leo;
+// The 'puzzle_pieces_v011' program.
 // Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
 
-program puzzle_pieces_v010.aleo {
+program puzzle_pieces_v011.aleo {
     mapping supply: field => u64;
 
     struct Message {
