@@ -12,7 +12,7 @@ import multiparty_pvp_utils_v011.leo;
 // todo: can we do this with inline functions?
 
 // The 'coinflip' program.
-program wheres_alex_v010.aleo {
+program wheres_alex_v011.aleo {
 
     // todo: this will likely need to store each player answer
     // todo: may be best to store players in the game here on game record
@@ -158,7 +158,7 @@ program wheres_alex_v010.aleo {
     // New propose game
     transition propose_game (
         //puzzle_pieces.stake_transfer_in() data
-        wager_record: puzzle_pieces_v010.leo/Piece.record,
+        wager_record: puzzle_pieces_v011.leo/Piece.record,
         amount: u64,
         sender: address, // Challenger address proposing game
         challenger: address,
@@ -176,15 +176,15 @@ program wheres_alex_v010.aleo {
         seed: field, //game_multisig seed to send to user
         //wheres_alex data
     ) -> (
-        puzzle_pieces_v010.leo/PieceClaim.record,
-        puzzle_pieces_v010.leo/PieceStake.record,
-        puzzle_pieces_v010.leo/ClaimSignature.record,
-        puzzle_pieces_v010.leo/Piece.record,
-        puzzle_pieces_v010.leo/AuditStakeIn.record,
-        multiparty_pvp_utils_v010.leo/Answer.record,
-        multiparty_pvp_utils_v010.leo/AuditMintAnswer.record,
-        multiparty_pvp_utils_v010.leo/Key.record,
-        multiparty_pvp_utils_v010.leo/AuditKey.record,
+        puzzle_pieces_v011.leo/PieceClaim.record,
+        puzzle_pieces_v011.leo/PieceStake.record,
+        puzzle_pieces_v011.leo/ClaimSignature.record,
+        puzzle_pieces_v011.leo/Piece.record,
+        puzzle_pieces_v011.leo/AuditStakeIn.record,
+        multiparty_pvp_utils_v011.leo/Answer.record,
+        multiparty_pvp_utils_v011.leo/AuditMintAnswer.record,
+        multiparty_pvp_utils_v011.leo/Key.record,
+        multiparty_pvp_utils_v011.leo/AuditKey.record,
         Game,
         GameReqNotification,
         WaitingAcceptanceNotification,
@@ -216,7 +216,7 @@ program wheres_alex_v010.aleo {
             ClaimSignature,
             Piece,
             AuditStakeIn
-        ) = puzzle_pieces_v010.leo/stake_transfer_in(
+        ) = puzzle_pieces_v011.leo/stake_transfer_in(
             wager_record,
             sender,
             challenger,
@@ -237,7 +237,7 @@ program wheres_alex_v010.aleo {
         ) : (
             Key,
             AuditKey
-        ) = multiparty_pvp_utils_v010.leo/mint_multisig_key(seed,amount,challenger,opponent,game_multisig);
+        ) = multiparty_pvp_utils_v011.leo/mint_multisig_key(seed,amount,challenger,opponent,game_multisig);
 
         let game_request_notification_record: GameReqNotification = GameReqNotification {
             owner: opponent, //opponent
@@ -270,7 +270,7 @@ program wheres_alex_v010.aleo {
             game_state: 1field,
         };
 
-        let (answer_record, audit_mint_answer_record):  (Answer, AuditMintAnswer) = multiparty_pvp_utils_v010.leo/mint_answer(
+        let (answer_record, audit_mint_answer_record):  (Answer, AuditMintAnswer) = multiparty_pvp_utils_v011.leo/mint_answer(
                 challenger,
                 opponent,
                 game_multisig,
@@ -307,17 +307,17 @@ program wheres_alex_v010.aleo {
     transition challenger_renege_stake
     (
         waiting_accept_game_notification: WaitingAcceptanceNotification,
-        piece_stake: puzzle_pieces_v010.leo/PieceStake.record,
-        piece_claim: puzzle_pieces_v010.leo/PieceClaim.record,
+        piece_stake: puzzle_pieces_v011.leo/PieceStake.record,
+        piece_claim: puzzle_pieces_v011.leo/PieceClaim.record,
         sig: signature,
     ) -> (
-        puzzle_pieces_v010.leo/Piece.record,
-        puzzle_pieces_v010.leo/AuditStakeOut.record,
+        puzzle_pieces_v011.leo/Piece.record,
+        puzzle_pieces_v011.leo/AuditStakeOut.record,
         StakeRenegedNotification,
         StakeRenegedNotification,
         )
     {
-        let (piece_record, audit_stake_out_record): (Piece, AuditStakeOut) = puzzle_pieces_v010.leo/stake_transfer_out(piece_stake, piece_claim, sig);
+        let (piece_record, audit_stake_out_record): (Piece, AuditStakeOut) = puzzle_pieces_v011.leo/stake_transfer_out(piece_stake, piece_claim, sig);
 
         let notify_challenger_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
             owner: waiting_accept_game_notification.challenger_address, //opponent
@@ -350,8 +350,8 @@ program wheres_alex_v010.aleo {
 
 
     transition submit_wager (
-        wager_record: puzzle_pieces_v010.leo/Piece.record,
-        key_record: multiparty_pvp_utils_v010.leo/Key.record,
+        wager_record: puzzle_pieces_v011.leo/Piece.record,
+        key_record: multiparty_pvp_utils_v011.leo/Key.record,
         game_req_notification: GameReqNotification,
         message_1: field, //from output of useSignature
         message_2: field,
@@ -360,11 +360,11 @@ program wheres_alex_v010.aleo {
         message_5: field,
         sig: signature, //from output of useSignature
     ) -> (
-        puzzle_pieces_v010.leo/PieceClaim.record,
-        puzzle_pieces_v010.leo/PieceStake.record,
-        puzzle_pieces_v010.leo/ClaimSignature.record,
-        puzzle_pieces_v010.leo/Piece.record,
-        puzzle_pieces_v010.leo/AuditStakeIn.record,
+        puzzle_pieces_v011.leo/PieceClaim.record,
+        puzzle_pieces_v011.leo/PieceStake.record,
+        puzzle_pieces_v011.leo/ClaimSignature.record,
+        puzzle_pieces_v011.leo/Piece.record,
+        puzzle_pieces_v011.leo/AuditStakeIn.record,
         ChallengerWagerNotification,
         OpponentWagerNotification,
     )
@@ -391,7 +391,7 @@ program wheres_alex_v010.aleo {
             ClaimSignature,
             Piece,
             AuditStakeIn
-        ) = puzzle_pieces_v010.leo/stake_transfer_in(
+        ) = puzzle_pieces_v011.leo/stake_transfer_in(
             wager_record,
             game_req_notification.opponent_address, // sender
             game_req_notification.challenger_address, // challenger
@@ -444,16 +444,16 @@ program wheres_alex_v010.aleo {
     (
         game_record: Game,
         opponent_answer: field,
-        piece_stake_challenger: puzzle_pieces_v010.leo/PieceStake.record,
-        piece_claim_challenger: puzzle_pieces_v010.leo/PieceClaim.record,
-        piece_stake_opponent: puzzle_pieces_v010.leo/PieceStake.record,
-        piece_claim_opponent: puzzle_pieces_v010.leo/PieceClaim.record,
+        piece_stake_challenger: puzzle_pieces_v011.leo/PieceStake.record,
+        piece_claim_challenger: puzzle_pieces_v011.leo/PieceClaim.record,
+        piece_stake_opponent: puzzle_pieces_v011.leo/PieceStake.record,
+        piece_claim_opponent: puzzle_pieces_v011.leo/PieceClaim.record,
         block_ht: u32,
     ) -> (
-        puzzle_pieces_v010.leo/PieceJointStake.record,
-        puzzle_pieces_v010.leo/JointPieceTimeClaim.record,
-        puzzle_pieces_v010.leo/JointPieceState.record,
-        puzzle_pieces_v010.leo/AuditJointStake.record,
+        puzzle_pieces_v011.leo/PieceJointStake.record,
+        puzzle_pieces_v011.leo/JointPieceTimeClaim.record,
+        puzzle_pieces_v011.leo/JointPieceState.record,
+        puzzle_pieces_v011.leo/AuditJointStake.record,
         WaitingRevealNotification,
         RevealAnswerNotification,
         Game,
@@ -470,7 +470,7 @@ program wheres_alex_v010.aleo {
             JointPieceTimeClaim,
             JointPieceState,
             AuditJointStake
-        ) = puzzle_pieces_v010.leo/transfer_stakes_to_joint(
+        ) = puzzle_pieces_v011.leo/transfer_stakes_to_joint(
             piece_stake_challenger,
             piece_claim_challenger,
             piece_stake_opponent,
@@ -546,15 +546,15 @@ program wheres_alex_v010.aleo {
     transition reveal_answer_game
     (
         reveal_answer_notification_record: RevealAnswerNotification,
-        answer_record: multiparty_pvp_utils_v010.leo/Answer.record,
-        joint_piece_state: puzzle_pieces_v010.leo/JointPieceState.record,
-        claim_signature: puzzle_pieces_v010.leo/ClaimSignature.record,
+        answer_record: multiparty_pvp_utils_v011.leo/Answer.record,
+        joint_piece_state: puzzle_pieces_v011.leo/JointPieceState.record,
+        claim_signature: puzzle_pieces_v011.leo/ClaimSignature.record,
         // sig: signature // using claimSignature record from beginning for this
     ) -> (
-        multiparty_pvp_utils_v010.leo/RevealAnswer.record,
-        multiparty_pvp_utils_v010.leo/AuditRevealAnswer.record,
-        puzzle_pieces_v010.leo/JointPieceWinner.record,
-        puzzle_pieces_v010.leo/AuditJointPieceWinner.record,
+        multiparty_pvp_utils_v011.leo/RevealAnswer.record,
+        multiparty_pvp_utils_v011.leo/AuditRevealAnswer.record,
+        puzzle_pieces_v011.leo/JointPieceWinner.record,
+        puzzle_pieces_v011.leo/AuditJointPieceWinner.record,
         GameFinishReqNotification,
         GameFinishReqNotification,
     )
@@ -566,9 +566,9 @@ program wheres_alex_v010.aleo {
         let sig: signature = claim_signature.sig;
 
         // retrieve revealedanswer record
-        let (revealed_answer_record, audit_revealed_answer_record): (RevealAnswer, AuditRevealAnswer) = multiparty_pvp_utils_v010.leo/reveal_answer(answer_record, sig);
+        let (revealed_answer_record, audit_revealed_answer_record): (RevealAnswer, AuditRevealAnswer) = multiparty_pvp_utils_v011.leo/reveal_answer(answer_record, sig);
 
-        let (joint_piece_winner, audit_joint_piece_winner): (JointPieceWinner, AuditJointPieceWinner) = puzzle_pieces_v010.leo/joint_stake_state_update(joint_piece_state, claim_signature, winner_address);
+        let (joint_piece_winner, audit_joint_piece_winner): (JointPieceWinner, AuditJointPieceWinner) = puzzle_pieces_v011.leo/joint_stake_state_update(joint_piece_state, claim_signature, winner_address);
 
         let game_finish_req_notification_record_opponent: GameFinishReqNotification = GameFinishReqNotification {
             owner: answer_record.opponent_address,
@@ -597,13 +597,13 @@ program wheres_alex_v010.aleo {
     transition finish_game
     (
         game_record: Game,
-        joint_piece_winner: puzzle_pieces_v010.leo/JointPieceWinner.record,
-        piece_joint_stake: puzzle_pieces_v010.leo/PieceJointStake.record,
-        joint_piece_time_claim: puzzle_pieces_v010.leo/JointPieceTimeClaim.record,
+        joint_piece_winner: puzzle_pieces_v011.leo/JointPieceWinner.record,
+        piece_joint_stake: puzzle_pieces_v011.leo/PieceJointStake.record,
+        joint_piece_time_claim: puzzle_pieces_v011.leo/JointPieceTimeClaim.record,
     ) -> (
-        puzzle_pieces_v010.leo/Piece.record,
-        puzzle_pieces_v010.leo/AuditTransferToWinner.record,
-        puzzle_pieces_v010.leo/AuditPieceOwner.record,
+        puzzle_pieces_v011.leo/Piece.record,
+        puzzle_pieces_v011.leo/AuditTransferToWinner.record,
+        puzzle_pieces_v011.leo/AuditPieceOwner.record,
         Game,
         GameFinishedNotification, 
         GameFinishedNotification)
@@ -611,7 +611,7 @@ program wheres_alex_v010.aleo {
 
         let loser_address: address = joint_piece_winner.winner == game_record.challenger_address ? game_record.opponent_address : game_record.challenger_address;
 
-        let (piece_record, audit_transfer_to_winner_record, audit_piece_owner): (Piece, AuditTransferToWinner, AuditPieceOwner) = puzzle_pieces_v010.leo/joint_stake_transfer_to_winner(
+        let (piece_record, audit_transfer_to_winner_record, audit_piece_owner): (Piece, AuditTransferToWinner, AuditPieceOwner) = puzzle_pieces_v011.leo/joint_stake_transfer_to_winner(
             joint_piece_winner,
             piece_joint_stake,
             joint_piece_time_claim,
@@ -658,12 +658,12 @@ program wheres_alex_v010.aleo {
     // called by ms key via opponent to finish the game and get the total pot!
     transition finish_game_by_timeout(
         game_record: Game,
-        piece_joint_stake: puzzle_pieces_v010.leo/PieceJointStake.record,
-        joint_piece_time_claim: puzzle_pieces_v010.leo/JointPieceTimeClaim.record,
+        piece_joint_stake: puzzle_pieces_v011.leo/PieceJointStake.record,
+        joint_piece_time_claim: puzzle_pieces_v011.leo/JointPieceTimeClaim.record,
         sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
     ) -> (
-        puzzle_pieces_v010.leo/Piece.record,
-        puzzle_pieces_v010.leo/AuditTransferToWinner.record,
+        puzzle_pieces_v011.leo/Piece.record,
+        puzzle_pieces_v011.leo/AuditTransferToWinner.record,
         Game,
         GameFinishedNotification,
         GameFinishedNotification)
@@ -708,7 +708,7 @@ program wheres_alex_v010.aleo {
         };
 
         // Payout to winner
-        let (piece_record, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v010.leo/joint_timeout_to_opponent(piece_joint_stake, joint_piece_time_claim, sig);
+        let (piece_record, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v011.leo/joint_timeout_to_opponent(piece_joint_stake, joint_piece_time_claim, sig);
 
         return (
             piece_record,
