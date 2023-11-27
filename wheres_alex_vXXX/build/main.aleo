@@ -217,6 +217,21 @@ function submit_wager:
     output r19 as OpponentWagerNotification.record;
 
 
+function opponent_renege_stake:
+    input r0 as WaitingAcceptanceNotification.record;
+    input r1 as puzzle_pieces_v011.aleo/PieceStake.record;
+    input r2 as puzzle_pieces_v011.aleo/PieceClaim.record;
+    input r3 as signature.private;
+    assert.eq self.caller self.signer;
+    call puzzle_pieces_v011.aleo/stake_transfer_out r1 r2 r3 into r4 r5;
+    cast r0.challenger_address r0.game_multisig 0field false r0.total_pot r0.challenger_address r0.opponent_address r0.opponent_address into r6 as StakeRenegedNotification.record;
+    cast r0.opponent_address r0.game_multisig 0field false r0.total_pot r0.challenger_address r0.opponent_address r0.opponent_address into r7 as StakeRenegedNotification.record;
+    output r4 as puzzle_pieces_v011.aleo/Piece.record;
+    output r5 as puzzle_pieces_v011.aleo/AuditStakeOut.record;
+    output r6 as StakeRenegedNotification.record;
+    output r7 as StakeRenegedNotification.record;
+
+
 function accept_game:
     input r0 as Game.record;
     input r1 as field.private;

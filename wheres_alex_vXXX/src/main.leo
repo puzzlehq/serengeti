@@ -422,7 +422,54 @@ program wheres_alex_v011.aleo {
             opponent_submitted_wager_notification_record,
         );
     }
-    // todo: implement renege for opponent
+
+
+    // opponent calls this function with Multisig key and signature as input
+    // that was submitted when submitting wager that exists on claim record
+    transition opponent_renege_stake
+    (
+        waiting_accept_game_notification: WaitingAcceptanceNotification,
+        piece_stake_opponent: puzzle_pieces_v011.leo/PieceStake.record,
+        piece_claim_opponent: puzzle_pieces_v011.leo/PieceClaim.record,
+        opponent_sig: signature,
+    ) -> (
+        puzzle_pieces_v011.leo/Piece.record,
+        puzzle_pieces_v011.leo/AuditStakeOut.record,
+        StakeRenegedNotification,
+        StakeRenegedNotification,
+        )
+    {
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
+
+        let (piece_record, audit_stake_out_record): (Piece, AuditStakeOut) = puzzle_pieces_v011.leo/stake_transfer_out(piece_stake_opponent, piece_claim_opponent, opponent_sig);
+
+        let notify_challenger_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
+            owner: waiting_accept_game_notification.challenger_address, //opponent
+            game_multisig: waiting_accept_game_notification.game_multisig,
+            game_state: 0field,
+            your_turn: false,
+            total_pot: waiting_accept_game_notification.total_pot,
+            challenger_address: waiting_accept_game_notification.challenger_address,
+            opponent_address: waiting_accept_game_notification.opponent_address,
+            renege_address: waiting_accept_game_notification.opponent_address,
+        };
+
+
+        let notify_opponent_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
+            owner: waiting_accept_game_notification.opponent_address, //opponent
+            game_multisig: waiting_accept_game_notification.game_multisig,
+            game_state: 0field,
+            your_turn: false,
+            total_pot: waiting_accept_game_notification.total_pot,
+            challenger_address: waiting_accept_game_notification.challenger_address,
+            opponent_address: waiting_accept_game_notification.opponent_address,
+            renege_address: waiting_accept_game_notification.opponent_address,
+        };
+
+        return (piece_record, audit_stake_out_record, notify_challenger_stake_reneged, notify_opponent_stake_reneged);
+
+    }
 
     // called by ms key after wager is confirmed on network
     transition accept_game
