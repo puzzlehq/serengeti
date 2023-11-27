@@ -126,13 +126,11 @@ program puzzle_pieces_v011.aleo {
         block_ht: u32,
         ix: u32,
     }
-    // Todo: can't pull block.height from chain without finalize to store block height on record (investigate more @Abhin and write up)
     //For block height — user can set it but can’t pull it onchain to check until a finalize
     // So a multisig Alice may want to penalize Bob and take bob’s stake if he inputs the wrong on
     // - We should track who updates this multisig state to who sets block height to be able to penalize
     // something like adding input (address, sig) where address is individual key with signature set to something
     // and set JointPieceCreator: address (challenger or opponent) ---> question about what is field vulnerabilities for msg
-    // TODO -- think on above more
 
     // owned by challenger only
     // ix: 10u32
@@ -685,7 +683,6 @@ program puzzle_pieces_v011.aleo {
     //
     // This function is called with the multisig key
     //
-    // TODO: Also note audit view can enforce a block_ht that's faulty
     //
     transition joint_timeout_to_opponent (
         piece_joint_stake: PieceJointStake,

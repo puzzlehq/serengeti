@@ -1,22 +1,9 @@
 import puzzle_pieces_v011.leo;
 import multiparty_pvp_utils_v011.leo;
 
-// todo: wait we're going to use alice's credits to send to multisig? need to add credits.leo but not supported yet per https://github.com/AleoHQ/leo/pull/2881
-// imports deployed to separate address: https://t.me/c/1766615939/3581
-
-// todo: the primary issue is that we need to consume owner rules inside of puzzle transfers but we can't do that?
-// todo: actually does this matter, there is only 1 owner rules record floating?
-// todo: can we consume it inside of this program?
-// todo: since if we do not consume it inside the transfer then someone could rug?
-// todo: also when transferring to winner will need to transfer both records
-// todo: can we do this with inline functions?
-
 // The 'coinflip' program.
 program wheres_alex_v011.aleo {
 
-    // todo: this will likely need to store each player answer
-    // todo: may be best to store players in the game here on game record
-    // todo: add block height to game record?
     record Game {
         owner: address,
         challenger_commit: field,
@@ -347,9 +334,6 @@ program wheres_alex_v011.aleo {
 
     }
 
-    // todo: implement renege for challenger
-
-
     transition submit_wager (
         opponent_wager_record: puzzle_pieces_v011.leo/Piece.record,
         key_record: multiparty_pvp_utils_v011.leo/Key.record,
@@ -486,7 +470,6 @@ program wheres_alex_v011.aleo {
         );
 
         // sent to opponent on accept_game
-        // todo: how will user know they can claim if challenger never reveals answer?
         let waiting_reveal_answer_notifcation_record: WaitingRevealNotification = WaitingRevealNotification {
             owner: game_record.opponent_address,
             game_multisig: game_record.owner,
@@ -556,7 +539,6 @@ program wheres_alex_v011.aleo {
         challenger_answer_record: multiparty_pvp_utils_v011.leo/Answer.record,
         joint_piece_state: puzzle_pieces_v011.leo/JointPieceState.record,
         challenger_claim_signature: puzzle_pieces_v011.leo/ClaimSignature.record,
-        // sig: signature // using claimSignature record from beginning for this
     ) -> (
         multiparty_pvp_utils_v011.leo/RevealAnswer.record,
         multiparty_pvp_utils_v011.leo/AuditRevealAnswer.record,
@@ -732,10 +714,10 @@ program wheres_alex_v011.aleo {
         };
 
         // Payout to winner
-        let (piece_record, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v011.leo/joint_timeout_to_opponent(piece_joint_stake, joint_piece_time_claim, sig);
+        let (piece_record_winner, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v011.leo/joint_timeout_to_opponent(piece_joint_stake, joint_piece_time_claim, sig);
 
         return (
-            piece_record,
+            piece_record_winner,
             audit_transfer_to_winner_record,
             updated_game_record,
             game_finished_notification_challenger_record,
