@@ -547,7 +547,7 @@ program wheres_alex_v011.aleo {
             challenger_address: game_record.challenger_address,
             opponent_address: game_record.opponent_address,
             game_multisig: game_record.game_multisig,
-            game_state: 2field,
+            game_state: 3field,
         };
 
         return (
