@@ -43,7 +43,7 @@ program wheres_alex_v011.aleo {
         //
         // ALTERNATE EXIT PATHS
         // 6 -> timeout finished game
-        // 0 -> Game reneged
+// 0 -> Game reneged
 
     // your turn:
         // true -> your turn or ms turn
@@ -190,6 +190,8 @@ program wheres_alex_v011.aleo {
         WaitingAcceptanceNotification,
     ) {
 
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
 
         // random edge case, maybe unnecessary
         assert_neq(game_multisig, opponent);
@@ -317,6 +319,9 @@ program wheres_alex_v011.aleo {
         StakeRenegedNotification,
         )
     {
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
+
         let (piece_record, audit_stake_out_record): (Piece, AuditStakeOut) = puzzle_pieces_v011.leo/stake_transfer_out(piece_stake, piece_claim, sig);
 
         let notify_challenger_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
@@ -460,6 +465,12 @@ program wheres_alex_v011.aleo {
     )
     {
 
+        // assert that the game address/multiisg is calling this
+        assert_eq(game_record.owner, self.signer);
+
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
+
         let (
             piece_joint_stake,
             joint_piece_time_claim,
@@ -560,7 +571,13 @@ program wheres_alex_v011.aleo {
     )
     {
 
+        // assert that the correct state updater address is the challenger and the challenger
+        // is invoking this
         assert_eq(joint_piece_state.state_updater_address, self.signer);
+
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
+
         // determine winner! If opponent correctly picked where the challenger hid alex, the opponent wins otherwise the challenger wins
         let winner_address: address = reveal_answer_notification_record.opponent_answer == answer_record.answer ? answer_record.opponent_address : answer_record.challenger_address;
         let sig: signature = claim_signature.sig;
@@ -605,9 +622,15 @@ program wheres_alex_v011.aleo {
         puzzle_pieces_v011.leo/AuditTransferToWinner.record,
         puzzle_pieces_v011.leo/AuditPieceOwner.record,
         Game,
-        GameFinishedNotification, 
+        GameFinishedNotification,
         GameFinishedNotification)
     {
+
+        // assert that the game address/multiisg is calling this
+        assert_eq(game_record.owner, self.signer);
+
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
 
         let loser_address: address = joint_piece_winner.winner == game_record.challenger_address ? game_record.opponent_address : game_record.challenger_address;
 
@@ -668,6 +691,11 @@ program wheres_alex_v011.aleo {
         GameFinishedNotification,
         GameFinishedNotification)
     {
+        // assert that the game address/multiisg is calling this
+        assert_eq(game_record.owner, self.signer);
+
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
 
         // Update the game state
         let updated_game_record: Game = Game {
