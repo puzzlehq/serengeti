@@ -26,10 +26,6 @@ program wheres_alex_v011.aleo {
         opponent_address: address,
         game_multisig: address,
         game_state: field,
-        // private game_state: field,
-        // 1 -> proposed game
-        // 2 -> accepted game
-        // 3 -> finished game
     }
 
     // GAME STATE RECORDED ON NOTIFICATIONS
@@ -159,7 +155,7 @@ program wheres_alex_v011.aleo {
     transition propose_game (
         //puzzle_pieces.stake_transfer_in() data
         wager_record: puzzle_pieces_v011.leo/Piece.record,
-        amount: u64,
+        challenger_wager_amount: u64,
         sender: address, // Challenger address proposing game
         challenger: address,
         opponent: address,
@@ -169,11 +165,11 @@ program wheres_alex_v011.aleo {
         message_3: field,
         message_4: field,
         message_5: field,
-        sig: signature, //from output of useSignature
+        challenger_sig: signature, //from output of useSignature
         //multiparty_pvp_utils data
-        nonce: field,
-        answer: field,
-        seed: field, //game_multisig seed to send to user
+        challenger_nonce: field,
+        challenger_answer: field,
+        game_multisig_seed: field, //game_multisig seed to send to user
         //wheres_alex data
     ) -> (
         puzzle_pieces_v011.leo/PieceClaim.record,
@@ -197,20 +193,20 @@ program wheres_alex_v011.aleo {
         assert_neq(game_multisig, opponent);
 
         // assert that player 1s answer is either "in weeds" or "behind building"
-        assert(answer == 0field || answer == 1field);
+        assert(challenger_answer == 0field || challenger_answer == 1field);
         // hash the answer and nonce
-        let challenger_commit: field = BHP256::commit_to_field(answer, nonce as scalar);
+        let challenger_commit: field = BHP256::commit_to_field(challenger_answer, challenger_nonce as scalar);
 
         // assert that the wager amount > 0 and wager inside credit == wager amt passed
-        assert(amount > 0u64);
+        assert(challenger_wager_amount > 0u64);
         // assert that the wager record has >= amount wagered
-        assert(wager_record.amount >= amount);
+        assert(wager_record.amount >= challenger_wager_amount);
 
         let (
-            piece_claim,
-            piece_stake,
-            claim_signature,
-            piece,
+            piece_claim_challenger,
+            piece_stake_challenger,
+            claim_signature_challenger,
+            piece_change_challenger,
             audit_stake_in_record
         ): (
             PieceClaim,
@@ -224,13 +220,13 @@ program wheres_alex_v011.aleo {
             challenger,
             opponent,
             game_multisig,
-            amount,
+            challenger_wager_amount,
             message_1,
             message_2,
             message_3,
             message_4,
             message_5,
-            sig
+            challenger_sig
         );
 
         let (
@@ -239,14 +235,14 @@ program wheres_alex_v011.aleo {
         ) : (
             Key,
             AuditKey
-        ) = multiparty_pvp_utils_v011.leo/mint_multisig_key(seed,amount,challenger,opponent,game_multisig);
+        ) = multiparty_pvp_utils_v011.leo/mint_multisig_key(game_multisig_seed,challenger_wager_amount,challenger,opponent,game_multisig);
 
         let game_request_notification_record: GameReqNotification = GameReqNotification {
             owner: opponent, //opponent
             game_multisig: game_multisig,
             game_state: 1field,
             your_turn: true,
-            total_pot: amount + amount,
+            total_pot: challenger_wager_amount + challenger_wager_amount,
             challenger_address: challenger,
             opponent_address: opponent,
         };
@@ -256,7 +252,7 @@ program wheres_alex_v011.aleo {
             game_multisig: game_multisig,
             game_state: 1field,
             your_turn: false,
-            total_pot: amount + amount,
+            total_pot: challenger_wager_amount + challenger_wager_amount,
             challenger_address: challenger,
             opponent_address: opponent,
         };
@@ -264,37 +260,37 @@ program wheres_alex_v011.aleo {
         let game_record: Game = Game {
             owner: game_multisig,
             challenger_commit: challenger_commit,
-            opponent_answer: answer,
-            total_pot: amount + amount,
+            opponent_answer: challenger_answer,
+            total_pot: challenger_wager_amount + challenger_wager_amount,
             challenger_address: challenger,
             opponent_address: opponent,
             game_multisig: game_multisig,
             game_state: 1field,
         };
 
-        let (answer_record, audit_mint_answer_record):  (Answer, AuditMintAnswer) = multiparty_pvp_utils_v011.leo/mint_answer(
+        let (challenger_answer_record, audit_mint_answer_record):  (Answer, AuditMintAnswer) = multiparty_pvp_utils_v011.leo/mint_answer(
                 challenger,
                 opponent,
                 game_multisig,
-                amount,
-                nonce,
-                answer,
+                challenger_wager_amount,
+                challenger_nonce,
+                challenger_answer,
                 message_1,
                 message_2,
                 message_3,
                 message_4,
                 message_5,
-                sig
+                challenger_sig
         );
 
 
         return (
-            piece_claim,
-            piece_stake,
-            claim_signature,
-            piece,
+            piece_claim_challenger,
+            piece_stake_challenger,
+            claim_signature_challenger,
+            piece_change_challenger,
             audit_stake_in_record,
-            answer_record,
+            challenger_answer_record,
             audit_mint_answer_record,
             key_record,
             audit_key_record,
@@ -309,8 +305,8 @@ program wheres_alex_v011.aleo {
     transition challenger_renege_stake
     (
         waiting_accept_game_notification: WaitingAcceptanceNotification,
-        piece_stake: puzzle_pieces_v011.leo/PieceStake.record,
-        piece_claim: puzzle_pieces_v011.leo/PieceClaim.record,
+        piece_stake_challenger: puzzle_pieces_v011.leo/PieceStake.record,
+        piece_claim_challenger: puzzle_pieces_v011.leo/PieceClaim.record,
         sig: signature,
     ) -> (
         puzzle_pieces_v011.leo/Piece.record,
@@ -322,7 +318,7 @@ program wheres_alex_v011.aleo {
         // assert contracts can't call this
         assert_eq(self.caller, self.signer);
 
-        let (piece_record, audit_stake_out_record): (Piece, AuditStakeOut) = puzzle_pieces_v011.leo/stake_transfer_out(piece_stake, piece_claim, sig);
+        let (piece_record, audit_stake_out_record): (Piece, AuditStakeOut) = puzzle_pieces_v011.leo/stake_transfer_out(piece_stake_challenger, piece_claim_challenger, sig);
 
         let notify_challenger_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
             owner: waiting_accept_game_notification.challenger_address, //opponent
@@ -385,10 +381,10 @@ program wheres_alex_v011.aleo {
         assert(wager_record.amount >= game_req_notification.total_pot / 2u64);
 
         let (
-            piece_claim,
-            piece_stake,
-            claim_signature,
-            piece,
+            piece_claim_opponent,
+            piece_stake_opponent,
+            claim_signature_opponent,
+            piece_change_opponent,
             audit_stake_in_record,
         ): (
             PieceClaim,
@@ -433,10 +429,10 @@ program wheres_alex_v011.aleo {
         };
 
         return (
-            piece_claim,
-            piece_stake,
-            claim_signature,
-            piece,
+            piece_claim_opponent,
+            piece_stake_opponent,
+            claim_signature_opponent,
+            piece_change_opponent,
             audit_stake_in_record,
             challenger_submitted_wager_notification_record,
             opponent_submitted_wager_notification_record,
