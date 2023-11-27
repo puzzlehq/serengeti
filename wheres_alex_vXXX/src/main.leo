@@ -43,7 +43,7 @@ program wheres_alex_v011.aleo {
         //
         // ALTERNATE EXIT PATHS
         // 6 -> timeout finished game
-// 0 -> Game reneged
+        // 0 -> Game reneged
 
     // your turn:
         // true -> your turn or ms turn
