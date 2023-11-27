@@ -124,7 +124,7 @@ echo "
 #         piece_stake_opponent: puzzle_pieces_v008.leo/PieceStake.record,
 #         piece_claim_opponent: puzzle_pieces_v008.leo/PieceClaim.record,
 #         block_ht: u32,
-#     ) 
+#     )
 
 leo run accept_game "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
@@ -226,7 +226,7 @@ leo run reveal_answer_game "{
     owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    game_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+    game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 100u64.private,
     nonce: 12345field.private,
     answer: 98765field.private,

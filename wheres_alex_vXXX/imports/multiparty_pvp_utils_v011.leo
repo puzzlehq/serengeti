@@ -12,7 +12,7 @@ program multiparty_pvp_utils_v011.aleo {
         owner: address, //challenger
         challenger_address: address,
         opponent_address: address,
-        game_address: address,
+        game_multisig: address,
         amount: u64,
         nonce: field,
         answer: field,
@@ -28,7 +28,7 @@ program multiparty_pvp_utils_v011.aleo {
         answer_owner: address,
         challenger_address: address,
         opponent_address: address,
-        game_address: address,
+        game_multisig: address,
         amount: u64,
         nonce: field,
         answer: field,
@@ -43,7 +43,7 @@ program multiparty_pvp_utils_v011.aleo {
         owner: address, //challenger
         challenger_address: address,
         opponent_address: address,
-        game_address: address,
+        game_multisig: address,
         amount: u64,
         nonce: field,
         answer: field,
@@ -54,7 +54,7 @@ program multiparty_pvp_utils_v011.aleo {
         owner: address, //challenger
         challenger_address: address,
         opponent_address: address,
-        game_address: address,
+        game_multisig: address,
         amount: u64,
         nonce: field,
         answer: field,
@@ -85,7 +85,7 @@ program multiparty_pvp_utils_v011.aleo {
     transition mint_answer (
         challenger_address: address,
         opponent_address: address,
-        game_address: address,
+        game_multisig: address,
         amount: u64,
         nonce: field,
         answer: field,
@@ -116,7 +116,7 @@ program multiparty_pvp_utils_v011.aleo {
             owner: challenger_address,
             challenger_address: challenger_address,
             opponent_address: opponent_address,
-            game_address: game_address,
+            game_multisig: game_multisig,
             amount: amount,
             nonce: nonce,
             answer: answer,
@@ -132,7 +132,7 @@ program multiparty_pvp_utils_v011.aleo {
             answer_owner: challenger_address,
             challenger_address: challenger_address,
             opponent_address: opponent_address,
-            game_address: game_address,
+            game_multisig: game_multisig,
             amount: amount,
             nonce: nonce,
             answer: answer,
@@ -215,16 +215,16 @@ program multiparty_pvp_utils_v011.aleo {
         let answer_owner: address = answer.owner;
         let answer_challenger_address: address = answer.challenger_address;
         let answer_opponent_address: address = answer.opponent_address;
-        let answer_game_address: address = answer.game_address;
+        let game_multisig: address = answer.game_multisig;
         let answer_amount: u64 = answer.amount;
         let answer_nonce: field = answer.nonce;
         let answer_answer: field = answer.answer;
 
         let revealed_answer_record: RevealAnswer = RevealAnswer {
-            owner: answer_game_address,
+            owner: game_multisig,
             challenger_address: answer_challenger_address,
             opponent_address: answer_opponent_address,
-            game_address: answer_game_address,
+            game_multisig: game_multisig,
             amount: answer_amount,
             nonce: answer_nonce,
             answer: answer_answer,
@@ -235,7 +235,7 @@ program multiparty_pvp_utils_v011.aleo {
             owner: puzzle_issuer,
             challenger_address: answer_challenger_address,
             opponent_address: answer_opponent_address,
-            game_address: answer_game_address,
+            game_multisig: game_multisig,
             amount: answer_amount,
             nonce: answer_nonce,
             answer: answer_answer,

@@ -589,7 +589,7 @@ program wheres_alex_v011.aleo {
 
         let game_finish_req_notification_record_opponent: GameFinishReqNotification = GameFinishReqNotification {
             owner: answer_record.opponent_address,
-            game_multisig: answer_record.game_address,
+            game_multisig: answer_record.game_multisig,
             game_state: 4field,
             your_turn: true,
             total_pot: joint_piece_state.amount,
@@ -599,7 +599,7 @@ program wheres_alex_v011.aleo {
 
         let game_finish_req_notification_record_challenger: GameFinishReqNotification = GameFinishReqNotification{
             owner: answer_record.challenger_address,
-            game_multisig: answer_record.game_address,
+            game_multisig: answer_record.game_multisig,
             game_state: 4field,
             your_turn: true,
             total_pot: joint_piece_state.amount,

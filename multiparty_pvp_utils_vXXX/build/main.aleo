@@ -11,7 +11,7 @@ record Answer:
     owner as address.private;
     challenger_address as address.private;
     opponent_address as address.private;
-    game_address as address.private;
+    game_multisig as address.private;
     amount as u64.private;
     nonce as field.private;
     answer as field.private;
@@ -26,7 +26,7 @@ record AuditMintAnswer:
     answer_owner as address.private;
     challenger_address as address.private;
     opponent_address as address.private;
-    game_address as address.private;
+    game_multisig as address.private;
     amount as u64.private;
     nonce as field.private;
     answer as field.private;
@@ -40,7 +40,7 @@ record RevealAnswer:
     owner as address.private;
     challenger_address as address.private;
     opponent_address as address.private;
-    game_address as address.private;
+    game_multisig as address.private;
     amount as u64.private;
     nonce as field.private;
     answer as field.private;
@@ -50,7 +50,7 @@ record AuditRevealAnswer:
     owner as address.private;
     challenger_address as address.private;
     opponent_address as address.private;
-    game_address as address.private;
+    game_multisig as address.private;
     amount as u64.private;
     nonce as field.private;
     answer as field.private;
@@ -114,7 +114,7 @@ function reveal_answer:
     cast r0.message_1 r0.message_2 r0.message_3 r0.message_4 r0.message_5 into r2 as Mssage;
     sign.verify r1 r0.challenger_address r2 into r3;
     assert.eq true r3;
-    cast r0.game_address r0.challenger_address r0.opponent_address r0.game_address r0.amount r0.nonce r0.answer r1 into r4 as RevealAnswer.record;
-    cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r0.challenger_address r0.opponent_address r0.game_address r0.amount r0.nonce r0.answer r1 into r5 as AuditRevealAnswer.record;
+    cast r0.game_multisig r0.challenger_address r0.opponent_address r0.game_multisig r0.amount r0.nonce r0.answer r1 into r4 as RevealAnswer.record;
+    cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r0.challenger_address r0.opponent_address r0.game_multisig r0.amount r0.nonce r0.answer r1 into r5 as AuditRevealAnswer.record;
     output r4 as RevealAnswer.record;
     output r5 as AuditRevealAnswer.record;
