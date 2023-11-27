@@ -160,11 +160,11 @@ program wheres_alex_v011.aleo {
         challenger: address,
         opponent: address,
         game_multisig: address,
-        message_1: field, //from output of useSignature
-        message_2: field,
-        message_3: field,
-        message_4: field,
-        message_5: field,
+        challenger_message_1: field, //from output of useSignature
+        challenger_message_2: field,
+        challenger_message_3: field,
+        challenger_message_4: field,
+        challenger_message_5: field,
         challenger_sig: signature, //from output of useSignature
         //multiparty_pvp_utils data
         challenger_nonce: field,
@@ -221,11 +221,11 @@ program wheres_alex_v011.aleo {
             opponent,
             game_multisig,
             challenger_wager_amount,
-            message_1,
-            message_2,
-            message_3,
-            message_4,
-            message_5,
+            challenger_message_1,
+            challenger_message_2,
+            challenger_message_3,
+            challenger_message_4,
+            challenger_message_5,
             challenger_sig
         );
 
@@ -275,11 +275,11 @@ program wheres_alex_v011.aleo {
                 challenger_wager_amount,
                 challenger_nonce,
                 challenger_answer,
-                message_1,
-                message_2,
-                message_3,
-                message_4,
-                message_5,
+                challenger_message_1,
+                challenger_message_2,
+                challenger_message_3,
+                challenger_message_4,
+                challenger_message_5,
                 challenger_sig
         );
 
