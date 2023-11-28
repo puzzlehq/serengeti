@@ -247,7 +247,7 @@ program wheres_alex_v012.aleo {
         let game_record: Game = Game {
             owner: game_multisig,
             challenger_commit: challenger_commit,
-            opponent_answer: challenger_answer,
+            opponent_answer: 123field, // random field for now until opponent answer in accept_game
             total_pot: challenger_wager_amount + challenger_wager_amount,
             challenger_address: challenger,
             opponent_address: opponent,
@@ -498,6 +498,9 @@ program wheres_alex_v012.aleo {
         // assert contracts can't call this
         assert_eq(self.caller, self.signer);
 
+        // assert that player 1s answer is either "in weeds" or "behind building"
+        assert(opponent_answer == 0field || opponent_answer == 1field);
+
         let (
             piece_joint_stake,
             joint_piece_time_claim,
@@ -542,7 +545,7 @@ program wheres_alex_v012.aleo {
         let updated_game_record: Game = Game {
             owner: game_record.owner,
             challenger_commit: game_record.challenger_commit,
-            opponent_answer: game_record.opponent_answer,
+            opponent_answer: opponent_answer,
             total_pot: game_record.total_pot,
             challenger_address: game_record.challenger_address,
             opponent_address: game_record.opponent_address,
