@@ -1,4 +1,4 @@
-program multiparty_pvp_utils_v011.aleo;
+program multiparty_pvp_utils_v012.aleo;
 
 struct Mssage:
     field_1 as field;

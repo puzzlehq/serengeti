@@ -1,5 +1,5 @@
-// The 'multiparty_pvp_utils_v011' program.
-program multiparty_pvp_utils_v011.aleo {
+// The 'multiparty_pvp_utils_v012' program.
+program multiparty_pvp_utils_v012.aleo {
     struct Mssage {
         field_1: field,
         field_2: field,
