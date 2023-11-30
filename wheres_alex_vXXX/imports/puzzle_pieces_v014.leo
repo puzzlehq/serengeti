@@ -1,7 +1,7 @@
-// The 'puzzle_pieces_v012' program.
+// The 'puzzle_pieces_v014' program.
 // Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
 
-program puzzle_pieces_v012.aleo {
+program puzzle_pieces_v014.aleo {
     mapping supply: field => u64;
 
     struct Message {
@@ -44,6 +44,7 @@ program puzzle_pieces_v012.aleo {
         amount: u64,
         challenger: address,
         opponent: address,
+        staker: address,
         ix: u32,
     }
 
@@ -301,9 +302,9 @@ program puzzle_pieces_v012.aleo {
 
         // check that sender is either challenger or opponent
         if sender == challenger {
-            assert_eq(sender,challenger);
+            assert_eq(sender, challenger);
         } else {
-            assert_eq(sender,opponent);
+            assert_eq(sender, opponent);
         }
         // check that challenger & opponent are different addresses
         assert_neq( challenger , opponent);
@@ -339,6 +340,7 @@ program puzzle_pieces_v012.aleo {
             amount: amount,
             challenger: challenger,
             opponent: opponent,
+            staker: sender,
             ix: 3u32,
         };
 
@@ -378,7 +380,7 @@ program puzzle_pieces_v012.aleo {
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
         // 1. Check Claim & Stake are from same game_multisig
-        assert_eq(piece_stake.owner,piece_claim.owner);
+        assert_eq(piece_stake.owner, piece_claim.owner);
 
         // 2. Check Claim & Stake have the same game details
         assert_eq(piece_stake.challenger,piece_claim.challenger);

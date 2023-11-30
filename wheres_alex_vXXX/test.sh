@@ -141,6 +141,7 @@ leo run accept_game "{
     amount: 100u64.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+    staker: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     ix: 3u32.private,
     _nonce: 1171432541040874548250929502681399288885050493667972397387185700646746850159group.public
     }" "{
@@ -161,6 +162,7 @@ leo run accept_game "{
     amount: 100u64.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+    staker: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     ix: 3u32.private,
     _nonce: 599889142096431066659827958356335087441348924043773473903678399640857634581group.public
   }" "{

@@ -30,6 +30,7 @@ record PieceStake:
     amount as u64.private;
     challenger as address.private;
     opponent as address.private;
+    staker as address.private;
     ix as u32.private;
 
 record AuditStakeIn:
@@ -213,7 +214,7 @@ function stake_transfer_in:
     assert.neq r2 r3;
     cast r4 r5 r1 r6 r7 r8 r9 r10 r2 r3 6u32 into r20 as PieceClaim.record;
     cast r1 r11 r5 r4 r2 r3 7u32 into r21 as ClaimSignature.record;
-    cast r4 r5 r2 r3 3u32 into r22 as PieceStake.record;
+    cast r4 r5 r2 r3 r1 3u32 into r22 as PieceStake.record;
     sub r0.amount r5 into r23;
     cast r1 r23 0u32 into r24 as Piece.record;
     cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r0.owner r5 r2 r3 r4 4u32 into r25 as AuditStakeIn.record;
