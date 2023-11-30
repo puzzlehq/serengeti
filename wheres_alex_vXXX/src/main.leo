@@ -2,7 +2,7 @@ import puzzle_pieces_v012.leo;
 import multiparty_pvp_utils_v012.leo;
 
 // The 'coinflip' program.
-program wheres_alex_v012.aleo {
+program wheres_alex_v013.aleo {
 
     record Game {
         owner: address,
