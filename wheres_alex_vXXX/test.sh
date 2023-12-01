@@ -79,6 +79,7 @@ leo run submit_wager "{
   challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
   opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
   game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+  ix: 5u32.private,
   _nonce: 614304942627494924156540954346562345174322008762458420667361217491279792987group.public
 }" "{
   owner: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
@@ -88,6 +89,7 @@ leo run submit_wager "{
   total_pot: 200u64.private,
   challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
   opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+  ix: 2u32.private,
   _nonce: 5007203806498158254911228558413488930295100188486359169745660062379448997833group.public
 }" 4299148155668445410404796665478412871867472362428312345599969289162437917169field 251561861986387641133995513088278466362266230978294643355666629668300490271field 1152742118437172617676919179607096353215168002720611159713055309066048881777field 6965356107999508170054292104522311809055538516545196583411503498743541220125field 478560413032field sign1j0hhruukxrlddx4tzzpe8gccgy3l430el69e0jpclrzk2x3kecpq7zteu9z5qqqttk4xltyplgwzt4famkfxar5wjncz5ttssdur2qslse2uz49ljzhxz82y28gy0un45z8w2jgwk7jhdgxqh58qgcvwqpcuf9estpjsv9n9jln3x08mzl2rc8z25j6s6r4uf8rq9r7ddkxqyaahcxh
 
@@ -135,6 +137,7 @@ leo run accept_game "{
     opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     game_state: 1field.private,
+    ix: 0u32.private,
     _nonce: 7317720964287754030180000298351657566658550240415053730543526730746196923728group.public
   }" 0field "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
@@ -223,6 +226,7 @@ leo run reveal_answer_game "{
     challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     opponent_answer: 0field.private,
+    ix: 8u32.private,
     _nonce: 1091792808197594721170902092665224630304882664167687449788333149679412516284group.public
     }" "{
     owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
@@ -237,6 +241,7 @@ leo run reveal_answer_game "{
     message_3: 7738966642647861988443742254957166327730088714215632067055062293849087980027field.private,
     message_4: 501202936879316583063216806269060512965140130553350448375465909870676136661field.private,
     message_5: 478560413032field.private,
+    ix: 1u32.private,
     _nonce: 8069166363212571197507892496914884693017996020436521525224559444902132897860group.public
   }" "{
     owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
@@ -306,6 +311,7 @@ leo run finish_game "{
     opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     game_state: 2field.private,
+    ix: 0u32.private,
     _nonce: 6948608249986613510548613368363016201727215274114585598126958153407391794356group.public
   }" "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
