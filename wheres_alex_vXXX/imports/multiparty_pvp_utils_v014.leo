@@ -8,6 +8,7 @@ program multiparty_pvp_utils_v014.aleo {
         field_5: field,
     }
 
+    // ix: 1u32
     record Answer {
         owner: address, //challenger
         challenger_address: address,
@@ -20,9 +21,11 @@ program multiparty_pvp_utils_v014.aleo {
         message_2: field,
         message_3: field,
         message_4: field,
-        message_5: field
+        message_5: field,
+        ix: u32,
     }
 
+    // ix: 2u32,
     record AuditMintAnswer {
         owner: address,
         answer_owner: address,
@@ -36,9 +39,11 @@ program multiparty_pvp_utils_v014.aleo {
         message_2: field,
         message_3: field,
         message_4: field,
-        message_5: field
+        message_5: field,
+        ix: u32,
     }
 
+    // ix: 3u32
     record RevealAnswer {
         owner: address, //challenger
         challenger_address: address,
@@ -47,9 +52,11 @@ program multiparty_pvp_utils_v014.aleo {
         amount: u64,
         nonce: field,
         answer: field,
-        sig: signature
+        sig: signature,
+        ix: u32,
     }
 
+    // ix: 4u32
     record AuditRevealAnswer {
         owner: address, //challenger
         challenger_address: address,
@@ -59,8 +66,10 @@ program multiparty_pvp_utils_v014.aleo {
         nonce: field,
         answer: field,
         sig: signature
+        ix: u32,
     }
 
+    // ix: 5u32
     record Key {
         owner: address, //opponent
         seed: field,
@@ -68,8 +77,10 @@ program multiparty_pvp_utils_v014.aleo {
         challenger: address,
         opponent: address,
         game_multisig: address,
+        ix: u32,
     }
 
+    // ix: 6u32
     record AuditKey {
         owner: address, //puzzle issuer
         seed: field,
@@ -77,6 +88,7 @@ program multiparty_pvp_utils_v014.aleo {
         challenger: address,
         opponent: address,
         game_multisig: address,
+        ix: u32,
     }
 
     // Created by challenger at start of the game
@@ -124,7 +136,8 @@ program multiparty_pvp_utils_v014.aleo {
             message_2: message_2,
             message_3: message_3,
             message_4: message_4,
-            message_5: message_5
+            message_5: message_5,
+            ix: 1u32,
         };
 
         let audit_record: AuditMintAnswer = AuditMintAnswer {
@@ -140,7 +153,8 @@ program multiparty_pvp_utils_v014.aleo {
             message_2: message_2,
             message_3: message_3,
             message_4: message_4,
-            message_5: message_5
+            message_5: message_5,
+            ix: 2u32,
         };
 
 
@@ -168,6 +182,7 @@ program multiparty_pvp_utils_v014.aleo {
             challenger: challenger,
             opponent: opponent,
             game_multisig: game_multisig,
+            ix: 5u32,
         };
 
         let audit_key_record: AuditKey = AuditKey {
@@ -177,6 +192,7 @@ program multiparty_pvp_utils_v014.aleo {
             challenger: challenger,
             opponent: opponent,
             game_multisig: game_multisig,
+            ix: 6u32,
         };
 
         return (key_record, audit_key_record);
@@ -229,6 +245,7 @@ program multiparty_pvp_utils_v014.aleo {
             nonce: answer_nonce,
             answer: answer_answer,
             sig: sig,
+            ix: 3u32,
         };
 
         let audit_record: AuditRevealAnswer = AuditRevealAnswer {
@@ -240,6 +257,7 @@ program multiparty_pvp_utils_v014.aleo {
             nonce: answer_nonce,
             answer: answer_answer,
             sig: sig,
+            ix: 4u32,
         };
 
         return (revealed_answer_record, audit_record);
