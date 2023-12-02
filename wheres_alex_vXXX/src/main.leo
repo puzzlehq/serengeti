@@ -2,7 +2,7 @@ import puzzle_pieces_v015.leo;
 import multiparty_pvp_utils_v015.leo;
 
 // The 'coinflip' program.
-program wheres_alex_v016.aleo {
+program wheres_alex_v017.aleo {
 
     // ix: 1
     record Game {
@@ -140,6 +140,8 @@ program wheres_alex_v016.aleo {
         total_pot: u64,
         challenger_address: address,
         opponent_address: address,
+        challenger_answer: field,
+        opponent_answer: field,
         winner: address,
         loser: address,
         ix: u32,
@@ -658,6 +660,8 @@ program wheres_alex_v016.aleo {
             total_pot: joint_piece_state.amount,
             challenger_address: challenger_answer_record.challenger_address,
             opponent_address: challenger_answer_record.opponent_address,
+            challenger_answer: challenger_answer_record.answer,
+            opponent_answer: reveal_answer_notification_record.opponent_answer,
             winner: winner_address,
             loser: loser_address,
             ix: 9u32,
@@ -671,6 +675,8 @@ program wheres_alex_v016.aleo {
             total_pot: joint_piece_state.amount,
             challenger_address: challenger_answer_record.challenger_address,
             opponent_address: challenger_answer_record.opponent_address,
+            challenger_answer: challenger_answer_record.answer,
+            opponent_answer: reveal_answer_notification_record.opponent_answer,
             winner: winner_address,
             loser: loser_address,
             ix: 9u32,
