@@ -1,6 +1,6 @@
 import puzzle_pieces_v015.aleo;
 import multiparty_pvp_utils_v015.aleo;
-program wheres_alex_v015.aleo;
+program wheres_alex_v016.aleo;
 
 
 
@@ -117,6 +117,8 @@ record GameFinishReqNotification:
     total_pot as u64.private;
     challenger_address as address.private;
     opponent_address as address.private;
+    winner as address.private;
+    loser as address.private;
     ix as u32.private;
 
 record GameFinishedNotification:
@@ -268,7 +270,7 @@ function accept_game:
     output r14 as WaitingRevealNotification.record;
     output r15 as RevealAnswerNotification.record;
     output r16 as Game.record;
-    output r17 as wheres_alex_v015.aleo/accept_game.future;
+    output r17 as wheres_alex_v016.aleo/accept_game.future;
 
 finalize accept_game:
     input r0 as u32.public;
@@ -289,16 +291,18 @@ function reveal_answer_game:
     assert.eq self.caller self.signer;
     is.eq r0.opponent_answer r1.answer into r4;
     ternary r4 r1.opponent_address r1.challenger_address into r5;
-    call multiparty_pvp_utils_v015.aleo/reveal_answer r1 r3.sig into r6 r7;
-    call puzzle_pieces_v015.aleo/joint_stake_state_update r2 r3 r5 into r8 r9;
-    cast r1.opponent_address r1.game_multisig 4field true r2.amount r1.challenger_address r1.opponent_address 9u32 into r10 as GameFinishReqNotification.record;
-    cast r1.challenger_address r1.game_multisig 4field true r2.amount r1.challenger_address r1.opponent_address 9u32 into r11 as GameFinishReqNotification.record;
-    output r6 as multiparty_pvp_utils_v015.aleo/RevealAnswer.record;
-    output r7 as multiparty_pvp_utils_v015.aleo/AuditRevealAnswer.record;
-    output r8 as puzzle_pieces_v015.aleo/JointPieceWinner.record;
-    output r9 as puzzle_pieces_v015.aleo/AuditJointPieceWinner.record;
-    output r10 as GameFinishReqNotification.record;
-    output r11 as GameFinishReqNotification.record;
+    is.eq r5 r1.challenger_address into r6;
+    ternary r6 r1.opponent_address r1.challenger_address into r7;
+    call multiparty_pvp_utils_v015.aleo/reveal_answer r1 r3.sig into r8 r9;
+    call puzzle_pieces_v015.aleo/joint_stake_state_update r2 r3 r5 into r10 r11;
+    cast r1.opponent_address r1.game_multisig 4field true r2.amount r1.challenger_address r1.opponent_address r5 r7 9u32 into r12 as GameFinishReqNotification.record;
+    cast r1.challenger_address r1.game_multisig 4field true r2.amount r1.challenger_address r1.opponent_address r5 r7 9u32 into r13 as GameFinishReqNotification.record;
+    output r8 as multiparty_pvp_utils_v015.aleo/RevealAnswer.record;
+    output r9 as multiparty_pvp_utils_v015.aleo/AuditRevealAnswer.record;
+    output r10 as puzzle_pieces_v015.aleo/JointPieceWinner.record;
+    output r11 as puzzle_pieces_v015.aleo/AuditJointPieceWinner.record;
+    output r12 as GameFinishReqNotification.record;
+    output r13 as GameFinishReqNotification.record;
 
 
 function finish_game:
@@ -339,7 +343,7 @@ function finish_game_by_timeout:
     output r4 as Game.record;
     output r5 as GameFinishedNotification.record;
     output r6 as GameFinishedNotification.record;
-    output r9 as wheres_alex_v015.aleo/finish_game_by_timeout.future;
+    output r9 as wheres_alex_v016.aleo/finish_game_by_timeout.future;
 
 finalize finish_game_by_timeout:
     input r0 as u32.public;

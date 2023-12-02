@@ -2,7 +2,7 @@ import puzzle_pieces_v015.leo;
 import multiparty_pvp_utils_v015.leo;
 
 // The 'coinflip' program.
-program wheres_alex_v015.aleo {
+program wheres_alex_v016.aleo {
 
     // ix: 1
     record Game {
@@ -140,6 +140,8 @@ program wheres_alex_v015.aleo {
         total_pot: u64,
         challenger_address: address,
         opponent_address: address,
+        winner: address,
+        loser: address,
         ix: u32,
     }
 
@@ -640,6 +642,7 @@ program wheres_alex_v015.aleo {
 
         // determine winner! If opponent correctly picked where the challenger hid alex, the opponent wins otherwise the challenger wins
         let winner_address: address = reveal_answer_notification_record.opponent_answer == challenger_answer_record.answer ? challenger_answer_record.opponent_address : challenger_answer_record.challenger_address;
+        let loser_address: address = winner_address == challenger_answer_record.challenger_address ? challenger_answer_record.opponent_address : challenger_answer_record.challenger_address;
         let challenger_sig: signature = challenger_claim_signature.sig;
 
         // retrieve revealedanswer record
@@ -655,6 +658,8 @@ program wheres_alex_v015.aleo {
             total_pot: joint_piece_state.amount,
             challenger_address: challenger_answer_record.challenger_address,
             opponent_address: challenger_answer_record.opponent_address,
+            winner: winner_address,
+            loser: loser_address,
             ix: 9u32,
         };
 
@@ -666,6 +671,8 @@ program wheres_alex_v015.aleo {
             total_pot: joint_piece_state.amount,
             challenger_address: challenger_answer_record.challenger_address,
             opponent_address: challenger_answer_record.opponent_address,
+            winner: winner_address,
+            loser: loser_address,
             ix: 9u32,
         };
 
