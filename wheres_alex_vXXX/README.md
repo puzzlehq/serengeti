@@ -1,21 +1,33 @@
 # wheres_alex_v011.aleo
 
-## NOTE: Different function executions require different keys (player 1, player 2, multisig keys). For testing purposes, you can run the below to switch execution keys.
+## High level overview of Where's Alex with the Puzzle Wallet and Puzzle SDK
 
-## We also have a `test.sh` script [here](test.sh) that runs through all the flows.
+<br />
 
-```
-echo "
-NETWORK=testnet3
-PRIVATE_KEY={MS_PK || P1_PK | P2_PK}
-" > .env
-```
+<img width="757" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/74b3a692-3b80-4c40-90b6-44307d9a4c1e">
 
-## Functions
+More information on the Puzzle Wallet and Puzzle SDK can be found [here](https://docs.puzzle.online/)
 
-### propose_game
+<br />
+
+# Walking through the Where's Alex Leo programs
+
+<br />
+
+Note: There is additional technical functionality in the wheres_alex program for better FE UX and notification enablement that is not explained in detail below.
+
+<br />
+
+## Step 1: challenger calls propose_game
+
+<br />
+
+<img width="917" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/70ebabdf-eab9-4c5e-ad69-e5eb0fa4f462">
+
 
 `propose_game` to create a game with a friend.
+
+This will involve creating a 2/2 multisig and staking funds to the private 2/2 multisig between the challenger and their opponent for the game (solving problem #3 mentioned above).
 
 Function:
 ```rust
@@ -66,9 +78,12 @@ player_one_renege_proposal(
 )
 ``` -->
 
-### submit_wager
+## Step 2: Opponent starts to accept game by calling submit_wager() with their key
 
-`submit_wager` to create a game with a friend.
+<img width="1001" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/6d2b5126-7c3d-4dd4-837b-629809d428a2">
+
+
+`submit_wager` to submit your wager to the game you received from the challenger.
 
 Function:
 ```rust
@@ -137,7 +152,12 @@ leo run player_two_renege_proposal "{
 }" 1u64
 ``` -->
 
-## accept_game
+## Step 3: Opponent uses multisig key to lock wagers in with accept_game()
+
+<img width="1418" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/129a3503-4f50-4f05-aac0-a599e589f040">
+
+`accept_game` to commit the wagers to the game and turn the game to the next step.
+
 ```rust
 accept_game (
   game_record: Game,
@@ -163,9 +183,11 @@ leo run accept_game "{
 }" 1field
 ``` -->
 
-### reveal_answer
+## Step 4: Challenger updates game & joint stake to finish state with reveal_answer()
+<img width="1183" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/288b92b5-9659-4fc7-a719-12ffb9be8f8a">
 
-`reveal_answer` to reveal answer record to prove player 1 won or lost.
+
+`reveal_answer` to reveal answer record and whether player 1 won or lost.
 
 Function:
 ```rust
@@ -201,7 +223,9 @@ leo run reveal_answer "{
 }" aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu aleo1muq22xpnzgaeqez0mgkdcau6kcjpk6ztey0u8yv34zcupk3hpczsmxeaww
 ``` -->
 
-### finish_game
+## Step 5: Challenger uses multisig key to send payouts to winner with finish_game()
+<img width="969" alt="image" src="https://github.com/puzzlehq/serengeti/assets/39972641/590e8fb4-c03f-4e5c-9a62-63608730b39b">
+
 
 `finish_game` to finish game
 
@@ -273,140 +297,13 @@ leo run claim_total_pot "{                                                      
 }"
 ``` -->
 
-# puzzle_pieces_v001.aleo
+## NOTE: Different function executions require different keys (player 1, player 2, multisig keys). For testing purposes, you can run the below to switch execution keys.
 
-## Functions
+## We also have a `test.sh` script [here](test.sh) that runs through all the flows.
 
-### stake_transfer_in
-
-`stake_transfer_in` to stake piece token into a game multisig/shared account.
-
-Function:
-```rust
-stake_transfer_in(
-  piece_token: Piece,
-  sender: address,
-  challenger: address,
-  opponent: address,
-  game_multisig: address,
-  amount: u64,
-  message_1: field,
-  message_2: field,
-  message_3: field,
-  message_4: field,
-  message_5: field,
-  sig: signature,
-)
 ```
-
-### stake_transfer_out
-
-`stake_transfer_out` to stake piece token out of a game multisig/shared account.
-
-Function:
-```rust
-stake_transfer_out(
-  piece_stake: PieceStake,
-  piece_claim: PieceClaim,
-  sig: signature,
-)
+echo "
+NETWORK=testnet3
+PRIVATE_KEY={MS_PK || P1_PK | P2_PK}
+" > .env
 ```
-
-## transfer_stakes_to_joint
-
-`transfer_stakes_to_joint` to jointly stake piece token into the game multisig/shared account.
-
-Function:
-```rust
-transfer_stakes_to_joint (
-  piece_stake_challenger: PieceStake,
-  piece_claim_challenger: PieceClaim,
-  piece_stake_opponent: PieceStake,
-  piece_claim_opponent: PieceClaim,
-  block_ht: u32,
-)
-```
-
-### joint_stake_state_update
-
-`joint_stake_state_update` called by challenger to reveal answer in where's alex game
-
-Function:
-```rust
-joint_stake_state_update(
-  reveal_answer_notification_record: RevealAnswerNotification,
-  answer_record: multiparty_pvp_utils_v001.leo/Answer.record,
-  joint_piece_state: puzzle_pieces_v007.leo/JointPieceState.record,
-  claim_signature: puzzle_pieces_v007.leo/ClaimSignature.record,
-  sig: signature,
-)
-```
-
-
-### joint_stake_transfer_to_winner
-
-`joint_stake_transfer_to_winner` called by anyone with multisig key to end the game and transfer the pieces to the winner
-
-Function:
-```rust
-joint_stake_transfer_to_winner (
-  joint_piece_winner: JointPieceWinner,
-  piece_joint_stake: PieceJointStake,
-  joint_piece_time_claim: JointPieceTimeClaim,
-)
-```
-
-
-# multiparty_pvp_utils_v001.aleo
-
-## Functions
-
-### stake_transfer_in
-
-`mint_answer` mints answer record on propose_game, verifies a signature by the challenger
-
-Function:
-```rust
-mint_answer(
-  piece_token: Piece,
-  sender: address,
-  challenger: address,
-  opponent: address,
-  game_multisig: address,
-  amount: u64,
-  message_1: field,
-  message_2: field,
-  message_3: field,
-  message_4: field,
-  message_5: field,
-  sig: signature,
-)
-```
-
-### mint_multisig_key
-
-`mint_multisig_key` to mint the multisig key record with a seed
-
-Function:
-```rust
-mint_multisig_key(
-  seed: field,
-  amount: u64,
-  challenger: address,
-  opponent: address,
-  game_multisig: address,
-)
-```
-
-## reveal_answer
-
-`reveal_answer` called by challenger to reveal the original answer to verify there was no cheating involved
-
-Function:
-```rust
-reveal_answer (
-  answer: Answer,
-  sig: signature,
-)
-```
-
