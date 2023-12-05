@@ -723,7 +723,7 @@ program wheres_alex_v017.aleo {
             challenger_address: game_record.challenger_address,
             opponent_address: game_record.opponent_address,
             game_multisig: game_record.game_multisig,
-            game_state: 3field,
+            game_state: 5field,
             ix: 0u32,
         };
 
@@ -784,7 +784,7 @@ program wheres_alex_v017.aleo {
             challenger_address: game_record.challenger_address,
             opponent_address: game_record.opponent_address,
             game_multisig: game_record.game_multisig,
-            game_state: 3field,
+            game_state: 6field,
             ix: 0u32,
         };
 
