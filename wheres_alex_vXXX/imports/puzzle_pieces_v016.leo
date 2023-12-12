@@ -1,7 +1,7 @@
-// The 'puzzle_pieces_v015' program.
+// The 'puzzle_pieces_v016' program.
 // Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
 
-program puzzle_pieces_v015.aleo {
+program puzzle_pieces_v016.aleo {
     mapping supply: field => u64;
 
     struct Message {
@@ -24,6 +24,14 @@ program puzzle_pieces_v015.aleo {
     record AuditMint {
         owner: address,
         minter: address,
+        amount: u64,
+        ix: u32,
+    }
+
+    // ix: 16u32
+    record AuditJoin {
+        owner: address,
+        joiner: address,
         amount: u64,
         ix: u32,
     }
@@ -234,6 +242,48 @@ program puzzle_pieces_v015.aleo {
         };
 
         return (minted_puzzle_pieces, audit_record);
+    }
+
+    // join 2 pieces
+    transition join_pieces
+    (
+        piece_record_one: Piece,
+        piece_record_two: Piece,
+    ) ->
+    (
+        Piece,
+        AuditJoin,
+    )
+    {
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
+
+        // assert that function caller owns both piece records
+        assert(piece_record_one.owner == self.signer);
+        assert(piece_record_two.owner == self.signer);
+
+        // assert that the piece records have values > 0
+        assert(piece_record_one.amount > 0u64);
+        assert(piece_record_two.amount > 0u64);
+
+        // set puzzle issuing address as issuer:
+        let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
+
+        let joined_piece_record: Piece = Piece {
+            owner: self.signer,
+            amount: piece_record_one.amount + piece_record_two.amount,
+            ix: 0u32,
+        };
+
+        // audit record for issuer to know supply
+        let audit_join_record: AuditJoin = AuditJoin {
+            owner: puzzle_issuer,
+            joiner: self.signer,
+            amount: piece_record_one.amount + piece_record_two.amount,
+            ix: 32u32,
+        };
+
+        return (joined_piece_record, audit_join_record);
     }
 
     transition transfer_private (sender: Piece, receiver: address, amount: u64) -> (Piece, Piece, AuditTransfer) {
