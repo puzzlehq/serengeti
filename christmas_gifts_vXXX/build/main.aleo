@@ -1,4 +1,4 @@
-program puzzle_pieces_v012.aleo;
+program puzzle_pieces_v016.aleo;
 
 struct Message:
     field_1 as field;
@@ -15,6 +15,12 @@ record Piece:
 record AuditMint:
     owner as address.private;
     minter as address.private;
+    amount as u64.private;
+    ix as u32.private;
+
+record AuditJoin:
+    owner as address.private;
+    joiner as address.private;
     amount as u64.private;
     ix as u32.private;
 
@@ -172,6 +178,26 @@ function mint_private:
     cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls r1 r0 1u32 into r3 as AuditMint.record;
     output r2 as Piece.record;
     output r3 as AuditMint.record;
+
+
+function join_pieces:
+    input r0 as Piece.record;
+    input r1 as Piece.record;
+    assert.eq self.caller self.signer;
+    is.eq r0.owner self.signer into r2;
+    assert.eq r2 true;
+    is.eq r1.owner self.signer into r3;
+    assert.eq r3 true;
+    gt r0.amount 0u64 into r4;
+    assert.eq r4 true;
+    gt r1.amount 0u64 into r5;
+    assert.eq r5 true;
+    add r0.amount r1.amount into r6;
+    cast self.signer r6 0u32 into r7 as Piece.record;
+    add r0.amount r1.amount into r8;
+    cast aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls self.signer r8 32u32 into r9 as AuditJoin.record;
+    output r7 as Piece.record;
+    output r9 as AuditJoin.record;
 
 
 function transfer_private:
