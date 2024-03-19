@@ -4,6 +4,7 @@
 program puzz_usdc_giveaway_v002.aleo {
 
     mapping entry_index: u64 => address;
+    // do we need a mapping for the entry count?
     mapping entry_count: u64 => u64;
     mapping winner: address => bool;
 
@@ -41,7 +42,7 @@ program puzz_usdc_giveaway_v002.aleo {
     // C) -- this is also a nice way to guarantee something with minimal proofs -- wide design space here!
     transition set_prize (to: address, amount: u64, asset_type: u64, date: u64, private_key: u64) -> (Gift, AuditGift) {
         // TODO -- probably don't need to field here
-        
+
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6;
 
@@ -78,7 +79,14 @@ program puzz_usdc_giveaway_v002.aleo {
         return then finalize(participant)
     }
 
-    finalize add_raffle_entry
+    finalize add_raffle_entry (public participant: address) {
+        // get current raffle count, if first entry, choose default of 0u64
+        let current_entry_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_entry_count + 1u64);
+        // add address to entry mapping
+        Mapping::set(entry_index, current_entry_count, participant);
+    }
 
 
     // determine_raffle_winner => raffle winner selection function -- may be purely public
