@@ -117,6 +117,8 @@ program puzz_usdc_giveaway_v002.aleo {
         Mapping::set(winner, winning_address, block.height);
     }
 
+
+    // quick test function to make sure cha cha is doing what it is intended to do, might not be correct. need to research this tbh.
     transition test_cha_cha (public input: u64) {
         return then finalize(input);
     }
@@ -127,10 +129,30 @@ program puzz_usdc_giveaway_v002.aleo {
         Mapping::set(test_cha, 0u64, new_num);
     }
 
-    // transition send_prize_to_winner () {
+    // likely need to spec out set_price and send_prize to winner a bit more
+    // think about best way to store private key, etc
+    transition send_prize_to_winner (public winner: address, public giveaway_record: GiveawayAccount) -> (GiveawayAccount, AuditGiveawayAccount) {
 
-    // }
+        let winner_record: GiveawayAccount = GiveawayAccount {
+            owner: winner,
+            amount: giveaway_record.amount,
+            asset_type: giveaway_record.asset_type,
+            date: giveaway_record.date,
+            private_key: giveaway_record.private_key,
+        }
 
+        let audit_winner_record: AuditGiveawayAccount = AuditGiveawayAccount {
+            owner: puzzle_issuer,
+            amount: giveaway_record.amount,
+            asset_type: giveaway_record.asset_type,
+            date: giveaway_record.date,
+            private_key: giveaway_record.private_key,
+        }
+
+        return (winner_record, audit_winner_record);
+    }
+
+    // placeholder if we need to use the finalize for anything
     // finalize send_prize_to_winner () {
 
     // }
