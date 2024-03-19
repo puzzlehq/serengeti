@@ -3,26 +3,28 @@
 
 program puzz_usdc_giveaway_v002.aleo {
 
+    mapping entry_index: u64 => address;
+    mapping entry_count: u64 => u64;
+    mapping winner: address => bool;
+
     // Change Structure to USDC Giveaway
     // Never owned by multisig
-    // ix: 0u32
-    record GiftCard {
+    record GiveawayAccount {
         owner: address,
         amount: u64,
-        number: u64,
+        asset_type: u64,
         date: u64,
-        code: u64,
+        private_key: u64,
     }
 
     // Change structure to USDC giveaway
-    // ix: 1u32
     record AuditGiftCard {
         owner: address,
         minter: address,
         amount: u64,
-        number: u64,
+        asset_type: u64,
         date: u64,
-        code: u64,
+        private_key: u64,
     }
 
     // Put Other Record Structs needed here
@@ -33,19 +35,25 @@ program puzz_usdc_giveaway_v002.aleo {
     // used for marketing purposes
     // do we want this to post something to a mapping? Maybe a blockheight when it was sent?
     // or a blockheight when an automated function should call it?
-    transition set_prize (to: address, amount: u64, number: u64, date: u64, code: u64) -> (Gift, AuditGift) {
+    // we can also PROVE that this has some funds by:
+    // A) signing message and verifying signature with address
+    // B) generating the ethAddress from the private key and posting that in the mapping
+    // C) -- this is also a nice way to guarantee something with minimal proofs -- wide design space here!
+    transition set_prize (to: address, amount: u64, asset_type: u64, date: u64, private_key: u64) -> (Gift, AuditGift) {
+        // TODO -- probably don't need to field here
+        
         // set puzzle issuing address as issuer:
-        let puzzle_issuer: address = aleo10eu5uxfv6fa3u9v3z77espy3f24pgdrwe57veak9hjt8rwg4gy8qu96l3n;
+        let puzzle_issuer: address = aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6;
 
         // no checks on minting right now. test actions and audit without address check
 
-        // puzzle gift minted
-        let minted_puzzle_gift: GiftCard = GiftCard {
+        // puzzle giveaway minted
+        let minted_puzzle_giveaway: GiveawayAccount = GiveawayAccount {
             owner: to,
             amount: amount,
-            number: number,
+            asset_type: number,
             date: date,
-            code: code,
+            private_key: private_key,
         };
 
         // audit record for issuer to know supply
@@ -53,24 +61,36 @@ program puzz_usdc_giveaway_v002.aleo {
             owner: puzzle_issuer,
             minter: to,
             amount: amount,
-            number: number,
+            asset_type: number,
             date: date,
-            code: code,
+            private_key: private_key,
         };
 
         return (minted_puzzle_gift, audit_gift);
     }
 
-    // add entry to raffle function
+    // add_raffle_entry => add entry to raffle function
+    // BIG need to investigate adding multiple entries in one go....
+    // BIG need to investigate not using public mappings because going to get insanely expensive
+    // BIG need to max size of public mapping
+    // public mappings here should just be limited to staking & slashing
+    transition add_raffle_entry(public participant: address) {
+        return then finalize(participant)
+    }
 
-    // raffle winner selection function -- may be purely public
+    finalize add_raffle_entry
+
+
+    // determine_raffle_winner => raffle winner selection function -- may be purely public
 
     // sending prize to raffle winner function
+    // should write out a record to raffle operator for winner.... get winner
 
     // Potential future scope:
     // - pulling out of raffle
     // - automating raffle winner selection
-    // https://www.youtube.com/watch?v=BARTutzwBrc -- Gelato solving this
+    // https://www.youtube.com/watch?v=BARTutzwBrc -- Gelato solving this. Used a whole ass network. Out of scope for us
+    // but we can try internally and would be cool
 
     // General Plan:
     // - Make functions -- functions should give idea about record structure & mappings -today
