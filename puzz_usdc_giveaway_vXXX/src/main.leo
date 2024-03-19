@@ -7,6 +7,7 @@ program puzz_usdc_giveaway_v002.aleo {
     // do we need a mapping for the entry count?
     mapping entry_count: u64 => u64;
     mapping winner: address => u32;
+    mapping test_cha: u64 => u64;
 
     // Change Structure to USDC Giveaway
     // Never owned by multisig
@@ -84,7 +85,7 @@ program puzz_usdc_giveaway_v002.aleo {
     // BIG need to investigate not using public mappings because going to get insanely expensive
     // BIG need to max size of public mapping
     // public mappings here should just be limited to staking & slashing
-    transition add_raffle_entry(public participant: address) {
+    transition add_raffle_entry (public participant: address) {
         return then finalize(participant);
     }
 
@@ -97,7 +98,7 @@ program puzz_usdc_giveaway_v002.aleo {
         Mapping::set(entry_index, current_raffle_count, participant);
     }
 
-    transition determine_raffle_winner() {
+    transition determine_raffle_winner () {
         return then finalize;
     }
 
@@ -115,6 +116,24 @@ program puzz_usdc_giveaway_v002.aleo {
         // set the winning address
         Mapping::set(winner, winning_address, block.height);
     }
+
+    transition test_cha_cha (public input: u64) {
+        return then finalize(input);
+    }
+
+    finalize test_cha_cha (public cha_input: u64) {
+        let random_number: u64 = ChaCha::rand_u64();
+        let new_num: u64 = random_number % cha_input;
+        Mapping::set(test_cha, 0u64, new_num);
+    }
+
+    // transition send_prize_to_winner () {
+
+    // }
+
+    // finalize send_prize_to_winner () {
+
+    // }
 
     // sending prize to raffle winner function
     // should write out a record to raffle operator for winner.... get winner

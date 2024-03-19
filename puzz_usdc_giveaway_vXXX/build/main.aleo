@@ -38,6 +38,11 @@ mapping winner:
 	key as address.public;
 	value as u32.public;
 
+
+mapping test_cha:
+	key as u64.public;
+	value as u64.public;
+
 function set_prize:
     input r0 as address.private;
     input r1 as u64.private;
@@ -73,3 +78,15 @@ finalize determine_raffle_winner:
     rem r1 r0 into r2;
     get entry_index[r2] into r3;
     set block.height into winner[r3];
+
+
+function test_cha_cha:
+    input r0 as u64.public;
+    async test_cha_cha r0 into r1;
+    output r1 as puzz_usdc_giveaway_v002.aleo/test_cha_cha.future;
+
+finalize test_cha_cha:
+    input r0 as u64.public;
+    rand.chacha into r1 as u64;
+    rem r1 r0 into r2;
+    set r2 into test_cha[0u64];
