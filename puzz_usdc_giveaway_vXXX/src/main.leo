@@ -18,6 +18,15 @@ program puzz_usdc_giveaway_v002.aleo {
         private_key: u64,
     }
 
+    record AuditGiveawayAccount {
+        owner: address,
+        minter: address,
+        amount: u64,
+        asset_type: u64,
+        date: u64,
+        private_key: u64,
+    }
+
     // Change structure to USDC giveaway
     record AuditGiftCard {
         owner: address,
@@ -40,7 +49,7 @@ program puzz_usdc_giveaway_v002.aleo {
     // A) signing message and verifying signature with address
     // B) generating the ethAddress from the private key and posting that in the mapping
     // C) -- this is also a nice way to guarantee something with minimal proofs -- wide design space here!
-    transition set_prize (to: address, amount: u64, asset_type: u64, date: u64, private_key: u64) -> (Gift, AuditGift) {
+    transition set_prize (to: address, amount: u64, asset_type: u64, date: u64, private_key: u64) -> (GiveawayAccount, AuditGiveawayAccount) {
         // TODO -- probably don't need to field here
 
         // set puzzle issuing address as issuer:
@@ -52,7 +61,7 @@ program puzz_usdc_giveaway_v002.aleo {
         let minted_puzzle_giveaway: GiveawayAccount = GiveawayAccount {
             owner: to,
             amount: amount,
-            asset_type: number,
+            asset_type: asset_type,
             date: date,
             private_key: private_key,
         };
@@ -62,7 +71,7 @@ program puzz_usdc_giveaway_v002.aleo {
             owner: puzzle_issuer,
             minter: to,
             amount: amount,
-            asset_type: number,
+            asset_type: asset_type,
             date: date,
             private_key: private_key,
         };
