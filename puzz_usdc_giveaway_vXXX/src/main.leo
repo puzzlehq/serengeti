@@ -57,7 +57,7 @@ program puzz_usdc_giveaway_v002.aleo {
         };
 
         // audit record for issuer to know supply
-        let audit_gift: AuditGiftCard = AuditGiftCard {
+        let audit_giveaway: AuditGiveawayAccount = AuditGiveawayAccount {
             owner: puzzle_issuer,
             minter: to,
             amount: amount,
@@ -66,7 +66,7 @@ program puzz_usdc_giveaway_v002.aleo {
             private_key: private_key,
         };
 
-        return (minted_puzzle_gift, audit_gift);
+        return (minted_puzzle_giveaway, audit_giveaway);
     }
 
     // add_raffle_entry => add entry to raffle function
