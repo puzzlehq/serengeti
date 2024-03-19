@@ -76,18 +76,35 @@ program puzz_usdc_giveaway_v002.aleo {
     // BIG need to max size of public mapping
     // public mappings here should just be limited to staking & slashing
     transition add_raffle_entry(public participant: address) {
-        return then finalize(participant)
+        return then finalize(participant);
     }
 
     finalize add_raffle_entry (public participant: address) {
         // get current raffle count, if first entry, choose default of 0u64
-        let current_entry_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
+        let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // increment raffle count
-        Mapping::set(entry_count, 0u64, current_entry_count + 1u64);
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
-        Mapping::set(entry_index, current_entry_count, participant);
+        Mapping::set(entry_index, current_raffle_count, participant);
     }
 
+    transition determine_raffle_winner() {
+        return then finalize determine_raffle_winner();
+    }
+
+    // todo: spec out block ht things
+    finalize determine_raffle_winner() {
+        // get current raffle count
+        let current_raffle_count: u64 = Mapping::get(entry_count, 0u64);
+        // grab random number
+        let random_number: u64 = ChaCha::rand_u64();
+        // select winning number
+        let winner_index: u64 = random_number % current_raffle_count;
+        // get winner at index position
+        let winning_address: address = Mapping::get(entry_index, winner_index);
+        // set the winning address
+        Mapping::set(winner, winning_address, true);
+    }
 
     // determine_raffle_winner => raffle winner selection function -- may be purely public
 
