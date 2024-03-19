@@ -98,11 +98,12 @@ program puzz_usdc_giveaway_v002.aleo {
     }
 
     transition determine_raffle_winner() {
-        return then finalize determine_raffle_winner(block.height);
+        return then finalize;
     }
 
+    // determine_raffle_winner => raffle winner selection function -- may be purely public
     // todo: spec out block ht things
-    finalize determine_raffle_winner (block_ht: u64) {
+    finalize determine_raffle_winner () {
         // get current raffle count
         let current_raffle_count: u64 = Mapping::get(entry_count, 0u64);
         // grab random number
@@ -112,10 +113,8 @@ program puzz_usdc_giveaway_v002.aleo {
         // get winner at index position
         let winning_address: address = Mapping::get(entry_index, winner_index);
         // set the winning address
-        Mapping::set(winner, winning_address, block_ht);
+        Mapping::set(winner, winning_address, block.height);
     }
-
-    // determine_raffle_winner => raffle winner selection function -- may be purely public
 
     // sending prize to raffle winner function
     // should write out a record to raffle operator for winner.... get winner
