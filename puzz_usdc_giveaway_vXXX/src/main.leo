@@ -6,7 +6,7 @@ program puzz_usdc_giveaway_v002.aleo {
     mapping entry_index: u64 => address;
     // do we need a mapping for the entry count?
     mapping entry_count: u64 => u64;
-    mapping winner: address => bool;
+    mapping winner: address => u32;
 
     // Change Structure to USDC Giveaway
     // Never owned by multisig
@@ -98,11 +98,11 @@ program puzz_usdc_giveaway_v002.aleo {
     }
 
     transition determine_raffle_winner() {
-        return then finalize determine_raffle_winner();
+        return then finalize determine_raffle_winner(block.height);
     }
 
     // todo: spec out block ht things
-    finalize determine_raffle_winner() {
+    finalize determine_raffle_winner (block_ht: u64) {
         // get current raffle count
         let current_raffle_count: u64 = Mapping::get(entry_count, 0u64);
         // grab random number
@@ -112,7 +112,7 @@ program puzz_usdc_giveaway_v002.aleo {
         // get winner at index position
         let winning_address: address = Mapping::get(entry_index, winner_index);
         // set the winning address
-        Mapping::set(winner, winning_address, true);
+        Mapping::set(winner, winning_address, block_ht);
     }
 
     // determine_raffle_winner => raffle winner selection function -- may be purely public
