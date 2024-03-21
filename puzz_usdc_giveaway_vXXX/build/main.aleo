@@ -97,6 +97,47 @@ finalize add_five_raffle_entries:
     set r0 into entry_index[r9];
 
 
+function add_eight_raffle_entries:
+    input r0 as address.public;
+    async add_eight_raffle_entries r0 into r1;
+    output r1 as puzz_usdc_giveaway_v002.aleo/add_eight_raffle_entries.future;
+
+finalize add_eight_raffle_entries:
+    input r0 as address.public;
+    get.or_use entry_count[0u64] 0u64 into r1;
+    add r1 1u64 into r2;
+    set r2 into entry_count[0u64];
+    set r0 into entry_index[r1];
+    get entry_count[0u64] into r3;
+    add r3 1u64 into r4;
+    set r4 into entry_count[0u64];
+    set r0 into entry_index[r3];
+    get entry_count[0u64] into r5;
+    add r5 1u64 into r6;
+    set r6 into entry_count[0u64];
+    set r0 into entry_index[r5];
+    get entry_count[0u64] into r7;
+    add r7 1u64 into r8;
+    set r8 into entry_count[0u64];
+    set r0 into entry_index[r7];
+    get entry_count[0u64] into r9;
+    add r9 1u64 into r10;
+    set r10 into entry_count[0u64];
+    set r0 into entry_index[r9];
+    get entry_count[0u64] into r11;
+    add r11 1u64 into r12;
+    set r12 into entry_count[0u64];
+    set r0 into entry_index[r11];
+    get entry_count[0u64] into r13;
+    add r13 1u64 into r14;
+    set r14 into entry_count[0u64];
+    set r0 into entry_index[r13];
+    get entry_count[0u64] into r15;
+    add r15 1u64 into r16;
+    set r16 into entry_count[0u64];
+    set r0 into entry_index[r15];
+
+
 function determine_raffle_winner:
     async determine_raffle_winner into r0;
     output r0 as puzz_usdc_giveaway_v002.aleo/determine_raffle_winner.future;

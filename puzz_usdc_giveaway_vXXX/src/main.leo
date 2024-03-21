@@ -164,12 +164,12 @@ program puzz_usdc_giveaway_v002.aleo {
     }
 
 
-    transition add_ten_raffle_entries (public participant: address)
+    transition add_eight_raffle_entries (public participant: address)
     {
         return then finalize (participant);
     }
 
-    finalize add_ten_raffle_entries (public participant: address) {
+    finalize add_eight_raffle_entries (public participant: address) {
         // 1st increment
         // get current_raffle_count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
@@ -227,22 +227,6 @@ program puzz_usdc_giveaway_v002.aleo {
         Mapping::set(entry_index, current_raffle_count, participant);
 
         // 8th increment
-        // get current_raffle_count
-        current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
-        // add address to entry mapping
-        Mapping::set(entry_index, current_raffle_count, participant);
-
-        // 9th increment
-        // get current_raffle_count
-        current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
-        // add address to entry mapping
-        Mapping::set(entry_index, current_raffle_count, participant);
-
-        // 10th increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
         // increment raffle count
