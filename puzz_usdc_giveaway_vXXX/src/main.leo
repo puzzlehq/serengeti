@@ -98,6 +98,73 @@ program puzz_usdc_giveaway_v002.aleo {
         Mapping::set(entry_index, current_raffle_count, participant);
     }
 
+    // tbd if struct/record is better for this?
+    // transition add_five_raffle_entries_for_loop (public participant: address)
+    // {
+    //     return then finalize (participant);
+    // }
+
+    // finalize add_five_raffle_entries_for_loop (public participant: address) {
+    //     // todo: doesn't compile
+    //     for i: u8 in 0u8..5u8 {
+    //         // get current raffle count, if first entry, choose default of 0u64
+    //         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
+    //         // increment raffle count
+    //         Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
+    //         // add address to entry mapping
+    //         Mapping::set(entry_index, current_raffle_count, participant);
+    //     }
+    // }
+
+    transition add_five_raffle_entries (public participant: address)
+    {
+        return then finalize (participant);
+    }
+
+    finalize add_five_raffle_entries (public participant: address) {
+        // 1st increment
+        // get current_raffle_count
+        let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
+        // add address to entry mapping
+        Mapping::set(entry_index, current_raffle_count, participant);
+
+        // 2nd increment
+        // get current_raffle_count
+        current_raffle_count = Mapping::get(entry_count, 0u64);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
+        // add address to entry mapping
+        Mapping::set(entry_index, current_raffle_count, participant);
+
+        // 3rd increment
+        // get current_raffle_count
+        current_raffle_count = Mapping::get(entry_count, 0u64);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
+        // add address to entry mapping
+        Mapping::set(entry_index, current_raffle_count, participant);
+
+        // 4th increment
+        // get current_raffle_count
+        current_raffle_count = Mapping::get(entry_count, 0u64);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
+        // add address to entry mapping
+        Mapping::set(entry_index, current_raffle_count, participant);
+
+        // 5th increment
+        // get current_raffle_count
+        current_raffle_count = Mapping::get(entry_count, 0u64);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
+        // add address to entry mapping
+        Mapping::set(entry_index, current_raffle_count, participant);
+
+
+    }
+
     transition determine_raffle_winner () {
         return then finalize;
     }
@@ -131,23 +198,27 @@ program puzz_usdc_giveaway_v002.aleo {
 
     // likely need to spec out set_price and send_prize to winner a bit more
     // think about best way to store private key, etc
-    transition send_prize_to_winner (public winner: address, public giveaway_record: GiveawayAccount) -> (GiveawayAccount, AuditGiveawayAccount) {
+    transition send_prize_to_winner (public winner_addr: address, public giveaway_record: GiveawayAccount) -> (GiveawayAccount, AuditGiveawayAccount) {
+
+        // set puzzle issuing address as issuer:
+        let puzzle_issuer: address = aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6;
 
         let winner_record: GiveawayAccount = GiveawayAccount {
-            owner: winner,
+            owner: winner_addr,
             amount: giveaway_record.amount,
             asset_type: giveaway_record.asset_type,
             date: giveaway_record.date,
             private_key: giveaway_record.private_key,
-        }
+        };
 
         let audit_winner_record: AuditGiveawayAccount = AuditGiveawayAccount {
             owner: puzzle_issuer,
+            minter: winner_addr,
             amount: giveaway_record.amount,
             asset_type: giveaway_record.asset_type,
             date: giveaway_record.date,
             private_key: giveaway_record.private_key,
-        }
+        };
 
         return (winner_record, audit_winner_record);
     }
