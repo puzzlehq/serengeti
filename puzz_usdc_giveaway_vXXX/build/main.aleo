@@ -5,7 +5,7 @@ record GiveawayAccount:
     amount as u64.private;
     asset_type as u64.private;
     date as u64.private;
-    private_key as u64.private;
+    private_key as field.private;
 
 record AuditGiveawayAccount:
     owner as address.private;
@@ -13,7 +13,7 @@ record AuditGiveawayAccount:
     amount as u64.private;
     asset_type as u64.private;
     date as u64.private;
-    private_key as u64.private;
+    private_key as field.private;
 
 record AuditGiftCard:
     owner as address.private;
@@ -48,7 +48,7 @@ function set_prize:
     input r1 as u64.private;
     input r2 as u64.private;
     input r3 as u64.private;
-    input r4 as u64.private;
+    input r4 as field.private;
     cast r0 r1 r2 r3 r4 into r5 as GiveawayAccount.record;
     cast aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6 r0 r1 r2 r3 r4 into r6 as AuditGiveawayAccount.record;
     output r5 as GiveawayAccount.record;

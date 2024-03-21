@@ -16,7 +16,7 @@ program puzz_usdc_giveaway_v002.aleo {
         amount: u64,
         asset_type: u64,
         date: u64,
-        private_key: u64,
+        private_key: field,
     }
 
     record AuditGiveawayAccount {
@@ -25,7 +25,7 @@ program puzz_usdc_giveaway_v002.aleo {
         amount: u64,
         asset_type: u64,
         date: u64,
-        private_key: u64,
+        private_key: field,
     }
 
     // Change structure to USDC giveaway
@@ -50,7 +50,9 @@ program puzz_usdc_giveaway_v002.aleo {
     // A) signing message and verifying signature with address
     // B) generating the ethAddress from the private key and posting that in the mapping
     // C) -- this is also a nice way to guarantee something with minimal proofs -- wide design space here!
-    transition set_prize (to: address, amount: u64, asset_type: u64, date: u64, private_key: u64) -> (GiveawayAccount, AuditGiveawayAccount) {
+    // ab: how will we store eth private key on chain? as a field element?
+    // need to be able to reverse the field element off chain into a private key. will we need to write custom logic for this?
+    transition set_prize (to: address, amount: u64, asset_type: u64, date: u64, private_key: field) -> (GiveawayAccount, AuditGiveawayAccount) {
         // TODO -- probably don't need to field here
 
         // set puzzle issuing address as issuer:
@@ -116,8 +118,7 @@ program puzz_usdc_giveaway_v002.aleo {
     //     }
     // }
 
-    transition add_five_raffle_entries (public participant: address)
-    {
+    transition add_five_raffle_entries (public participant: address) {
         return then finalize (participant);
     }
 
@@ -164,8 +165,7 @@ program puzz_usdc_giveaway_v002.aleo {
     }
 
 
-    transition add_eight_raffle_entries (public participant: address)
-    {
+    transition add_eight_raffle_entries (public participant: address) {
         return then finalize (participant);
     }
 
