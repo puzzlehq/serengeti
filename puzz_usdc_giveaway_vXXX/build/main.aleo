@@ -1,4 +1,4 @@
-program puzz_usdc_giveaway_v002.aleo;
+program puzz_usdc_giveaway_v004.aleo;
 
 record GiveawayAccount:
     owner as address.private;
@@ -43,6 +43,11 @@ mapping test_cha:
 	key as u64.public;
 	value as u64.public;
 
+
+mapping test_cha_count:
+	key as u64.public;
+	value as u64.public;
+
 function set_prize:
     input r0 as address.private;
     input r1 as u64.private;
@@ -58,7 +63,7 @@ function set_prize:
 function add_raffle_entry:
     input r0 as address.public;
     async add_raffle_entry r0 into r1;
-    output r1 as puzz_usdc_giveaway_v002.aleo/add_raffle_entry.future;
+    output r1 as puzz_usdc_giveaway_v004.aleo/add_raffle_entry.future;
 
 finalize add_raffle_entry:
     input r0 as address.public;
@@ -71,7 +76,7 @@ finalize add_raffle_entry:
 function add_five_raffle_entries:
     input r0 as address.public;
     async add_five_raffle_entries r0 into r1;
-    output r1 as puzz_usdc_giveaway_v002.aleo/add_five_raffle_entries.future;
+    output r1 as puzz_usdc_giveaway_v004.aleo/add_five_raffle_entries.future;
 
 finalize add_five_raffle_entries:
     input r0 as address.public;
@@ -100,7 +105,7 @@ finalize add_five_raffle_entries:
 function add_eight_raffle_entries:
     input r0 as address.public;
     async add_eight_raffle_entries r0 into r1;
-    output r1 as puzz_usdc_giveaway_v002.aleo/add_eight_raffle_entries.future;
+    output r1 as puzz_usdc_giveaway_v004.aleo/add_eight_raffle_entries.future;
 
 finalize add_eight_raffle_entries:
     input r0 as address.public;
@@ -140,7 +145,7 @@ finalize add_eight_raffle_entries:
 
 function determine_raffle_winner:
     async determine_raffle_winner into r0;
-    output r0 as puzz_usdc_giveaway_v002.aleo/determine_raffle_winner.future;
+    output r0 as puzz_usdc_giveaway_v004.aleo/determine_raffle_winner.future;
 
 finalize determine_raffle_winner:
     get entry_count[0u64] into r0;
@@ -153,13 +158,16 @@ finalize determine_raffle_winner:
 function test_cha_cha:
     input r0 as u64.public;
     async test_cha_cha r0 into r1;
-    output r1 as puzz_usdc_giveaway_v002.aleo/test_cha_cha.future;
+    output r1 as puzz_usdc_giveaway_v004.aleo/test_cha_cha.future;
 
 finalize test_cha_cha:
     input r0 as u64.public;
     rand.chacha into r1 as u64;
     rem r1 r0 into r2;
-    set r2 into test_cha[0u64];
+    get.or_use test_cha_count[0u64] 0u64 into r3;
+    set r2 into test_cha[r3];
+    add r3 1u64 into r4;
+    set r4 into test_cha_count[0u64];
 
 
 function send_prize_to_winner:

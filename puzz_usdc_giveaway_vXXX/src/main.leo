@@ -1,13 +1,15 @@
 // The 'puzz_usdc_giveaway_v002' program.
 // Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
 
-program puzz_usdc_giveaway_v002.aleo {
-
+program puzz_usdc_giveaway_v004.aleo {
+    // 0 -> aleo123, 1 -> aleo456
     mapping entry_index: u64 => address;
     // do we need a mapping for the entry count?
+    // 0 -> 1, 0 -> 2, and so on.
     mapping entry_count: u64 => u64;
     mapping winner: address => u32;
     mapping test_cha: u64 => u64;
+    mapping test_cha_count: u64 => u64;
 
     // Change Structure to USDC Giveaway
     // Never owned by multisig
@@ -94,10 +96,10 @@ program puzz_usdc_giveaway_v002.aleo {
     finalize add_raffle_entry (public participant: address) {
         // get current raffle count, if first entry, choose default of 0u64
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
     }
 
     // tbd if struct/record is better for this?
@@ -126,42 +128,43 @@ program puzz_usdc_giveaway_v002.aleo {
         // 1st increment
         // get current_raffle_count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 2nd increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 3rd increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 4th increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 5th increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
+
     }
 
 
@@ -173,66 +176,67 @@ program puzz_usdc_giveaway_v002.aleo {
         // 1st increment
         // get current_raffle_count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 2nd increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 3rd increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 4th increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 5th increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 6th increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 7th increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
 
         // 8th increment
         // get current_raffle_count
         current_raffle_count = Mapping::get(entry_count, 0u64);
-        // increment raffle count
-        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
         // add address to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
+        // increment raffle count
+        Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
+
     }
 
 
@@ -264,7 +268,10 @@ program puzz_usdc_giveaway_v002.aleo {
     finalize test_cha_cha (public cha_input: u64) {
         let random_number: u64 = ChaCha::rand_u64();
         let new_num: u64 = random_number % cha_input;
-        Mapping::set(test_cha, 0u64, new_num);
+        // quick test to maintain history
+        let current_cha_num: u64 = Mapping::get_or_use(test_cha_count, 0u64, 0u64);
+        Mapping::set(test_cha, current_cha_num, new_num);
+        Mapping::set(test_cha_count, 0u64, current_cha_num + 1u64);
     }
 
     // likely need to spec out set_price and send_prize to winner a bit more
