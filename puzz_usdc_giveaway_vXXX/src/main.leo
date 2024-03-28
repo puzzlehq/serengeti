@@ -8,8 +8,6 @@ program puzz_usdc_giveaway_v005.aleo {
     // 0 -> 1, 0 -> 2, and so on.
     mapping entry_count: u64 => u64;
     mapping winner: address => u32;
-    mapping test_cha: u64 => u64;
-    mapping test_cha_count: u64 => u64;
 
     struct pk {
         pk_pt1: u128,
@@ -443,30 +441,6 @@ program puzz_usdc_giveaway_v005.aleo {
         };
 
         return (winner_record, audit_winner_record);
-    }
-
-    // test functions
-
-    // quick test function to make sure cha cha is doing what it is intended to do, might not be correct. need to research this tbh.
-    transition test_cha_cha (public input: u64) {
-        assert_eq(self.caller, self.signer);
-        return then finalize(input);
-    }
-
-    finalize test_cha_cha (public cha_input: u64) {
-        let random_number: u64 = ChaCha::rand_u64();
-        let new_num: u64 = random_number % cha_input;
-        // quick test to maintain history
-        let current_cha_num: u64 = Mapping::get_or_use(test_cha_count, 0u64, 0u64);
-        Mapping::set(test_cha, current_cha_num, new_num);
-        Mapping::set(test_cha_count, 0u64, current_cha_num + 1u64);
-    }
-
-    transition test_pk (public pk_pt1: u128, pk_pt2: u128) -> pk {
-        return pk {
-            pk_pt1: pk_pt1,
-            pk_pt2: pk_pt2
-        };
     }
 
     // placeholder if we need to use the finalize for anything

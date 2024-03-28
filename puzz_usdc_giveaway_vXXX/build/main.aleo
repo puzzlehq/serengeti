@@ -28,16 +28,6 @@ mapping winner:
 	key as address.public;
 	value as u32.public;
 
-
-mapping test_cha:
-	key as u64.public;
-	value as u64.public;
-
-
-mapping test_cha_count:
-	key as u64.public;
-	value as u64.public;
-
 function set_prize:
     input r0 as address.private;
     input r1 as u64.private;
@@ -723,26 +713,3 @@ function send_prize_to_winner:
     cast aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6 r0 r1.private_key into r3 as AuditGiveawayAccount.record;
     output r2 as GiveawayAccount.record;
     output r3 as AuditGiveawayAccount.record;
-
-
-function test_cha_cha:
-    input r0 as u64.public;
-    assert.eq self.caller self.signer;
-    async test_cha_cha r0 into r1;
-    output r1 as puzz_usdc_giveaway_v005.aleo/test_cha_cha.future;
-
-finalize test_cha_cha:
-    input r0 as u64.public;
-    rand.chacha into r1 as u64;
-    rem r1 r0 into r2;
-    get.or_use test_cha_count[0u64] 0u64 into r3;
-    set r2 into test_cha[r3];
-    add r3 1u64 into r4;
-    set r4 into test_cha_count[0u64];
-
-
-function test_pk:
-    input r0 as u128.public;
-    input r1 as u128.private;
-    cast r0 r1 into r2 as pk;
-    output r2 as pk.private;
