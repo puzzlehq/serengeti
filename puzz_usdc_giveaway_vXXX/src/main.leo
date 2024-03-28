@@ -14,8 +14,6 @@ program puzz_usdc_giveaway_v005.aleo {
         pk_pt2: u128
     }
 
-    // Change Structure to USDC Giveaway
-    // Never owned by multisig
     record GiveawayAccount {
         owner: address,
         // todo: remove these below
@@ -93,308 +91,308 @@ program puzz_usdc_giveaway_v005.aleo {
         Mapping::set(entry_count, 0u64, current_raffle_count + 1u64);
     }
 
-    transition add_two_raffle_entries (public participant: address, participant_two: address ) {
+    transition add_two_raffle_entries (public participant: address ) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two);
+        return then finalize(participant);
     }
 
-    finalize add_two_raffle_entries (public participant: address, participant_two: address ) {
+    finalize add_two_raffle_entries (public participant: address) {
         // get current_raffle_count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
         // increment raffle count
         Mapping::set(entry_count, 0u64, current_raffle_count + 2u64);
     }
 
-    transition add_three_raffle_entries (public participant: address, participant_two: address, participant_three: address ) {
+    transition add_three_raffle_entries (public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three);
+        return then finalize(participant);
     }
 
-    finalize add_three_raffle_entries (public participant: address, participant_two: address, participant_three: address) {
+    finalize add_three_raffle_entries (public participant: address) {
         // get current_raffle_count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
         // increment raffle count
         Mapping::set(entry_count, 0u64, current_raffle_count + 3u64);
     }
 
-    transition add_four_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address) {
+    transition add_four_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four);
+        return then finalize(participant);
     }
 
-    finalize add_four_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address) {
+    finalize add_four_raffle_entries(public participant: address) {
         // Get current raffle count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
         // Increment raffle count
         Mapping::set(entry_count, 0u64, current_raffle_count + 4u64);
     }
 
-    transition add_five_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address) {
+    transition add_five_raffle_entries(public participant: address,) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five);
+        return then finalize(participant);
     }
 
-    finalize add_five_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address) {
+    finalize add_five_raffle_entries(public participant: address) {
     // Get current raffle count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
         // Increment raffle count
         Mapping::set(entry_count, 0u64, current_raffle_count + 5u64);
     }
 
-    transition add_six_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address) {
+    transition add_six_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six);
+        return then finalize(participant);
     }
 
-    finalize add_six_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address) {
+    finalize add_six_raffle_entries(public participant: address) {
         // Get current raffle count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
         // Increment raffle count
         Mapping::set(entry_count, 0u64, current_raffle_count + 6u64);
     }
 
-    transition add_seven_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address) {
+    transition add_seven_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six, participant_seven);
+        return then finalize(participant);
     }
 
-    finalize add_seven_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address) {
+    finalize add_seven_raffle_entries(public participant: address) {
         // Get current raffle count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
-        Mapping::set(entry_index, current_raffle_count + 6u64, participant_seven);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 6u64, participant);
         // Increment raffle count
         Mapping::set(entry_count, 0u64, current_raffle_count + 7u64);
     }
 
-    transition add_eight_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address) {
+    transition add_eight_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six, participant_seven, participant_eight);
+        return then finalize(participant);
     }
 
-    finalize add_eight_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address) {
+    finalize add_eight_raffle_entries(public participant: address) {
         // Get current raffle count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
-        Mapping::set(entry_index, current_raffle_count + 6u64, participant_seven);
-        Mapping::set(entry_index, current_raffle_count + 7u64, participant_eight);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 6u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 7u64, participant);
         // Increment raffle count
         Mapping::set(entry_count, 0u64, current_raffle_count + 8u64);
     }
 
-    transition add_nine_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address) {
+    transition add_nine_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six, participant_seven, participant_eight, participant_nine);
+        return then finalize(participant);
     }
 
-    finalize add_nine_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address) {
+    finalize add_nine_raffle_entries(public participant: address) {
         // Get current raffle count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
-        Mapping::set(entry_index, current_raffle_count + 6u64, participant_seven);
-        Mapping::set(entry_index, current_raffle_count + 7u64, participant_eight);
-        Mapping::set(entry_index, current_raffle_count + 8u64, participant_nine);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 6u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 7u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 8u64, participant);
         // Increment raffle count
         Mapping::set(entry_count, 0u64, current_raffle_count + 9u64);
     }
 
-    transition add_ten_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address) {
+    transition add_ten_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six, participant_seven, participant_eight, participant_nine, participant_ten);
+        return then finalize(participant);
     }
 
-    finalize add_ten_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address) {
+    finalize add_ten_raffle_entries(public participant: address) {
         // Get current raffle count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
-        Mapping::set(entry_index, current_raffle_count + 6u64, participant_seven);
-        Mapping::set(entry_index, current_raffle_count + 7u64, participant_eight);
-        Mapping::set(entry_index, current_raffle_count + 8u64, participant_nine);
-        Mapping::set(entry_index, current_raffle_count + 9u64, participant_ten);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 6u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 7u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 8u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 9u64, participant);
         // Increment raffle count by 10
         Mapping::set(entry_count, 0u64, current_raffle_count + 10u64);
     }
 
-    transition add_eleven_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address) {
+    transition add_eleven_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six, participant_seven, participant_eight, participant_nine, participant_ten, participant_eleven);
+        return then finalize(participant);
     }
 
-    finalize add_eleven_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address) {
+    finalize add_eleven_raffle_entries(public participant: address) {
     // Get current raffle count
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         // Add addresses to entry mapping
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
-        Mapping::set(entry_index, current_raffle_count + 6u64, participant_seven);
-        Mapping::set(entry_index, current_raffle_count + 7u64, participant_eight);
-        Mapping::set(entry_index, current_raffle_count + 8u64, participant_nine);
-        Mapping::set(entry_index, current_raffle_count + 9u64, participant_ten);
-        Mapping::set(entry_index, current_raffle_count + 10u64, participant_eleven);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 6u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 7u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 8u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 9u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 10u64, participant);
         // Increment raffle count by 11
         Mapping::set(entry_count, 0u64, current_raffle_count + 11u64);
     }
 
-    transition add_twelve_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address, participant_twelve: address) {
+    transition add_twelve_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six, participant_seven, participant_eight, participant_nine, participant_ten, participant_eleven, participant_twelve);
+        return then finalize(participant);
     }
 
-    finalize add_twelve_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address, participant_twelve: address) {
+    finalize add_twelve_raffle_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
-        Mapping::set(entry_index, current_raffle_count + 6u64, participant_seven);
-        Mapping::set(entry_index, current_raffle_count + 7u64, participant_eight);
-        Mapping::set(entry_index, current_raffle_count + 8u64, participant_nine);
-        Mapping::set(entry_index, current_raffle_count + 9u64, participant_ten);
-        Mapping::set(entry_index, current_raffle_count + 10u64, participant_eleven);
-        Mapping::set(entry_index, current_raffle_count + 11u64, participant_twelve);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 6u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 7u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 8u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 9u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 10u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 11u64, participant);
         Mapping::set(entry_count, 0u64, current_raffle_count + 12u64);
     }
 
-    transition add_thirteen_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address, participant_twelve: address, participant_thirteen: address) {
+    transition add_thirteen_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six, participant_seven, participant_eight, participant_nine, participant_ten, participant_eleven, participant_twelve, participant_thirteen);
+        return then finalize(participant);
     }
 
-    finalize add_thirteen_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address, participant_twelve: address, participant_thirteen: address) {
+    finalize add_thirteen_raffle_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
-        Mapping::set(entry_index, current_raffle_count + 6u64, participant_seven);
-        Mapping::set(entry_index, current_raffle_count + 7u64, participant_eight);
-        Mapping::set(entry_index, current_raffle_count + 8u64, participant_nine);
-        Mapping::set(entry_index, current_raffle_count + 9u64, participant_ten);
-        Mapping::set(entry_index, current_raffle_count + 10u64, participant_eleven);
-        Mapping::set(entry_index, current_raffle_count + 11u64, participant_twelve);
-        Mapping::set(entry_index, current_raffle_count + 12u64, participant_thirteen);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 6u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 7u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 8u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 9u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 10u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 11u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 12u64, participant);
         // Increment raffle count by 13
         Mapping::set(entry_count, 0u64, current_raffle_count + 13u64);
     }
 
-    transition add_fourteen_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address, participant_twelve: address, participant_thirteen: address, participant_fourteen: address) {
+    transition add_fourteen_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six, participant_seven, participant_eight, participant_nine, participant_ten, participant_eleven, participant_twelve, participant_thirteen, participant_fourteen);
+        return then finalize(participant);
     }
 
-    finalize add_fourteen_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address, participant_twelve: address, participant_thirteen: address, participant_fourteen: address) {
+    finalize add_fourteen_raffle_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
-        Mapping::set(entry_index, current_raffle_count + 6u64, participant_seven);
-        Mapping::set(entry_index, current_raffle_count + 7u64, participant_eight);
-        Mapping::set(entry_index, current_raffle_count + 8u64, participant_nine);
-        Mapping::set(entry_index, current_raffle_count + 9u64, participant_ten);
-        Mapping::set(entry_index, current_raffle_count + 10u64, participant_eleven);
-        Mapping::set(entry_index, current_raffle_count + 11u64, participant_twelve);
-        Mapping::set(entry_index, current_raffle_count + 12u64, participant_thirteen);
-        Mapping::set(entry_index, current_raffle_count + 13u64, participant_fourteen);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 6u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 7u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 8u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 9u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 10u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 11u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 12u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 13u64, participant);
         // Increment raffle count by 14
         Mapping::set(entry_count, 0u64, current_raffle_count + 14u64);
     }
 
-    transition add_fifteen_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address, participant_twelve: address, participant_thirteen: address, participant_fourteen: address, participant_fifteen: address) {
+    transition add_fifteen_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-        return then finalize(participant, participant_two, participant_three, participant_four, participant_five, participant_six, participant_seven, participant_eight, participant_nine, participant_ten, participant_eleven, participant_twelve, participant_thirteen, participant_fourteen, participant_fifteen);
+        return then finalize(participant);
     }
 
-    finalize add_fifteen_raffle_entries(public participant: address, participant_two: address, participant_three: address, participant_four: address, participant_five: address, participant_six: address, participant_seven: address, participant_eight: address, participant_nine: address, participant_ten: address, participant_eleven: address, participant_twelve: address, participant_thirteen: address, participant_fourteen: address, participant_fifteen: address) {
+    finalize add_fifteen_raffle_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(entry_count, 0u64, 0u64);
         Mapping::set(entry_index, current_raffle_count, participant);
-        Mapping::set(entry_index, current_raffle_count + 1u64, participant_two);
-        Mapping::set(entry_index, current_raffle_count + 2u64, participant_three);
-        Mapping::set(entry_index, current_raffle_count + 3u64, participant_four);
-        Mapping::set(entry_index, current_raffle_count + 4u64, participant_five);
-        Mapping::set(entry_index, current_raffle_count + 5u64, participant_six);
-        Mapping::set(entry_index, current_raffle_count + 6u64, participant_seven);
-        Mapping::set(entry_index, current_raffle_count + 7u64, participant_eight);
-        Mapping::set(entry_index, current_raffle_count + 8u64, participant_nine);
-        Mapping::set(entry_index, current_raffle_count + 9u64, participant_ten);
-        Mapping::set(entry_index, current_raffle_count + 10u64, participant_eleven);
-        Mapping::set(entry_index, current_raffle_count + 11u64, participant_twelve);
-        Mapping::set(entry_index, current_raffle_count + 12u64, participant_thirteen);
-        Mapping::set(entry_index, current_raffle_count + 13u64, participant_fourteen);
-        Mapping::set(entry_index, current_raffle_count + 14u64, participant_fifteen);
+        Mapping::set(entry_index, current_raffle_count + 1u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 2u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 3u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 4u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 5u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 6u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 7u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 8u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 9u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 10u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 11u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 12u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 13u64, participant);
+        Mapping::set(entry_index, current_raffle_count + 14u64, participant);
         // Increment raffle count by 15
         Mapping::set(entry_count, 0u64, current_raffle_count + 15u64);
     }
