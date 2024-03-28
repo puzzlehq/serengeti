@@ -26,8 +26,6 @@ program puzz_usdc_giveaway_v005.aleo {
         private_key: pk,
     }
 
-    // Put Other Record Structs needed here
-    // ...
 
     // set_prize function -- start
     // creates record onchain with privatekey for ETH that can be
