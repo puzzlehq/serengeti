@@ -443,14 +443,6 @@ program puzz_usdc_giveaway_v005.aleo {
         return (winner_record, audit_winner_record);
     }
 
-    // placeholder if we need to use the finalize for anything
-    // finalize send_prize_to_winner () {
-
-    // }
-
-    // sending prize to raffle winner function
-    // should write out a record to raffle operator for winner.... get winner
-
     // Potential future scope:
     // - pulling out of raffle
     // - automating raffle winner selection
