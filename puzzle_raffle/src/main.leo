@@ -373,7 +373,7 @@ program puzzle_raffle_v001.aleo {
         Mapping::set(winner, winner_address, 0u32);
     }
 
-    transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrize) {
+    transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
 

@@ -503,4 +503,4 @@ function send_prize_to_winner:
     cast r0 r1.private_key into r2 as Prize.record;
     cast aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6 r0 r1.private_key into r3 as AuditPrizeToWinner.record;
     output r2 as Prize.record;
-    output r3 as AuditPrize.record;
+    output r3 as AuditPrizeToWinner.record;
