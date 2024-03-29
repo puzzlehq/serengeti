@@ -39,9 +39,9 @@ function mint_prize:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn;
     cast r0 r1 into r2 as PrivateKey;
-    cast aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6 r2 into r3 as Prize.record;
+    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r2 into r3 as Prize.record;
     cast r0 r1 into r4 as PrivateKey;
-    cast aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6 aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6 r4 into r5 as AuditPrize.record;
+    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r4 into r5 as AuditPrize.record;
     output r3 as Prize.record;
     output r5 as AuditPrize.record;
 
@@ -499,8 +499,8 @@ function send_prize_to_winner:
     input r0 as address.public;
     input r1 as Prize.record;
     assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn;
+    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     cast r0 r1.private_key into r2 as Prize.record;
-    cast aleo1fan3jt83xvs5m4pqppmeghv4ypsan5aq4clwt4hnfv8pq90evqqq4dj6p6 r0 r1.private_key into r3 as AuditPrizeToWinner.record;
+    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r0 r1.private_key into r3 as AuditPrizeToWinner.record;
     output r2 as Prize.record;
     output r3 as AuditPrizeToWinner.record;
