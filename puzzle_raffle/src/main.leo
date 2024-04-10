@@ -1,11 +1,11 @@
-program puzzle_raffle_v001.aleo {
+program puzzle_raffle_v003.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
     mapping entries: u64 => address;
     // used for storing of total number of values in entries mapping
     //   i.e. 0 -> 1, 0 -> 2
     mapping total_entries: u64 => u64;
-    mapping winner: address => u32;
+    mapping winner: u32 => address;
 
     struct PrivateKey {
         pk_pt1: u128,
@@ -370,7 +370,7 @@ program puzzle_raffle_v001.aleo {
         // get address at winning index
         let winner_address: address = Mapping::get(entries, winner_index);
         // set the winner address
-        Mapping::set(winner, winner_address, 0u32);
+        Mapping::set(winner, 0u32, winner_address);
     }
 
     transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
@@ -390,7 +390,13 @@ program puzzle_raffle_v001.aleo {
             private_key: prize.private_key,
         };
 
-        return (prize_to_winner, audit_prize_to_winner);
+        return (prize_to_winner, audit_prize_to_winner) then finalize (winner_addr);
+    }
+
+    finalize send_prize_to_winner (public winner_addr: address) {
+        // assert that this function is called with the winner_addr
+        let winner_addr_from_mapping: address = Mapping::get(winner, 0u32);
+        assert_eq(winner_addr, winner_addr_from_mapping);
     }
 
     // Potential future scope:
