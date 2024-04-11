@@ -5,7 +5,8 @@ program puzzle_raffle_v003.aleo {
     // used for storing of total number of values in entries mapping
     //   i.e. 0 -> 1, 0 -> 2
     mapping total_entries: u64 => u64;
-    mapping winner: u16 => address;
+    // 0u32 -> aleo1...lka
+    mapping winner: u32 => address;
 
     struct PrivateKey {
         pk_pt1: u128,
@@ -41,6 +42,7 @@ program puzzle_raffle_v003.aleo {
     // ab: how will we store eth private key on chain? as a field element?
     // need to be able to reverse the field element off chain into a private key. will we need to write custom logic for this?
     transition mint_prize (pk_pt1: u128, pk_pt2: u128) -> (Prize, AuditPrize) {
+        // todo: can we check if it is a valid eth pk here...
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
 
@@ -370,7 +372,7 @@ program puzzle_raffle_v003.aleo {
         // get address at winning index
         let winner_address: address = Mapping::get(entries, winner_index);
         // set the winner address
-        Mapping::set(winner, 0u16, winner_address);
+        Mapping::set(winner, 0u32, winner_address);
     }
 
     transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
@@ -390,12 +392,13 @@ program puzzle_raffle_v003.aleo {
             private_key: prize.private_key,
         };
 
-        return (prize_to_winner, audit_prize_to_winner) then finalize(winner_addr);
+        return (prize_to_winner, audit_prize_to_winner) then finalize (winner_addr);
     }
 
-    finalize send_prize_to_winner (winner_addr: address) {
-      let public_winner: address = Mapping::get(winner, 0u16);
-      assert_eq(public_winner, winner_addr);
+    finalize send_prize_to_winner (public winner_addr: address) {
+        // assert that this function is called with the winner_addr
+        let winner_addr_from_mapping: address = Mapping::get(winner, 0u32);
+        assert_eq(winner_addr, winner_addr_from_mapping);
     }
 
     // Potential future scope:
