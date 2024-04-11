@@ -5,6 +5,7 @@ program puzzle_raffle_v003.aleo {
     // used for storing of total number of values in entries mapping
     //   i.e. 0 -> 1, 0 -> 2
     mapping total_entries: u64 => u64;
+    // 0u32 -> aleo1...lka
     mapping winner: u32 => address;
 
     struct PrivateKey {
@@ -41,6 +42,7 @@ program puzzle_raffle_v003.aleo {
     // ab: how will we store eth private key on chain? as a field element?
     // need to be able to reverse the field element off chain into a private key. will we need to write custom logic for this?
     transition mint_prize (pk_pt1: u128, pk_pt2: u128) -> (Prize, AuditPrize) {
+        // todo: can we check if it is a valid eth pk here...
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
 
