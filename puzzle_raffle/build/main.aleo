@@ -30,11 +30,7 @@ mapping total_entries:
 
 
 mapping winner:
-<<<<<<< HEAD
-	key as u16.public;
-=======
 	key as u32.public;
->>>>>>> 3328863a10575e2b7833c379c30aed15c4635910
 	value as address.public;
 
 function mint_prize:
@@ -496,11 +492,7 @@ finalize draw_winner:
     rand.chacha into r1 as u64;
     rem r1 r0 into r2;
     get entries[r2] into r3;
-<<<<<<< HEAD
-    set r3 into winner[0u16];
-=======
     set r3 into winner[0u32];
->>>>>>> 3328863a10575e2b7833c379c30aed15c4635910
 
 
 function send_prize_to_winner:
@@ -517,10 +509,5 @@ function send_prize_to_winner:
 
 finalize send_prize_to_winner:
     input r0 as address.public;
-<<<<<<< HEAD
-    get winner[0u16] into r1;
-    assert.eq r1 r0;
-=======
     get winner[0u32] into r1;
     assert.eq r0 r1;
->>>>>>> 3328863a10575e2b7833c379c30aed15c4635910
