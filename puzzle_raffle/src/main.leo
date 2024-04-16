@@ -1,4 +1,4 @@
-program puzzle_raffle_v003.aleo {
+program puzzle_raffle_v005.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
     mapping entries: u64 => address;
@@ -7,6 +7,9 @@ program puzzle_raffle_v003.aleo {
     mapping total_entries: u64 => u64;
     // 0u32 -> aleo1...lka
     mapping winner: u32 => address;
+
+    // winner_count
+    mapping winner_count: u32 => u32;
 
     struct PrivateKey {
         pk_pt1: u128,
@@ -41,6 +44,7 @@ program puzzle_raffle_v003.aleo {
     // C) -- this is also a nice way to guarantee something with minimal proofs -- wide design space here!
     // ab: how will we store eth private key on chain? as a field element?
     // need to be able to reverse the field element off chain into a private key. will we need to write custom logic for this?
+    // todo: allow only one mint prize call
     transition mint_prize (pk_pt1: u128, pk_pt2: u128) -> (Prize, AuditPrize) {
         // todo: can we check if it is a valid eth pk here...
         assert_eq(self.caller, self.signer);
@@ -356,11 +360,13 @@ program puzzle_raffle_v003.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 15u64);
     }
 
+    // todo: allow draw winner to only be called once
     transition draw_winner () {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
         return then finalize;
     }
+
 
     finalize draw_winner () {
         // get total entries
@@ -371,8 +377,12 @@ program puzzle_raffle_v003.aleo {
         let winner_index: u64 = random_number % num_entries;
         // get address at winning index
         let winner_address: address = Mapping::get(entries, winner_index);
+        // get the winner_count
+        let current_winner_count: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
         // set the winner address
-        Mapping::set(winner, 0u32, winner_address);
+        Mapping::set(winner, current_winner_count, winner_address);
+        // increment the winner count
+        Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
     }
 
     transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
