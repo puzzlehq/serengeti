@@ -1,4 +1,4 @@
-program puzzle_raffle_v005.aleo {
+program puzzle_raffle_v009.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
     mapping entries: u64 => address;
@@ -46,11 +46,10 @@ program puzzle_raffle_v005.aleo {
     // need to be able to reverse the field element off chain into a private key. will we need to write custom logic for this?
     // todo: allow only one mint prize call
     transition mint_prize (pk_pt1: u128, pk_pt2: u128) -> (Prize, AuditPrize) {
+        let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
         // todo: can we check if it is a valid eth pk here...
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
-
-        let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
+        assert_eq(self.caller, operator);
 
         let prize: Prize = Prize {
             owner: operator,
@@ -74,7 +73,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_one_raffle_entry (public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -89,7 +88,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_two_raffle_entries (public participant: address ) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -102,7 +101,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_three_raffle_entries (public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -116,7 +115,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_four_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -131,7 +130,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_five_raffle_entries(public participant: address,) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -147,7 +146,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_six_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -164,7 +163,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_seven_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -182,7 +181,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_eight_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -201,7 +200,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_nine_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -221,7 +220,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_ten_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -242,7 +241,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_eleven_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -264,7 +263,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_twelve_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -287,7 +286,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_thirteen_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -311,7 +310,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_fourteen_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -336,7 +335,7 @@ program puzzle_raffle_v005.aleo {
 
     transition add_fifteen_raffle_entries(public participant: address) {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize(participant);
     }
 
@@ -363,7 +362,7 @@ program puzzle_raffle_v005.aleo {
     // todo: allow draw winner to only be called once
     transition draw_winner () {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1nnrfst0v0zrmv809y9l55denfldx3ryn0nmelws0ffz0hx9mxcys84jxxn);
+        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize;
     }
 
@@ -382,14 +381,16 @@ program puzzle_raffle_v005.aleo {
         // set the winner address
         Mapping::set(winner, current_winner_count, winner_address);
         // increment the winner count
+        //todo: update this to fix this mapping being 1 ahead of other mapping
         Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
     }
 
     transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-
         let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
+        assert_eq(self.caller, self.signer);
+        assert_eq(self.caller, operator);
+
+
 
         let prize_to_winner: Prize = Prize {
             owner: winner_addr,
@@ -402,14 +403,18 @@ program puzzle_raffle_v005.aleo {
             private_key: prize.private_key,
         };
 
-        return (prize_to_winner, audit_prize_to_winner) then finalize (winner_addr);
+        return (prize_to_winner, audit_prize_to_winner);
+        //  then finalize (winner_addr);
     }
 
-    finalize send_prize_to_winner (public winner_addr: address) {
-        // assert that this function is called with the winner_addr
-        let winner_addr_from_mapping: address = Mapping::get(winner, 0u32);
-        assert_eq(winner_addr, winner_addr_from_mapping);
-    }
+    // finalize send_prize_to_winner (public winner_addr: address) {
+    //     // get the current winner idx
+    //     // let current_winner_count_idx: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
+    //     // get the current winner via the index (if draw_winner is called multiple times)
+    //     // let winner_addr_from_mapping: address = Mapping::get(winner, current_winner_count_idx);
+    //     // assert that this function is called with the winner_addr
+    //     // assert_eq(winner_addr, winner_addr_from_mapping);
+    // }
 
     // Potential future scope:
     // - pulling out of raffle
