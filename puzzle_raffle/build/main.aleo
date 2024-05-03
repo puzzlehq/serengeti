@@ -504,10 +504,11 @@ finalize draw_winner:
     get entries[r2] into r3;
     get.or_use winner_count[0u32] 0u32 into r4;
     get.or_use has_won[r3] false into r5;
+    not r5 into r6;
     set true into has_won[r3];
     set r3 into winner[r4];
-    add r4 1u32 into r6;
-    set r6 into winner_count[0u32];
+    add r4 1u32 into r7;
+    set r7 into winner_count[0u32];
 
 
 function send_prize_to_winner:
