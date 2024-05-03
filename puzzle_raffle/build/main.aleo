@@ -1,4 +1,4 @@
-program puzzle_raffle_v009.aleo;
+program puzzle_raffle_050124.aleo;
 
 struct PrivateKey:
     pk_pt1 as u128;
@@ -61,7 +61,7 @@ function add_one_raffle_entry:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_one_raffle_entry r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_one_raffle_entry.future;
+    output r1 as puzzle_raffle_050124.aleo/add_one_raffle_entry.future;
 
 finalize add_one_raffle_entry:
     input r0 as address.public;
@@ -76,7 +76,7 @@ function add_two_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_two_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_two_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_two_raffle_entries.future;
 
 finalize add_two_raffle_entries:
     input r0 as address.public;
@@ -93,7 +93,7 @@ function add_three_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_three_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_three_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_three_raffle_entries.future;
 
 finalize add_three_raffle_entries:
     input r0 as address.public;
@@ -112,7 +112,7 @@ function add_four_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_four_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_four_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_four_raffle_entries.future;
 
 finalize add_four_raffle_entries:
     input r0 as address.public;
@@ -133,7 +133,7 @@ function add_five_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_five_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_five_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_five_raffle_entries.future;
 
 finalize add_five_raffle_entries:
     input r0 as address.public;
@@ -156,7 +156,7 @@ function add_six_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_six_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_six_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_six_raffle_entries.future;
 
 finalize add_six_raffle_entries:
     input r0 as address.public;
@@ -181,7 +181,7 @@ function add_seven_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_seven_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_seven_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_seven_raffle_entries.future;
 
 finalize add_seven_raffle_entries:
     input r0 as address.public;
@@ -208,7 +208,7 @@ function add_eight_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_eight_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_eight_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_eight_raffle_entries.future;
 
 finalize add_eight_raffle_entries:
     input r0 as address.public;
@@ -237,7 +237,7 @@ function add_nine_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_nine_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_nine_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_nine_raffle_entries.future;
 
 finalize add_nine_raffle_entries:
     input r0 as address.public;
@@ -268,7 +268,7 @@ function add_ten_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_ten_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_ten_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_ten_raffle_entries.future;
 
 finalize add_ten_raffle_entries:
     input r0 as address.public;
@@ -301,7 +301,7 @@ function add_eleven_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_eleven_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_eleven_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_eleven_raffle_entries.future;
 
 finalize add_eleven_raffle_entries:
     input r0 as address.public;
@@ -336,7 +336,7 @@ function add_twelve_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_twelve_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_twelve_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_twelve_raffle_entries.future;
 
 finalize add_twelve_raffle_entries:
     input r0 as address.public;
@@ -373,7 +373,7 @@ function add_thirteen_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_thirteen_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_thirteen_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_thirteen_raffle_entries.future;
 
 finalize add_thirteen_raffle_entries:
     input r0 as address.public;
@@ -412,7 +412,7 @@ function add_fourteen_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_fourteen_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_fourteen_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_fourteen_raffle_entries.future;
 
 finalize add_fourteen_raffle_entries:
     input r0 as address.public;
@@ -453,7 +453,7 @@ function add_fifteen_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_fifteen_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_v009.aleo/add_fifteen_raffle_entries.future;
+    output r1 as puzzle_raffle_050124.aleo/add_fifteen_raffle_entries.future;
 
 finalize add_fifteen_raffle_entries:
     input r0 as address.public;
@@ -495,7 +495,7 @@ function draw_winner:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async draw_winner into r0;
-    output r0 as puzzle_raffle_v009.aleo/draw_winner.future;
+    output r0 as puzzle_raffle_050124.aleo/draw_winner.future;
 
 finalize draw_winner:
     get total_entries[0u64] into r0;

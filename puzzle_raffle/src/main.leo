@@ -1,4 +1,4 @@
-program puzzle_raffle_v009.aleo {
+program puzzle_raffle_050124.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
     mapping entries: u64 => address;
