@@ -7,6 +7,8 @@ program puzzle_raffle_v009.aleo {
     mapping total_entries: u64 => u64;
     // 0u32 -> aleo1...lka
     mapping winner: u32 => address;
+    // mapping to store winner aleo1... => true (if addr has won)
+    mapping has_won: address => bool;
 
     // winner_count
     mapping winner_count: u32 => u32;
@@ -378,11 +380,13 @@ program puzzle_raffle_v009.aleo {
         let winner_address: address = Mapping::get(entries, winner_index);
         // get the winner_count
         let current_winner_count: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
-        // set the winner address
-        Mapping::set(winner, current_winner_count, winner_address);
-        // increment the winner count
-        //todo: update this to fix this mapping being 1 ahead of other mapping
-        Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
+
+        // if the winner has never been selected
+        if (Mapping::get_or_use(has_won, winner_address, false)) {
+            Mapping::set(has_won, winner_address, true);
+            Mapping::set(winner, current_winner_count, winner_address);
+            Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
+        }
     }
 
     transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {

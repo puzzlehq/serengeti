@@ -34,6 +34,11 @@ mapping winner:
 	value as address.public;
 
 
+mapping has_won:
+	key as address.public;
+	value as boolean.public;
+
+
 mapping winner_count:
 	key as u32.public;
 	value as u32.public;
@@ -498,9 +503,11 @@ finalize draw_winner:
     rem r1 r0 into r2;
     get entries[r2] into r3;
     get.or_use winner_count[0u32] 0u32 into r4;
+    get.or_use has_won[r3] false into r5;
+    set true into has_won[r3];
     set r3 into winner[r4];
-    add r4 1u32 into r5;
-    set r5 into winner_count[0u32];
+    add r4 1u32 into r6;
+    set r6 into winner_count[0u32];
 
 
 function send_prize_to_winner:
