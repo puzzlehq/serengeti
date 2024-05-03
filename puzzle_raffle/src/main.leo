@@ -383,8 +383,11 @@ program puzzle_raffle_050124.aleo {
 
         // if the winner has never been selected
         if (Mapping::get_or_use(has_won, winner_address, false)) {
+            // set addr to true {aleo1...: true}
             Mapping::set(has_won, winner_address, true);
+            // set winner { 0u32: aleo1...} ...
             Mapping::set(winner, current_winner_count, winner_address);
+            // increment winner count {0u32: 1u32} and so on
             Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
         }
     }
