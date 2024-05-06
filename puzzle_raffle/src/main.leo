@@ -440,7 +440,7 @@ program puzzle_raffle_050124.aleo {
 
     }
 
-    transition send_prize_to_winner (public winner_addr: address, public prize: Prize, public winner_idx: u32) -> (Prize, AuditPrizeToWinner) {
+    transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
         let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, operator);
@@ -457,14 +457,12 @@ program puzzle_raffle_050124.aleo {
             private_key: prize.private_key,
         };
 
-        return (prize_to_winner, audit_prize_to_winner) then finalize (winner_addr, winner_idx);
+        return (prize_to_winner, audit_prize_to_winner) then finalize (winner_addr);
     }
 
-    finalize send_prize_to_winner (public winner_addr: address, public winner_idx: u32) {
-        // get the current winner via the index (if draw_winner is called multiple times)
-        let winner_addr_from_mapping: address = Mapping::get(winner, winner_idx);
-        // assert that this function is called with the winner_addr
-        assert_eq(winner_addr, winner_addr_from_mapping);
+    finalize send_prize_to_winner (public winner_addr: address) {
+        let has_addr_won: bool = Mapping::get_or_use(has_won, winner_addr, false);
+        assert(has_addr_won);
     }
 
 
@@ -529,8 +527,8 @@ program puzzle_raffle_050124.aleo {
     {
         // assert that the prizes are being sent to the official winners
         assert_eq(Mapping::get(winner_one, winner_idx), winner_addr_one);
-        assert_eq(Mapping::get(winner_one, winner_idx), winner_addr_two);
-        assert_eq(Mapping::get(winner_one, winner_idx), winner_addr_three);
+        assert_eq(Mapping::get(winner_two, winner_idx), winner_addr_two);
+        assert_eq(Mapping::get(winner_three, winner_idx), winner_addr_three);
 
     }
 

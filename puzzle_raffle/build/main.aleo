@@ -565,21 +565,19 @@ finalize draw_three_winners:
 function send_prize_to_winner:
     input r0 as address.public;
     input r1 as Prize.record;
-    input r2 as u32.public;
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    cast r0 r1.private_key into r3 as Prize.record;
-    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r0 r1.private_key into r4 as AuditPrizeToWinner.record;
-    async send_prize_to_winner r0 r2 into r5;
-    output r3 as Prize.record;
-    output r4 as AuditPrizeToWinner.record;
-    output r5 as puzzle_raffle_050124.aleo/send_prize_to_winner.future;
+    cast r0 r1.private_key into r2 as Prize.record;
+    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r0 r1.private_key into r3 as AuditPrizeToWinner.record;
+    async send_prize_to_winner r0 into r4;
+    output r2 as Prize.record;
+    output r3 as AuditPrizeToWinner.record;
+    output r4 as puzzle_raffle_050124.aleo/send_prize_to_winner.future;
 
 finalize send_prize_to_winner:
     input r0 as address.public;
-    input r1 as u32.public;
-    get winner[r1] into r2;
-    assert.eq r0 r2;
+    get.or_use has_won[r0] false into r1;
+    assert.eq r1 true;
 
 
 function send_three_prizes_to_winners:
@@ -608,7 +606,7 @@ finalize send_three_prizes_to_winners:
     input r3 as u32.public;
     get winner_one[r3] into r4;
     assert.eq r4 r0;
-    get winner_one[r3] into r5;
+    get winner_two[r3] into r5;
     assert.eq r5 r1;
-    get winner_one[r3] into r6;
+    get winner_three[r3] into r6;
     assert.eq r6 r2;
