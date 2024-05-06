@@ -13,6 +13,13 @@ program puzzle_raffle_050124.aleo {
     // winner_count
     mapping winner_count: u32 => u32;
 
+    // winner_indexes
+    mapping winner_idxs: u32 => u64;
+
+    mapping winner_one: u32 => address;
+    mapping winner_two: u32 => address;
+    mapping winner_three: u32 => address;
+
     struct PrivateKey {
         pk_pt1: u128,
         pk_pt2: u128
@@ -368,31 +375,56 @@ program puzzle_raffle_050124.aleo {
         return then finalize;
     }
 
-
     finalize draw_winner () {
-        // get total entries
         let num_entries: u64 = Mapping::get(total_entries, 0u64);
-        // grab random number
-        let random_number: u64 = ChaCha::rand_u64();
-        // select winning index
-        let winner_index: u64 = random_number % num_entries;
-        // get address at winning index
-        let winner_address: address = Mapping::get(entries, winner_index);
-        // get the winner_count
-        let current_winner_count: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
-        // true if addr has already won, false if not
-        let has_addr_won: bool = Mapping::get_or_use(has_won, winner_address, false);
-
-        // if the winner has never been selected
-        if (has_addr_won.not()) {
-            // set addr to true {aleo1...: true}
-            Mapping::set(has_won, winner_address, true);
-            // set winner { 0u32: aleo1...} ...
-            Mapping::set(winner, current_winner_count, winner_address);
-            // increment winner count {0u32: 1u32} and so on
-            Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
+        for i: u32 in 0u32..3u32 {
+            let random_number: u64 = ChaCha::rand_u64();
+            let winner_index: u64 = random_number % num_entries;
+            Mapping::set(winner_idxs, i, winner_index);
         }
+        let winner_idx_one: u64 = Mapping::get(winner_idxs, 0u32);
+        let winner_idx_two: u64 = Mapping::get(winner_idxs, 1u32);
+        let winner_idx_three: u64 = Mapping::get(winner_idxs, 2u32);
+
+        let winner_address_one: address = Mapping::get(entries, winner_idx_one);
+        let winner_address_two: address = Mapping::get(entries, winner_idx_two);
+        let winner_address_three: address = Mapping::get(entries, winner_idx_three);
+
+        assert_neq(winner_address_one, winner_address_two);
+        assert_neq(winner_address_two, winner_address_three);
+        assert_neq(winner_address_one, winner_address_three);
+
+        Mapping::set(winner_one, 0u32, winner_address_one);
+        Mapping::set(winner_two, 0u32, winner_address_two);
+        Mapping::set(winner_three, 0u32, winner_address_three);
+
     }
+
+
+    // finalize draw_winner () {
+    //     // get total entries
+    //     let num_entries: u64 = Mapping::get(total_entries, 0u64);
+    //     // grab random number
+    //     let random_number: u64 = ChaCha::rand_u64();
+    //     // select winning index
+    //     let winner_index: u64 = random_number % num_entries;
+    //     // get address at winning index
+    //     let winner_address: address = Mapping::get(entries, winner_index);
+    //     // get the winner_count
+    //     let current_winner_count: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
+    //     // true if addr has already won, false if not
+    //     let has_addr_won: bool = Mapping::get_or_use(has_won, winner_address, false);
+
+    //     // if the winner has never been selected
+    //     if (has_addr_won.not()) {
+    //         // set addr to true {aleo1...: true}
+    //         Mapping::set(has_won, winner_address, true);
+    //         // set winner { 0u32: aleo1...} ...
+    //         Mapping::set(winner, current_winner_count, winner_address);
+    //         // increment winner count {0u32: 1u32} and so on
+    //         Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
+    //     }
+    // }
 
     transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
         let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;

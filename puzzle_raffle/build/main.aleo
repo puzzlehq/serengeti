@@ -43,6 +43,26 @@ mapping winner_count:
 	key as u32.public;
 	value as u32.public;
 
+
+mapping winner_idxs:
+	key as u32.public;
+	value as u64.public;
+
+
+mapping winner_one:
+	key as u32.public;
+	value as address.public;
+
+
+mapping winner_two:
+	key as u32.public;
+	value as address.public;
+
+
+mapping winner_three:
+	key as u32.public;
+	value as address.public;
+
 function mint_prize:
     input r0 as u128.private;
     input r1 as u128.private;
@@ -501,14 +521,25 @@ finalize draw_winner:
     get total_entries[0u64] into r0;
     rand.chacha into r1 as u64;
     rem r1 r0 into r2;
-    get entries[r2] into r3;
-    get.or_use winner_count[0u32] 0u32 into r4;
-    get.or_use has_won[r3] false into r5;
-    not r5 into r6;
-    set true into has_won[r3];
-    set r3 into winner[r4];
-    add r4 1u32 into r7;
-    set r7 into winner_count[0u32];
+    set r2 into winner_idxs[0u32];
+    rand.chacha into r3 as u64;
+    rem r3 r0 into r4;
+    set r4 into winner_idxs[1u32];
+    rand.chacha into r5 as u64;
+    rem r5 r0 into r6;
+    set r6 into winner_idxs[2u32];
+    get winner_idxs[0u32] into r7;
+    get winner_idxs[1u32] into r8;
+    get winner_idxs[2u32] into r9;
+    get entries[r7] into r10;
+    get entries[r8] into r11;
+    get entries[r9] into r12;
+    assert.neq r10 r11;
+    assert.neq r11 r12;
+    assert.neq r10 r12;
+    set r10 into winner_one[0u32];
+    set r11 into winner_two[0u32];
+    set r12 into winner_three[0u32];
 
 
 function send_prize_to_winner:
