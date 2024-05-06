@@ -5,7 +5,7 @@ program puzzle_raffle_050124.aleo {
     // used for storing of total number of values in entries mapping
     //   i.e. 0 -> 1, 0 -> 2
     mapping total_entries: u64 => u64;
-    // 0u32 -> aleo1...lka
+    // 1u32 -> aleo1...lka
     mapping winner: u32 => address;
     // mapping to store winner aleo1... => true (if addr has won)
     mapping has_won: address => bool;
@@ -396,10 +396,10 @@ program puzzle_raffle_050124.aleo {
         if (has_addr_won.not()) {
             // set addr to true {aleo1...: true}
             Mapping::set(has_won, winner_address, true);
-            // set winner { 0u32: aleo1...} ...
-            Mapping::set(winner, current_winner_count, winner_address);
             // increment winner count {0u32: 1u32} and so on
             Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
+            // set winner { 1u32: aleo1...} ...
+            Mapping::set(winner, current_winner_count, winner_address);
         }
     }
 
@@ -440,7 +440,7 @@ program puzzle_raffle_050124.aleo {
 
     }
 
-    transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
+    transition send_prize_to_winner (public winner_addr: address, public prize: Prize, public winner_idx: u32) -> (Prize, AuditPrizeToWinner) {
         let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, operator);
@@ -457,18 +457,15 @@ program puzzle_raffle_050124.aleo {
             private_key: prize.private_key,
         };
 
-        return (prize_to_winner, audit_prize_to_winner);
-        //  then finalize (winner_addr);
+        return (prize_to_winner, audit_prize_to_winner) then finalize (winner_addr, winner_idx);
     }
 
-    // finalize send_prize_to_winner (public winner_addr: address) {
-    //     // get the current winner idx
-    //     // let current_winner_count_idx: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
-    //     // get the current winner via the index (if draw_winner is called multiple times)
-    //     // let winner_addr_from_mapping: address = Mapping::get(winner, current_winner_count_idx);
-    //     // assert that this function is called with the winner_addr
-    //     // assert_eq(winner_addr, winner_addr_from_mapping);
-    // }
+    finalize send_prize_to_winner (public winner_addr: address, public winner_idx: u32) {
+        // get the current winner via the index (if draw_winner is called multiple times)
+        let winner_addr_from_mapping: address = Mapping::get(winner, winner_idx);
+        // assert that this function is called with the winner_addr
+        assert_eq(winner_addr, winner_addr_from_mapping);
+    }
 
 
     transition send_three_prizes_to_winners(
@@ -530,7 +527,7 @@ program puzzle_raffle_050124.aleo {
         public winner_idx: u32,
     )
     {
-        // assert that the prizer are being sent to the official winners
+        // assert that the prizes are being sent to the official winners
         assert_eq(Mapping::get(winner_one, winner_idx), winner_addr_one);
         assert_eq(Mapping::get(winner_one, winner_idx), winner_addr_two);
         assert_eq(Mapping::get(winner_one, winner_idx), winner_addr_three);
