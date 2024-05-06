@@ -521,6 +521,26 @@ finalize draw_winner:
     get total_entries[0u64] into r0;
     rand.chacha into r1 as u64;
     rem r1 r0 into r2;
+    get entries[r2] into r3;
+    get.or_use winner_count[0u32] 0u32 into r4;
+    get.or_use has_won[r3] false into r5;
+    not r5 into r6;
+    set true into has_won[r3];
+    set r3 into winner[r4];
+    add r4 1u32 into r7;
+    set r7 into winner_count[0u32];
+
+
+function draw_three_winners:
+    assert.eq self.caller self.signer;
+    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
+    async draw_three_winners into r0;
+    output r0 as puzzle_raffle_050124.aleo/draw_three_winners.future;
+
+finalize draw_three_winners:
+    get total_entries[0u64] into r0;
+    rand.chacha into r1 as u64;
+    rem r1 r0 into r2;
     set r2 into winner_idxs[0u32];
     rand.chacha into r3 as u64;
     rem r3 r0 into r4;
@@ -551,3 +571,35 @@ function send_prize_to_winner:
     cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r0 r1.private_key into r3 as AuditPrizeToWinner.record;
     output r2 as Prize.record;
     output r3 as AuditPrizeToWinner.record;
+
+
+function send_three_prizes_to_winners:
+    input r0 as address.public;
+    input r1 as address.public;
+    input r2 as address.public;
+    input r3 as u32.public;
+    input r4 as Prize.record;
+    input r5 as Prize.record;
+    input r6 as Prize.record;
+    assert.eq self.caller self.signer;
+    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
+    cast r0 r4.private_key into r7 as Prize.record;
+    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r0 r4.private_key into r8 as AuditPrizeToWinner.record;
+    cast r1 r5.private_key into r9 as Prize.record;
+    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r1 r5.private_key into r10 as AuditPrizeToWinner.record;
+    cast r2 r6.private_key into r11 as Prize.record;
+    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r2 r6.private_key into r12 as AuditPrizeToWinner.record;
+    async send_three_prizes_to_winners r0 r1 r2 r3 into r13;
+    output r13 as puzzle_raffle_050124.aleo/send_three_prizes_to_winners.future;
+
+finalize send_three_prizes_to_winners:
+    input r0 as address.public;
+    input r1 as address.public;
+    input r2 as address.public;
+    input r3 as u32.public;
+    get winner_one[r3] into r4;
+    assert.eq r4 r0;
+    get winner_one[r3] into r5;
+    assert.eq r5 r1;
+    get winner_one[r3] into r6;
+    assert.eq r6 r2;
