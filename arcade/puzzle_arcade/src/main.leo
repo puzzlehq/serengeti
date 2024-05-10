@@ -11,9 +11,8 @@ program puzzle_arcade_v001.aleo {
   }
 
   transition mint_coins(amount: u64, to: address) -> PuzzleArcadeCoin {
-    let admin: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     assert_eq(self.caller, self.signer);
-    assert_eq(self.caller, admin);
+    assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
 
     let coin: PuzzleArcadeCoin = PuzzleArcadeCoin {
       owner: to,
@@ -21,6 +20,18 @@ program puzzle_arcade_v001.aleo {
     };
 
     return (coin);
+  }
+
+  transition mint_tickets(amount: u64, to: address) -> PuzzleArcadeTicket {
+    assert_eq(self.caller, self.signer);
+    assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
+
+    let ticket: PuzzleArcadeTicket = PuzzleArcadeTicket {
+      owner: to,
+      amount
+    };
+
+    return (ticket);
   }
 
 }
