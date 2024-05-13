@@ -71,6 +71,20 @@ program puzzle_raffle_050124.aleo {
         return (prize, audit_prize);
     }
 
+    transition buy_entries (ticket, num_entries) {
+      if (num_entries == 1) {
+        // validate ticket value >= 1
+        assert_gte(ticket.value, 1);
+        // mint new ticket with value - 1
+        let change: PuzzleArcadeTicket = mint_ticket(ticket.value - 1);
+
+        return then finalize(add_one_raffle_entry);
+      } else if (num_entries == 2) {
+        // validate ticket value >= 2
+        return then finalize(add_two_raffle_entry);
+      }
+    }
+
     transition add_one_raffle_entry (public participant: address) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);

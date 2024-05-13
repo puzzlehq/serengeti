@@ -10,24 +10,25 @@ program puzzle_arcade_v001.aleo {
     amount: u64
   }
 
-  transition mint_coins(amount: u64, to: address) -> PuzzleArcadeCoin {
+  transition mint_coin(to: address) -> PuzzleArcadeCoin {
     assert_eq(self.caller, self.signer);
     assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
 
     let coin: PuzzleArcadeCoin = PuzzleArcadeCoin {
       owner: to,
-      amount
+      amount: 1000000u64
     };
 
     return (coin);
   }
 
-  transition mint_tickets(amount: u64, to: address) -> PuzzleArcadeTicket {
-    assert_eq(self.caller, self.signer);
-    assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
+  // future: only puzzle_spinner should be able to call this
+  transition mint_tickets(coin: PuzzleArcadeCoin, amount: u64) -> PuzzleArcadeTicket {
+    // let a: address = puzzle_spinner_v001.aleo;
+    // assert_eq(self.caller, a);
 
     let ticket: PuzzleArcadeTicket = PuzzleArcadeTicket {
-      owner: to,
+      owner: coin.owner,
       amount
     };
 

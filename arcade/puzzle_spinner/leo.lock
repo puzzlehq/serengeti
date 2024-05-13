@@ -1,0 +1,6 @@
+[[package]]
+name = "puzzle_arcade_v001.aleo"
+location = "local"
+path = "/Users/lucas/code/puzzle/serengeti/arcade/puzzle_spinner/../puzzle_arcade"
+checksum = "5efff549c70d50f51b40e61837c1051d015f52faeceeb4ede18e7040ee1fa5dc"
+dependencies = []
