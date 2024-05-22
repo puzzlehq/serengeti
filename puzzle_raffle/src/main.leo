@@ -1,4 +1,4 @@
-program puzzle_single_draw_raffle_final.aleo {
+program puzzle_raffle_052224.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
     mapping entries: u32 => address;
@@ -379,7 +379,7 @@ program puzzle_single_draw_raffle_final.aleo {
         let has_addr_won: bool = Mapping::get_or_use(has_won, winner_address, false);
 
         // if the drawn address has already won, fail
-        assert_eq(has_addr_won, false); 
+        assert_eq(has_addr_won, false);
 
         // get the winner_count
         let current_winner_count: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
