@@ -1,14 +1,15 @@
-program puzzle_raffle_050124.aleo {
+program puzzle_raffle_052224.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
-    mapping entries: u64 => address;
+    mapping entries: u32 => address;
     // used for storing of total number of values in entries mapping
     //   i.e. 0 -> 1, 0 -> 2
-    mapping total_entries: u64 => u64;
-    // 0u32 -> aleo1...lka
+    mapping total_entries: u32 => u32;
+    // 1u32 -> aleo1...lka
     mapping winner: u32 => address;
-
-    // winner_count
+    // mapping to store winner aleo1... => true (if addr has won)
+    mapping has_won: address => bool;
+    // total number of winners
     mapping winner_count: u32 => u32;
 
     struct PrivateKey {
@@ -78,12 +79,12 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_one_raffle_entry (public participant: address) {
-        // get current raffle count, if first entry, choose default of 0u64
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        // get current raffle count, if first entry, choose default of 0u32
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         // add address to entry mapping
         Mapping::set(entries, current_raffle_count, participant);
         // increment raffle count by 1
-        Mapping::set(total_entries, 0u64, current_raffle_count + 1u64);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 1u32);
     }
 
     transition add_two_raffle_entries (public participant: address ) {
@@ -93,10 +94,10 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_two_raffle_entries (public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 2u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 2u32);
     }
 
     transition add_three_raffle_entries (public participant: address) {
@@ -106,11 +107,11 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_three_raffle_entries (public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 3u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 3u32);
     }
 
     transition add_four_raffle_entries(public participant: address) {
@@ -120,12 +121,12 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_four_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 4u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 4u32);
     }
 
     transition add_five_raffle_entries(public participant: address,) {
@@ -135,13 +136,13 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_five_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 5u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 5u32);
     }
 
     transition add_six_raffle_entries(public participant: address) {
@@ -151,14 +152,14 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_six_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 6u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 6u32);
     }
 
     transition add_seven_raffle_entries(public participant: address) {
@@ -168,15 +169,15 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_seven_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 7u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(entries, current_raffle_count + 6u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 7u32);
     }
 
     transition add_eight_raffle_entries(public participant: address) {
@@ -186,16 +187,16 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_eight_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 8u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(entries, current_raffle_count + 6u32, participant);
+        Mapping::set(entries, current_raffle_count + 7u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 8u32);
     }
 
     transition add_nine_raffle_entries(public participant: address) {
@@ -205,17 +206,17 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_nine_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 9u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(entries, current_raffle_count + 6u32, participant);
+        Mapping::set(entries, current_raffle_count + 7u32, participant);
+        Mapping::set(entries, current_raffle_count + 8u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 9u32);
     }
 
     transition add_ten_raffle_entries(public participant: address) {
@@ -225,18 +226,18 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_ten_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 10u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(entries, current_raffle_count + 6u32, participant);
+        Mapping::set(entries, current_raffle_count + 7u32, participant);
+        Mapping::set(entries, current_raffle_count + 8u32, participant);
+        Mapping::set(entries, current_raffle_count + 9u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 10u32);
     }
 
     transition add_eleven_raffle_entries(public participant: address) {
@@ -246,19 +247,19 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_eleven_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 11u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(entries, current_raffle_count + 6u32, participant);
+        Mapping::set(entries, current_raffle_count + 7u32, participant);
+        Mapping::set(entries, current_raffle_count + 8u32, participant);
+        Mapping::set(entries, current_raffle_count + 9u32, participant);
+        Mapping::set(entries, current_raffle_count + 10u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 11u32);
     }
 
     transition add_twelve_raffle_entries(public participant: address) {
@@ -268,20 +269,20 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_twelve_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
-        Mapping::set(entries, current_raffle_count + 11u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 12u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(entries, current_raffle_count + 6u32, participant);
+        Mapping::set(entries, current_raffle_count + 7u32, participant);
+        Mapping::set(entries, current_raffle_count + 8u32, participant);
+        Mapping::set(entries, current_raffle_count + 9u32, participant);
+        Mapping::set(entries, current_raffle_count + 10u32, participant);
+        Mapping::set(entries, current_raffle_count + 11u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 12u32);
     }
 
     transition add_thirteen_raffle_entries(public participant: address) {
@@ -291,21 +292,21 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_thirteen_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
-        Mapping::set(entries, current_raffle_count + 11u64, participant);
-        Mapping::set(entries, current_raffle_count + 12u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 13u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(entries, current_raffle_count + 6u32, participant);
+        Mapping::set(entries, current_raffle_count + 7u32, participant);
+        Mapping::set(entries, current_raffle_count + 8u32, participant);
+        Mapping::set(entries, current_raffle_count + 9u32, participant);
+        Mapping::set(entries, current_raffle_count + 10u32, participant);
+        Mapping::set(entries, current_raffle_count + 11u32, participant);
+        Mapping::set(entries, current_raffle_count + 12u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 13u32);
     }
 
     transition add_fourteen_raffle_entries(public participant: address) {
@@ -315,22 +316,22 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_fourteen_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
-        Mapping::set(entries, current_raffle_count + 11u64, participant);
-        Mapping::set(entries, current_raffle_count + 12u64, participant);
-        Mapping::set(entries, current_raffle_count + 13u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 14u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(entries, current_raffle_count + 6u32, participant);
+        Mapping::set(entries, current_raffle_count + 7u32, participant);
+        Mapping::set(entries, current_raffle_count + 8u32, participant);
+        Mapping::set(entries, current_raffle_count + 9u32, participant);
+        Mapping::set(entries, current_raffle_count + 10u32, participant);
+        Mapping::set(entries, current_raffle_count + 11u32, participant);
+        Mapping::set(entries, current_raffle_count + 12u32, participant);
+        Mapping::set(entries, current_raffle_count + 13u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 14u32);
     }
 
     transition add_fifteen_raffle_entries(public participant: address) {
@@ -340,57 +341,60 @@ program puzzle_raffle_050124.aleo {
     }
 
     finalize add_fifteen_raffle_entries(public participant: address) {
-        let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        let current_raffle_count: u32 = Mapping::get_or_use(total_entries, 0u32, 0u32);
         Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
-        Mapping::set(entries, current_raffle_count + 11u64, participant);
-        Mapping::set(entries, current_raffle_count + 12u64, participant);
-        Mapping::set(entries, current_raffle_count + 13u64, participant);
-        Mapping::set(entries, current_raffle_count + 14u64, participant);
-        Mapping::set(total_entries, 0u64, current_raffle_count + 15u64);
+        Mapping::set(entries, current_raffle_count + 1u32, participant);
+        Mapping::set(entries, current_raffle_count + 2u32, participant);
+        Mapping::set(entries, current_raffle_count + 3u32, participant);
+        Mapping::set(entries, current_raffle_count + 4u32, participant);
+        Mapping::set(entries, current_raffle_count + 5u32, participant);
+        Mapping::set(entries, current_raffle_count + 6u32, participant);
+        Mapping::set(entries, current_raffle_count + 7u32, participant);
+        Mapping::set(entries, current_raffle_count + 8u32, participant);
+        Mapping::set(entries, current_raffle_count + 9u32, participant);
+        Mapping::set(entries, current_raffle_count + 10u32, participant);
+        Mapping::set(entries, current_raffle_count + 11u32, participant);
+        Mapping::set(entries, current_raffle_count + 12u32, participant);
+        Mapping::set(entries, current_raffle_count + 13u32, participant);
+        Mapping::set(entries, current_raffle_count + 14u32, participant);
+        Mapping::set(total_entries, 0u32, current_raffle_count + 15u32);
     }
 
-    // todo: allow draw winner to only be called once
     transition draw_winner () {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
         return then finalize;
     }
 
-
     finalize draw_winner () {
         // get total entries
-        let num_entries: u64 = Mapping::get(total_entries, 0u64);
+        let num_entries: u32 = Mapping::get(total_entries, 0u32);
         // grab random number
-        let random_number: u64 = ChaCha::rand_u64();
+        let random_number: u32 = ChaCha::rand_u32();
         // select winning index
-        let winner_index: u64 = random_number % num_entries;
+        let winner_index: u32 = random_number % num_entries;
         // get address at winning index
         let winner_address: address = Mapping::get(entries, winner_index);
+        // true if addr has already won, false if not
+        let has_addr_won: bool = Mapping::get_or_use(has_won, winner_address, false);
+
+        // if the drawn address has already won, fail
+        assert_eq(has_addr_won, false);
+
         // get the winner_count
         let current_winner_count: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
-        // set the winner address
-        Mapping::set(winner, current_winner_count, winner_address);
-        // increment the winner count
-        //todo: update this to fix this mapping being 1 ahead of other mapping
+        // set addr to true {aleo1...: true}
+        Mapping::set(has_won, winner_address, true);
+        // increment winner count {0u32: 1u32} and so on
         Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
+        // set winner { 1u32: aleo1...} ...
+        Mapping::set(winner, current_winner_count, winner_address);
     }
 
     transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
         let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, operator);
-
-
 
         let prize_to_winner: Prize = Prize {
             owner: winner_addr,
@@ -403,18 +407,14 @@ program puzzle_raffle_050124.aleo {
             private_key: prize.private_key,
         };
 
-        return (prize_to_winner, audit_prize_to_winner);
-        //  then finalize (winner_addr);
+        return (prize_to_winner, audit_prize_to_winner) then finalize (winner_addr);
     }
 
-    // finalize send_prize_to_winner (public winner_addr: address) {
-    //     // get the current winner idx
-    //     // let current_winner_count_idx: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
-    //     // get the current winner via the index (if draw_winner is called multiple times)
-    //     // let winner_addr_from_mapping: address = Mapping::get(winner, current_winner_count_idx);
-    //     // assert that this function is called with the winner_addr
-    //     // assert_eq(winner_addr, winner_addr_from_mapping);
-    // }
+    finalize send_prize_to_winner (public winner_addr: address) {
+        let has_addr_won: bool = Mapping::get_or_use(has_won, winner_addr, false);
+        assert(has_addr_won);
+    }
+
 
     // Potential future scope:
     // - pulling out of raffle

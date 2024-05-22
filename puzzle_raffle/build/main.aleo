@@ -1,4 +1,4 @@
-program puzzle_raffle_050124.aleo;
+program puzzle_raffle_052224.aleo;
 
 struct PrivateKey:
     pk_pt1 as u128;
@@ -20,18 +20,23 @@ record AuditPrizeToWinner:
 
 
 mapping entries:
-	key as u64.public;
+	key as u32.public;
 	value as address.public;
 
 
 mapping total_entries:
-	key as u64.public;
-	value as u64.public;
+	key as u32.public;
+	value as u32.public;
 
 
 mapping winner:
 	key as u32.public;
 	value as address.public;
+
+
+mapping has_won:
+	key as address.public;
+	value as boolean.public;
 
 
 mapping winner_count:
@@ -56,14 +61,14 @@ function add_one_raffle_entry:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_one_raffle_entry r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_one_raffle_entry.future;
+    output r1 as puzzle_raffle_052224.aleo/add_one_raffle_entry.future;
 
 finalize add_one_raffle_entry:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
-    set r2 into total_entries[0u64];
+    add r1 1u32 into r2;
+    set r2 into total_entries[0u32];
 
 
 function add_two_raffle_entries:
@@ -71,16 +76,16 @@ function add_two_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_two_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_two_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_two_raffle_entries.future;
 
 finalize add_two_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
-    set r3 into total_entries[0u64];
+    add r1 2u32 into r3;
+    set r3 into total_entries[0u32];
 
 
 function add_three_raffle_entries:
@@ -88,18 +93,18 @@ function add_three_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_three_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_three_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_three_raffle_entries.future;
 
 finalize add_three_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
-    set r4 into total_entries[0u64];
+    add r1 3u32 into r4;
+    set r4 into total_entries[0u32];
 
 
 function add_four_raffle_entries:
@@ -107,20 +112,20 @@ function add_four_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_four_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_four_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_four_raffle_entries.future;
 
 finalize add_four_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
-    set r5 into total_entries[0u64];
+    add r1 4u32 into r5;
+    set r5 into total_entries[0u32];
 
 
 function add_five_raffle_entries:
@@ -128,22 +133,22 @@ function add_five_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_five_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_five_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_five_raffle_entries.future;
 
 finalize add_five_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
-    set r6 into total_entries[0u64];
+    add r1 5u32 into r6;
+    set r6 into total_entries[0u32];
 
 
 function add_six_raffle_entries:
@@ -151,24 +156,24 @@ function add_six_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_six_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_six_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_six_raffle_entries.future;
 
 finalize add_six_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
-    set r7 into total_entries[0u64];
+    add r1 6u32 into r7;
+    set r7 into total_entries[0u32];
 
 
 function add_seven_raffle_entries:
@@ -176,26 +181,26 @@ function add_seven_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_seven_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_seven_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_seven_raffle_entries.future;
 
 finalize add_seven_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
+    add r1 6u32 into r7;
     set r0 into entries[r7];
-    add r1 7u64 into r8;
-    set r8 into total_entries[0u64];
+    add r1 7u32 into r8;
+    set r8 into total_entries[0u32];
 
 
 function add_eight_raffle_entries:
@@ -203,28 +208,28 @@ function add_eight_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_eight_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_eight_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_eight_raffle_entries.future;
 
 finalize add_eight_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
+    add r1 6u32 into r7;
     set r0 into entries[r7];
-    add r1 7u64 into r8;
+    add r1 7u32 into r8;
     set r0 into entries[r8];
-    add r1 8u64 into r9;
-    set r9 into total_entries[0u64];
+    add r1 8u32 into r9;
+    set r9 into total_entries[0u32];
 
 
 function add_nine_raffle_entries:
@@ -232,30 +237,30 @@ function add_nine_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_nine_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_nine_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_nine_raffle_entries.future;
 
 finalize add_nine_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
+    add r1 6u32 into r7;
     set r0 into entries[r7];
-    add r1 7u64 into r8;
+    add r1 7u32 into r8;
     set r0 into entries[r8];
-    add r1 8u64 into r9;
+    add r1 8u32 into r9;
     set r0 into entries[r9];
-    add r1 9u64 into r10;
-    set r10 into total_entries[0u64];
+    add r1 9u32 into r10;
+    set r10 into total_entries[0u32];
 
 
 function add_ten_raffle_entries:
@@ -263,32 +268,32 @@ function add_ten_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_ten_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_ten_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_ten_raffle_entries.future;
 
 finalize add_ten_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
+    add r1 6u32 into r7;
     set r0 into entries[r7];
-    add r1 7u64 into r8;
+    add r1 7u32 into r8;
     set r0 into entries[r8];
-    add r1 8u64 into r9;
+    add r1 8u32 into r9;
     set r0 into entries[r9];
-    add r1 9u64 into r10;
+    add r1 9u32 into r10;
     set r0 into entries[r10];
-    add r1 10u64 into r11;
-    set r11 into total_entries[0u64];
+    add r1 10u32 into r11;
+    set r11 into total_entries[0u32];
 
 
 function add_eleven_raffle_entries:
@@ -296,34 +301,34 @@ function add_eleven_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_eleven_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_eleven_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_eleven_raffle_entries.future;
 
 finalize add_eleven_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
+    add r1 6u32 into r7;
     set r0 into entries[r7];
-    add r1 7u64 into r8;
+    add r1 7u32 into r8;
     set r0 into entries[r8];
-    add r1 8u64 into r9;
+    add r1 8u32 into r9;
     set r0 into entries[r9];
-    add r1 9u64 into r10;
+    add r1 9u32 into r10;
     set r0 into entries[r10];
-    add r1 10u64 into r11;
+    add r1 10u32 into r11;
     set r0 into entries[r11];
-    add r1 11u64 into r12;
-    set r12 into total_entries[0u64];
+    add r1 11u32 into r12;
+    set r12 into total_entries[0u32];
 
 
 function add_twelve_raffle_entries:
@@ -331,36 +336,36 @@ function add_twelve_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_twelve_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_twelve_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_twelve_raffle_entries.future;
 
 finalize add_twelve_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
+    add r1 6u32 into r7;
     set r0 into entries[r7];
-    add r1 7u64 into r8;
+    add r1 7u32 into r8;
     set r0 into entries[r8];
-    add r1 8u64 into r9;
+    add r1 8u32 into r9;
     set r0 into entries[r9];
-    add r1 9u64 into r10;
+    add r1 9u32 into r10;
     set r0 into entries[r10];
-    add r1 10u64 into r11;
+    add r1 10u32 into r11;
     set r0 into entries[r11];
-    add r1 11u64 into r12;
+    add r1 11u32 into r12;
     set r0 into entries[r12];
-    add r1 12u64 into r13;
-    set r13 into total_entries[0u64];
+    add r1 12u32 into r13;
+    set r13 into total_entries[0u32];
 
 
 function add_thirteen_raffle_entries:
@@ -368,38 +373,38 @@ function add_thirteen_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_thirteen_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_thirteen_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_thirteen_raffle_entries.future;
 
 finalize add_thirteen_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
+    add r1 6u32 into r7;
     set r0 into entries[r7];
-    add r1 7u64 into r8;
+    add r1 7u32 into r8;
     set r0 into entries[r8];
-    add r1 8u64 into r9;
+    add r1 8u32 into r9;
     set r0 into entries[r9];
-    add r1 9u64 into r10;
+    add r1 9u32 into r10;
     set r0 into entries[r10];
-    add r1 10u64 into r11;
+    add r1 10u32 into r11;
     set r0 into entries[r11];
-    add r1 11u64 into r12;
+    add r1 11u32 into r12;
     set r0 into entries[r12];
-    add r1 12u64 into r13;
+    add r1 12u32 into r13;
     set r0 into entries[r13];
-    add r1 13u64 into r14;
-    set r14 into total_entries[0u64];
+    add r1 13u32 into r14;
+    set r14 into total_entries[0u32];
 
 
 function add_fourteen_raffle_entries:
@@ -407,40 +412,40 @@ function add_fourteen_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_fourteen_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_fourteen_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_fourteen_raffle_entries.future;
 
 finalize add_fourteen_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
+    add r1 6u32 into r7;
     set r0 into entries[r7];
-    add r1 7u64 into r8;
+    add r1 7u32 into r8;
     set r0 into entries[r8];
-    add r1 8u64 into r9;
+    add r1 8u32 into r9;
     set r0 into entries[r9];
-    add r1 9u64 into r10;
+    add r1 9u32 into r10;
     set r0 into entries[r10];
-    add r1 10u64 into r11;
+    add r1 10u32 into r11;
     set r0 into entries[r11];
-    add r1 11u64 into r12;
+    add r1 11u32 into r12;
     set r0 into entries[r12];
-    add r1 12u64 into r13;
+    add r1 12u32 into r13;
     set r0 into entries[r13];
-    add r1 13u64 into r14;
+    add r1 13u32 into r14;
     set r0 into entries[r14];
-    add r1 14u64 into r15;
-    set r15 into total_entries[0u64];
+    add r1 14u32 into r15;
+    set r15 into total_entries[0u32];
 
 
 function add_fifteen_raffle_entries:
@@ -448,59 +453,62 @@ function add_fifteen_raffle_entries:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_fifteen_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_fifteen_raffle_entries.future;
+    output r1 as puzzle_raffle_052224.aleo/add_fifteen_raffle_entries.future;
 
 finalize add_fifteen_raffle_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u32] 0u32 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
+    add r1 1u32 into r2;
     set r0 into entries[r2];
-    add r1 2u64 into r3;
+    add r1 2u32 into r3;
     set r0 into entries[r3];
-    add r1 3u64 into r4;
+    add r1 3u32 into r4;
     set r0 into entries[r4];
-    add r1 4u64 into r5;
+    add r1 4u32 into r5;
     set r0 into entries[r5];
-    add r1 5u64 into r6;
+    add r1 5u32 into r6;
     set r0 into entries[r6];
-    add r1 6u64 into r7;
+    add r1 6u32 into r7;
     set r0 into entries[r7];
-    add r1 7u64 into r8;
+    add r1 7u32 into r8;
     set r0 into entries[r8];
-    add r1 8u64 into r9;
+    add r1 8u32 into r9;
     set r0 into entries[r9];
-    add r1 9u64 into r10;
+    add r1 9u32 into r10;
     set r0 into entries[r10];
-    add r1 10u64 into r11;
+    add r1 10u32 into r11;
     set r0 into entries[r11];
-    add r1 11u64 into r12;
+    add r1 11u32 into r12;
     set r0 into entries[r12];
-    add r1 12u64 into r13;
+    add r1 12u32 into r13;
     set r0 into entries[r13];
-    add r1 13u64 into r14;
+    add r1 13u32 into r14;
     set r0 into entries[r14];
-    add r1 14u64 into r15;
+    add r1 14u32 into r15;
     set r0 into entries[r15];
-    add r1 15u64 into r16;
-    set r16 into total_entries[0u64];
+    add r1 15u32 into r16;
+    set r16 into total_entries[0u32];
 
 
 function draw_winner:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async draw_winner into r0;
-    output r0 as puzzle_raffle_050124.aleo/draw_winner.future;
+    output r0 as puzzle_raffle_052224.aleo/draw_winner.future;
 
 finalize draw_winner:
-    get total_entries[0u64] into r0;
-    rand.chacha into r1 as u64;
+    get total_entries[0u32] into r0;
+    rand.chacha into r1 as u32;
     rem r1 r0 into r2;
     get entries[r2] into r3;
-    get.or_use winner_count[0u32] 0u32 into r4;
-    set r3 into winner[r4];
-    add r4 1u32 into r5;
-    set r5 into winner_count[0u32];
+    get.or_use has_won[r3] false into r4;
+    assert.eq r4 false;
+    get.or_use winner_count[0u32] 0u32 into r5;
+    set true into has_won[r3];
+    add r5 1u32 into r6;
+    set r6 into winner_count[0u32];
+    set r3 into winner[r5];
 
 
 function send_prize_to_winner:
@@ -510,5 +518,12 @@ function send_prize_to_winner:
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     cast r0 r1.private_key into r2 as Prize.record;
     cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r0 r1.private_key into r3 as AuditPrizeToWinner.record;
+    async send_prize_to_winner r0 into r4;
     output r2 as Prize.record;
     output r3 as AuditPrizeToWinner.record;
+    output r4 as puzzle_raffle_052224.aleo/send_prize_to_winner.future;
+
+finalize send_prize_to_winner:
+    input r0 as address.public;
+    get.or_use has_won[r0] false into r1;
+    assert.eq r1 true;
