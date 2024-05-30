@@ -5,12 +5,38 @@ record PuzzleArcadeTicket:
     amount as u64.private;
 
 
+mapping registry:
+	key as address.public;
+	value as boolean.public;
+
+
+function add_program_to_registry:
+    input r0 as address.private;
+    assert.eq self.caller self.signer;
+    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
+    async add_program_to_registry r0 into r1;
+    output r1 as puzzle_arcade_ticket_v001.aleo/add_program_to_registry.future;
+
+finalize add_program_to_registry:
+    input r0 as address.public;
+    set true into registry[r0];
+
+
+
+
 function mint:
     input r0 as address.private;
     input r1 as u64.private;
-    assert.eq self.caller puzzle_arcade_v001.aleo;
     cast r0 r1 into r2 as PuzzleArcadeTicket.record;
+    async mint self.caller into r3;
     output r2 as PuzzleArcadeTicket.record;
+    output r3 as puzzle_arcade_ticket_v001.aleo/mint.future;
+
+finalize mint:
+    input r0 as address.public;
+    get.or_use registry[r0] false into r1;
+    assert.eq r1 true;
+
 
 
 function join:

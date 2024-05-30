@@ -15,12 +15,6 @@
       "location": "local",
       "network": null,
       "path": "../ticket"
-    },
-    {
-      "name": "puzzle_arcade_v001.aleo",
-      "location": "local",
-      "network": null,
-      "path": "../arcade"
     }
   ]
 }

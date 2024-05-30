@@ -1,20 +1,35 @@
 program puzzle_arcade_ticket_v001.aleo {
+  
+  // game programs that can mint tickets
+  mapping registry: address => bool;
+  
   record PuzzleArcadeTicket {
     owner: address,
     amount: u64
   }
 
-  transition mint(to: address, amount: u64) -> PuzzleArcadeTicket {
-    // only the arcade contract can call mint
-    let arcade: address = puzzle_arcade_v001.aleo;
-    assert_eq(self.caller, arcade);
+  async transition add_program_to_registry(program_address: address) -> (Future) {
+    assert_eq(self.caller, self.signer);
+    assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
+    return register_program(program_address);
+  }
 
+  async function register_program(program_address: address) {
+    Mapping::set(registry, program_address, true);
+  }
+
+  async transition mint(to: address, amount: u64) -> (PuzzleArcadeTicket, Future) {
     let ticket: PuzzleArcadeTicket = PuzzleArcadeTicket {
       owner: to,
       amount
     };
 
-    return (ticket);
+    return (ticket, validate_caller(self.caller));
+  }
+
+  async function validate_caller(caller: address) {
+    let registered: bool = Mapping::get_or_use(registry, caller, false);
+    assert(registered);
   }
 
   transition join(
