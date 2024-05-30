@@ -1,4 +1,6 @@
+import puzzle_arcade_ticket_v001.aleo;
 program puzzle_raffle_050124.aleo;
+
 
 struct PrivateKey:
     pk_pt1 as u128;
@@ -11,11 +13,6 @@ record Prize:
 record AuditPrize:
     owner as address.private;
     minter as address.private;
-    private_key as PrivateKey.private;
-
-record AuditPrizeToWinner:
-    owner as address.private;
-    winner as address.private;
     private_key as PrivateKey.private;
 
 
@@ -51,12 +48,12 @@ function mint_prize:
     output r5 as AuditPrize.record;
 
 
+
 function add_one_raffle_entry:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_one_raffle_entry r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_one_raffle_entry.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_one_raffle_entry r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_one_raffle_entry.future;
 
 finalize add_one_raffle_entry:
     input r0 as address.public;
@@ -66,12 +63,13 @@ finalize add_one_raffle_entry:
     set r2 into total_entries[0u64];
 
 
+
+
 function add_two_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_two_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_two_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_two_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_two_raffle_entries.future;
 
 finalize add_two_raffle_entries:
     input r0 as address.public;
@@ -83,12 +81,13 @@ finalize add_two_raffle_entries:
     set r3 into total_entries[0u64];
 
 
+
+
 function add_three_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_three_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_three_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_three_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_three_raffle_entries.future;
 
 finalize add_three_raffle_entries:
     input r0 as address.public;
@@ -102,12 +101,13 @@ finalize add_three_raffle_entries:
     set r4 into total_entries[0u64];
 
 
+
+
 function add_four_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_four_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_four_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_four_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_four_raffle_entries.future;
 
 finalize add_four_raffle_entries:
     input r0 as address.public;
@@ -123,12 +123,13 @@ finalize add_four_raffle_entries:
     set r5 into total_entries[0u64];
 
 
+
+
 function add_five_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_five_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_five_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_five_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_five_raffle_entries.future;
 
 finalize add_five_raffle_entries:
     input r0 as address.public;
@@ -146,12 +147,13 @@ finalize add_five_raffle_entries:
     set r6 into total_entries[0u64];
 
 
+
+
 function add_six_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_six_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_six_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_six_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_six_raffle_entries.future;
 
 finalize add_six_raffle_entries:
     input r0 as address.public;
@@ -171,12 +173,13 @@ finalize add_six_raffle_entries:
     set r7 into total_entries[0u64];
 
 
+
+
 function add_seven_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_seven_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_seven_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_seven_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_seven_raffle_entries.future;
 
 finalize add_seven_raffle_entries:
     input r0 as address.public;
@@ -198,12 +201,13 @@ finalize add_seven_raffle_entries:
     set r8 into total_entries[0u64];
 
 
+
+
 function add_eight_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_eight_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_eight_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_eight_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_eight_raffle_entries.future;
 
 finalize add_eight_raffle_entries:
     input r0 as address.public;
@@ -227,12 +231,13 @@ finalize add_eight_raffle_entries:
     set r9 into total_entries[0u64];
 
 
+
+
 function add_nine_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_nine_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_nine_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_nine_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_nine_raffle_entries.future;
 
 finalize add_nine_raffle_entries:
     input r0 as address.public;
@@ -258,12 +263,13 @@ finalize add_nine_raffle_entries:
     set r10 into total_entries[0u64];
 
 
+
+
 function add_ten_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_ten_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_ten_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_ten_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_ten_raffle_entries.future;
 
 finalize add_ten_raffle_entries:
     input r0 as address.public;
@@ -291,12 +297,13 @@ finalize add_ten_raffle_entries:
     set r11 into total_entries[0u64];
 
 
+
+
 function add_eleven_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_eleven_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_eleven_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_eleven_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_eleven_raffle_entries.future;
 
 finalize add_eleven_raffle_entries:
     input r0 as address.public;
@@ -326,12 +333,13 @@ finalize add_eleven_raffle_entries:
     set r12 into total_entries[0u64];
 
 
+
+
 function add_twelve_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_twelve_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_twelve_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_twelve_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_twelve_raffle_entries.future;
 
 finalize add_twelve_raffle_entries:
     input r0 as address.public;
@@ -363,12 +371,13 @@ finalize add_twelve_raffle_entries:
     set r13 into total_entries[0u64];
 
 
+
+
 function add_thirteen_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_thirteen_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_thirteen_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_thirteen_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_thirteen_raffle_entries.future;
 
 finalize add_thirteen_raffle_entries:
     input r0 as address.public;
@@ -402,12 +411,13 @@ finalize add_thirteen_raffle_entries:
     set r14 into total_entries[0u64];
 
 
+
+
 function add_fourteen_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_fourteen_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_fourteen_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_fourteen_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_fourteen_raffle_entries.future;
 
 finalize add_fourteen_raffle_entries:
     input r0 as address.public;
@@ -443,12 +453,13 @@ finalize add_fourteen_raffle_entries:
     set r15 into total_entries[0u64];
 
 
+
+
 function add_fifteen_raffle_entries:
-    input r0 as address.public;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async add_fifteen_raffle_entries r0 into r1;
-    output r1 as puzzle_raffle_050124.aleo/add_fifteen_raffle_entries.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    input r1 as address.public;
+    async add_fifteen_raffle_entries r1 into r2;
+    output r2 as puzzle_raffle_050124.aleo/add_fifteen_raffle_entries.future;
 
 finalize add_fifteen_raffle_entries:
     input r0 as address.public;
@@ -485,30 +496,3 @@ finalize add_fifteen_raffle_entries:
     add r1 15u64 into r16;
     set r16 into total_entries[0u64];
 
-
-function draw_winner:
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    async draw_winner into r0;
-    output r0 as puzzle_raffle_050124.aleo/draw_winner.future;
-
-finalize draw_winner:
-    get total_entries[0u64] into r0;
-    rand.chacha into r1 as u64;
-    rem r1 r0 into r2;
-    get entries[r2] into r3;
-    get.or_use winner_count[0u32] 0u32 into r4;
-    set r3 into winner[r4];
-    add r4 1u32 into r5;
-    set r5 into winner_count[0u32];
-
-
-function send_prize_to_winner:
-    input r0 as address.public;
-    input r1 as Prize.record;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    cast r0 r1.private_key into r2 as Prize.record;
-    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r0 r1.private_key into r3 as AuditPrizeToWinner.record;
-    output r2 as Prize.record;
-    output r3 as AuditPrizeToWinner.record;

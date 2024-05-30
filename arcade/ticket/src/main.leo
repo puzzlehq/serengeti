@@ -1,8 +1,8 @@
 program puzzle_arcade_ticket_v001.aleo {
-  
+
   // game programs that can mint tickets
   mapping registry: address => bool;
-  
+
   record PuzzleArcadeTicket {
     owner: address,
     amount: u64

@@ -1,1 +1,6 @@
-package = []
+[[package]]
+name = "puzzle_arcade_ticket_v001.aleo"
+location = "local"
+path = "/Users/asharma/code/medici/serengeti/arcade/raffle/../ticket"
+checksum = "a49359c23bcf87c74cecb847e9a7a9f9206ce20fc42a59306450f623942807c2"
+dependencies = []
