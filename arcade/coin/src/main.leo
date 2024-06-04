@@ -4,7 +4,7 @@ program puzzle_arcade_coin_v001.aleo {
     amount: u64
   }
 
-  transition mint_coin(to: address) -> PuzzleArcadeCoin {
+  transition mint(to: address) -> PuzzleArcadeCoin {
     assert_eq(self.caller, self.signer);
     assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
 

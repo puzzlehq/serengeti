@@ -2,7 +2,7 @@
 name = "puzzle_arcade_coin_v001.aleo"
 location = "local"
 path = "/Users/lucas/code/puzzle/serengeti/arcade/spinner/../coin"
-checksum = "089ce580c7ddbb640e023a53a8d1f1cf3fa811b3f4ccff2d37849cfb24a92d49"
+checksum = "cecb5b5f1638f054d09d564442d60c6928532384530a4b71c0bb4e6eb7a250d7"
 dependencies = []
 
 [[package]]

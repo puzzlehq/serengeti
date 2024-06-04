@@ -5,7 +5,7 @@ record PuzzleArcadeCoin:
     amount as u64.private;
 
 
-function mint_coin:
+function mint:
     input r0 as address.private;
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
