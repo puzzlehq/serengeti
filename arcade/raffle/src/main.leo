@@ -1,4 +1,4 @@
-program puzzle_raffle_050124.aleo {
+program puzzle_raffle_v001.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
     mapping entries: u64 => address;
@@ -7,7 +7,6 @@ program puzzle_raffle_050124.aleo {
     mapping total_entries: u64 => u64;
     // 0u32 -> aleo1...lka
     mapping winner: u32 => address;
-
     // winner_count
     mapping winner_count: u32 => u32;
 
@@ -33,18 +32,7 @@ program puzzle_raffle_050124.aleo {
         private_key: PrivateKey,
     }
 
-    // set_prize function -- start
-    // creates record onchain with privatekey for ETH that can be
-    // used for marketing purposes
-    // do we want this to post something to a mapping? Maybe a blockheight when it was sent?
-    // or a blockheight when an automated function should call it?
-    // we can also PROVE that this has some funds by:
-    // A) signing message and verifying signature with address
-    // B) generating the ethAddress from the private key and posting that in the mapping
-    // C) -- this is also a nice way to guarantee something with minimal proofs -- wide design space here!
-    // ab: how will we store eth private key on chain? as a field element?
-    // need to be able to reverse the field element off chain into a private key. will we need to write custom logic for this?
-    // todo: allow only one mint prize call
+    // todo: allow only one mint_prize call?
     transition mint_prize (pk_pt1: u128, pk_pt2: u128) -> (Prize, AuditPrize) {
         let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
         // todo: can we check if it is a valid eth pk here...
@@ -71,27 +59,12 @@ program puzzle_raffle_050124.aleo {
         return (prize, audit_prize);
     }
 
-    transition buy_entries (ticket, num_entries) {
-      if (num_entries == 1) {
-        // validate ticket value >= 1
-        assert_gte(ticket.value, 1);
-        // mint new ticket with value - 1
-        let change: PuzzleArcadeTicket = mint_ticket(ticket.value - 1);
-
-        return then finalize(add_one_raffle_entry);
-      } else if (num_entries == 2) {
-        // validate ticket value >= 2
-        return then finalize(add_two_raffle_entry);
-      }
-    }
-
-    transition add_one_raffle_entry (public participant: address) {
+    async transition buy_one_entry (public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_one_entry(participant);
     }
-
-    finalize add_one_raffle_entry (public participant: address) {
+    async function add_one_entry (public participant: address) {
         // get current raffle count, if first entry, choose default of 0u64
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         // add address to entry mapping
@@ -100,26 +73,24 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 1u64);
     }
 
-    transition add_two_raffle_entries (public participant: address ) {
+    async transition buy_two_entries (public participant: address ) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_two_entries(participant);
     }
-
-    finalize add_two_raffle_entries (public participant: address) {
+    async function add_two_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
         Mapping::set(total_entries, 0u64, current_raffle_count + 2u64);
     }
 
-    transition add_three_raffle_entries (public participant: address) {
+    async transition buy_three_entries (public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_three_entries(participant);
     }
-
-    finalize add_three_raffle_entries (public participant: address) {
+    async function add_three_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -127,13 +98,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 3u64);
     }
 
-    transition add_four_raffle_entries(public participant: address) {
+    async transition buy_four_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_four_entries(participant);
     }
-
-    finalize add_four_raffle_entries(public participant: address) {
+    async function add_four_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -142,13 +112,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 4u64);
     }
 
-    transition add_five_raffle_entries(public participant: address,) {
+    async transition buy_five_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_five_entries(participant);
     }
-
-    finalize add_five_raffle_entries(public participant: address) {
+    async function add_five_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -158,13 +127,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 5u64);
     }
 
-    transition add_six_raffle_entries(public participant: address) {
+    async transition buy_six_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_six_entries(participant);
     }
-
-    finalize add_six_raffle_entries(public participant: address) {
+    async function add_six_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -175,13 +143,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 6u64);
     }
 
-    transition add_seven_raffle_entries(public participant: address) {
+    async transition buy_seven_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_seven_entries(participant);
     }
-
-    finalize add_seven_raffle_entries(public participant: address) {
+    async function add_seven_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -193,13 +160,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 7u64);
     }
 
-    transition add_eight_raffle_entries(public participant: address) {
+    async transition buy_eight_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_eight_entries(participant);
     }
-
-    finalize add_eight_raffle_entries(public participant: address) {
+    async function add_eight_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -212,13 +178,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 8u64);
     }
 
-    transition add_nine_raffle_entries(public participant: address) {
+    async transition buy_nine_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_nine_entries(participant);
     }
-
-    finalize add_nine_raffle_entries(public participant: address) {
+    async function add_nine_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -232,13 +197,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 9u64);
     }
 
-    transition add_ten_raffle_entries(public participant: address) {
+    async transition buy_ten_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_ten_entries(participant);
     }
-
-    finalize add_ten_raffle_entries(public participant: address) {
+    async function add_ten_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -253,13 +217,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 10u64);
     }
 
-    transition add_eleven_raffle_entries(public participant: address) {
+    async transition buy_eleven_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_11_entries(participant);
     }
-
-    finalize add_eleven_raffle_entries(public participant: address) {
+    async function add_11_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -275,13 +238,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 11u64);
     }
 
-    transition add_twelve_raffle_entries(public participant: address) {
+    async transition buy_twelve_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_twelve_entries(participant);
     }
-
-    finalize add_twelve_raffle_entries(public participant: address) {
+    async function add_twelve_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -298,13 +260,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 12u64);
     }
 
-    transition add_thirteen_raffle_entries(public participant: address) {
+    async transition buy_thirteen_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_thirteen_entries(participant);
     }
-
-    finalize add_thirteen_raffle_entries(public participant: address) {
+    async function add_thirteen_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -322,13 +283,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 13u64);
     }
 
-    transition add_fourteen_raffle_entries(public participant: address) {
+    async transition buy_fourteen_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_fourteen_entries(participant);
     }
-
-    finalize add_fourteen_raffle_entries(public participant: address) {
+    async function add_fourteen_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -347,13 +307,12 @@ program puzzle_raffle_050124.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 14u64);
     }
 
-    transition add_fifteen_raffle_entries(public participant: address) {
+    async transition buy_fifteen_entries(public participant: address) -> Future {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize(participant);
+        return add_fifteen_entries(participant);
     }
-
-    finalize add_fifteen_raffle_entries(public participant: address) {
+    async function add_fifteen_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         Mapping::set(entries, current_raffle_count, participant);
         Mapping::set(entries, current_raffle_count + 1u64, participant);
@@ -374,14 +333,12 @@ program puzzle_raffle_050124.aleo {
     }
 
     // todo: allow draw winner to only be called once
-    transition draw_winner () {
+    async transition draw_winner () -> (Future) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return then finalize;
+        return draw_winner_finalize();
     }
-
-
-    finalize draw_winner () {
+    async function draw_winner_finalize () {
         // get total entries
         let num_entries: u64 = Mapping::get(total_entries, 0u64);
         // grab random number
@@ -404,8 +361,6 @@ program puzzle_raffle_050124.aleo {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, operator);
 
-
-
         let prize_to_winner: Prize = Prize {
             owner: winner_addr,
             private_key: prize.private_key,
@@ -418,7 +373,6 @@ program puzzle_raffle_050124.aleo {
         };
 
         return (prize_to_winner, audit_prize_to_winner);
-        //  then finalize (winner_addr);
     }
 
     // finalize send_prize_to_winner (public winner_addr: address) {
@@ -429,16 +383,4 @@ program puzzle_raffle_050124.aleo {
     //     // assert that this function is called with the winner_addr
     //     // assert_eq(winner_addr, winner_addr_from_mapping);
     // }
-
-    // Potential future scope:
-    // - pulling out of raffle
-    // - automating raffle winner selection
-    // https://www.youtube.com/watch?v=BARTutzwBrc -- Gelato solving this. Used a whole ass network. Out of scope for us
-    // but we can try internally and would be cool
-
-    // General Plan:
-    // - Make functions -- functions should give idea about record structure & mappings -today
-    // - Test with bash script -today
-    // - Deploy with CLI and test on testnet with some giftcards - today
-    // - Testing script for 20,000 people hitting this function -- this one will be tomorrow
 }
