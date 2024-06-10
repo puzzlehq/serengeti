@@ -1,4 +1,4 @@
-program puzzle_arcade_coin_v001.aleo {
+program puzzle_arcade_coin_v002.aleo {
   record PuzzleArcadeCoin {
     owner: address,
     amount: u64
@@ -14,5 +14,12 @@ program puzzle_arcade_coin_v001.aleo {
     };
 
     return (coin);
+  }
+
+  transition spend(coin: PuzzleArcadeCoin) -> PuzzleArcadeCoin {
+    return PuzzleArcadeCoin {
+      owner: coin.owner,
+      amount: 0u64
+    };
   }
 }

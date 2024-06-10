@@ -5,10 +5,12 @@ program puzzle_raffle_v001.aleo {
     // used for storing of total number of values in entries mapping
     //   i.e. 0 -> 1, 0 -> 2
     mapping total_entries: u64 => u64;
-    // 0u32 -> aleo1...lka
-    mapping winner: u32 => address;
-    // winner_count
-    mapping winner_count: u32 => u32;
+    // 1u64 -> aleo1...lka
+    mapping winner: u64 => address;
+    // mapping to store winner aleo1... => true (if addr has won)
+    mapping has_won: address => bool;
+    // total number of winners
+    mapping winner_count: u64 => u64;
 
     struct PrivateKey {
         pk_pt1: u128,
@@ -23,12 +25,6 @@ program puzzle_raffle_v001.aleo {
     record AuditPrize {
         owner: address,
         minter: address,
-        private_key: PrivateKey,
-    }
-
-    record AuditPrizeToWinner {
-        owner: address,
-        winner: address,
         private_key: PrivateKey,
     }
 
@@ -336,9 +332,9 @@ program puzzle_raffle_v001.aleo {
     async transition draw_winner () -> (Future) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return draw_winner_finalize();
+        return await_draw_winner();
     }
-    async function draw_winner_finalize () {
+    async function await_draw_winner () {
         // get total entries
         let num_entries: u64 = Mapping::get(total_entries, 0u64);
         // grab random number
@@ -347,16 +343,23 @@ program puzzle_raffle_v001.aleo {
         let winner_index: u64 = random_number % num_entries;
         // get address at winning index
         let winner_address: address = Mapping::get(entries, winner_index);
+        // true if addr has already won, false if not
+        let has_addr_won: bool = Mapping::get_or_use(has_won, winner_address, false);
+
+        // if the drawn address has already won, fail
+        assert_eq(has_addr_won, false);
+
         // get the winner_count
-        let current_winner_count: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
-        // set the winner address
+        let current_winner_count: u64 = Mapping::get_or_use(winner_count, 0u64, 0u64);
+        // set addr to true {aleo1...: true}
+        Mapping::set(has_won, winner_address, true);
+        // increment winner count {0u64: 1u64} and so on
+        Mapping::set(winner_count, 0u64, current_winner_count + 1u64);
+        // set winner { 1u64: aleo1...} ...
         Mapping::set(winner, current_winner_count, winner_address);
-        // increment the winner count
-        //todo: update this to fix this mapping being 1 ahead of other mapping
-        Mapping::set(winner_count, 0u32, current_winner_count + 1u32);
     }
 
-    transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize, AuditPrizeToWinner) {
+    transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize) {
         let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, operator);
@@ -366,18 +369,18 @@ program puzzle_raffle_v001.aleo {
             private_key: prize.private_key,
         };
 
-        let audit_prize_to_winner: AuditPrizeToWinner = AuditPrizeToWinner {
-            owner: operator,
-            winner: winner_addr,
-            private_key: prize.private_key,
-        };
+        // let audit_prize_to_winner: AuditPrizeToWinner = AuditPrizeToWinner {
+        //     owner: operator,
+        //     winner: winner_addr,
+        //     private_key: prize.private_key,
+        // };
 
-        return (prize_to_winner, audit_prize_to_winner);
+        return (prize_to_winner);
     }
 
     // finalize send_prize_to_winner (public winner_addr: address) {
     //     // get the current winner idx
-    //     // let current_winner_count_idx: u32 = Mapping::get_or_use(winner_count, 0u32, 0u32);
+    //     // let current_winner_count_idx: u64 = Mapping::get_or_use(winner_count, 0u64, 0u64);
     //     // get the current winner via the index (if draw_winner is called multiple times)
     //     // let winner_addr_from_mapping: address = Mapping::get(winner, current_winner_count_idx);
     //     // assert that this function is called with the winner_addr

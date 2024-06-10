@@ -13,11 +13,6 @@ record AuditPrize:
     minter as address.private;
     private_key as PrivateKey.private;
 
-record AuditPrizeToWinner:
-    owner as address.private;
-    winner as address.private;
-    private_key as PrivateKey.private;
-
 
 mapping entries:
 	key as u64.public;
@@ -30,13 +25,18 @@ mapping total_entries:
 
 
 mapping winner:
-	key as u32.public;
+	key as u64.public;
 	value as address.public;
 
 
+mapping has_won:
+	key as address.public;
+	value as boolean.public;
+
+
 mapping winner_count:
-	key as u32.public;
-	value as u32.public;
+	key as u64.public;
+	value as u64.public;
 
 function mint_prize:
     input r0 as u128.private;
@@ -528,10 +528,13 @@ finalize draw_winner:
     rand.chacha into r1 as u64;
     rem r1 r0 into r2;
     get entries[r2] into r3;
-    get.or_use winner_count[0u32] 0u32 into r4;
-    set r3 into winner[r4];
-    add r4 1u32 into r5;
-    set r5 into winner_count[0u32];
+    get.or_use has_won[r3] false into r4;
+    assert.eq r4 false;
+    get.or_use winner_count[0u64] 0u64 into r5;
+    set true into has_won[r3];
+    add r5 1u64 into r6;
+    set r6 into winner_count[0u64];
+    set r3 into winner[r5];
 
 
 
@@ -541,6 +544,4 @@ function send_prize_to_winner:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     cast r0 r1.private_key into r2 as Prize.record;
-    cast aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw r0 r1.private_key into r3 as AuditPrizeToWinner.record;
     output r2 as Prize.record;
-    output r3 as AuditPrizeToWinner.record;

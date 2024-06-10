@@ -11,3 +11,9 @@ function mint:
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     cast r0 1000000u64 into r1 as PuzzleArcadeCoin.record;
     output r1 as PuzzleArcadeCoin.record;
+
+
+function spend:
+    input r0 as PuzzleArcadeCoin.record;
+    cast r0.owner 0u64 into r1 as PuzzleArcadeCoin.record;
+    output r1 as PuzzleArcadeCoin.record;
