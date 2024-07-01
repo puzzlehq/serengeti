@@ -1,4 +1,4 @@
-program puzzle_arcade_coin_v002.aleo;
+program puzzle_arcade_coin_v001.aleo;
 
 record PuzzleArcadeCoin:
     owner as address.private;
@@ -15,9 +15,5 @@ function mint:
 
 function spend:
     input r0 as PuzzleArcadeCoin.record;
-    input r1 as u64.private;
-    gte r0.amount r1 into r2;
-    assert.eq r2 true;
-    sub r0.amount r1 into r3;
-    cast r0.owner r3 into r4 as PuzzleArcadeCoin.record;
-    output r4 as PuzzleArcadeCoin.record;
+    cast r0.owner 0u64 into r1 as PuzzleArcadeCoin.record;
+    output r1 as PuzzleArcadeCoin.record;

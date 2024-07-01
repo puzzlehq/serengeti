@@ -1,1 +1,13 @@
-package = []
+[[package]]
+name = "puzzle_arcade_coin_v002.aleo"
+location = "local"
+path = "/Users/lucas/code/puzzle/serengeti/arcade/raffle/../coin"
+checksum = "3136835bfde5817255696ff80e63a0a048a72543ae0429638535389f2f08d78b"
+dependencies = []
+
+[[package]]
+name = "puzzle_arcade_ticket_v002.aleo"
+location = "local"
+path = "/Users/lucas/code/puzzle/serengeti/arcade/raffle/../ticket"
+checksum = "da535c51a4d99d9bb867d0ae8b6c0bcb694da3e2af7fac924cbe72e25702d9c6"
+dependencies = []

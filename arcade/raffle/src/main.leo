@@ -1,3 +1,6 @@
+import puzzle_arcade_coin_v002.aleo;
+import puzzle_arcade_ticket_v002.aleo;
+
 program puzzle_raffle_v001.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
@@ -28,10 +31,8 @@ program puzzle_raffle_v001.aleo {
         private_key: PrivateKey,
     }
 
-    // todo: allow only one mint_prize call?
     transition mint_prize (pk_pt1: u128, pk_pt2: u128) -> (Prize, AuditPrize) {
         let operator: address = aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-        // todo: can we check if it is a valid eth pk here...
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, operator);
 
@@ -55,10 +56,12 @@ program puzzle_raffle_v001.aleo {
         return (prize, audit_prize);
     }
 
-    async transition buy_one_entry (public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_one_entry(participant);
+    async transition buy_one_entry (ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 1000000u64);
+        return (spent_ticket, add_one_entry(ticket.owner));
     }
     async function add_one_entry (public participant: address) {
         // get current raffle count, if first entry, choose default of 0u64
@@ -69,262 +72,241 @@ program puzzle_raffle_v001.aleo {
         Mapping::set(total_entries, 0u64, current_raffle_count + 1u64);
     }
 
-    async transition buy_two_entries (public participant: address ) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_two_entries(participant);
+    async transition buy_two_entries (ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 2000000u64);
+        return (spent_ticket, add_two_entries(ticket.owner));
     }
     async function add_two_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
+        
+        for i: u64 in 0u64..2u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 2u64);
     }
 
-    async transition buy_three_entries (public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_three_entries(participant);
+    async transition buy_three_entries (ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 3000000u64);
+        return (spent_ticket, add_three_entries(ticket.owner));
     }
     async function add_three_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
+        
+        for i: u64 in 0u64..3u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 3u64);
     }
 
-    async transition buy_four_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_four_entries(participant);
+    async transition buy_four_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 4000000u64);
+        return (spent_ticket, add_four_entries(ticket.owner));
     }
     async function add_four_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
+        
+        for i: u64 in 0u64..4u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 4u64);
     }
 
-    async transition buy_five_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_five_entries(participant);
+    async transition buy_five_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 5000000u64);
+        return (spent_ticket, add_five_entries(ticket.owner));
     }
     async function add_five_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
+        
+        for i: u64 in 0u64..5u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 5u64);
     }
 
-    async transition buy_six_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_six_entries(participant);
+    async transition buy_six_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 6000000u64);
+        return (spent_ticket, add_six_entries(ticket.owner));
     }
     async function add_six_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
+        
+        for i: u64 in 0u64..6u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 6u64);
     }
 
-    async transition buy_seven_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_seven_entries(participant);
+    async transition buy_seven_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 7000000u64);
+        return (spent_ticket, add_seven_entries(ticket.owner));
     }
     async function add_seven_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
+        
+        for i: u64 in 0u64..7u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 7u64);
     }
 
-    async transition buy_eight_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_eight_entries(participant);
+    async transition buy_eight_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 8000000u64);
+        return (spent_ticket, add_eight_entries(ticket.owner));
     }
     async function add_eight_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
+
+        for i: u64 in 0u64..8u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 8u64);
     }
 
-    async transition buy_nine_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_nine_entries(participant);
+    async transition buy_nine_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 9000000u64);
+        return (spent_ticket, add_nine_entries(ticket.owner));
     }
     async function add_nine_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
+
+        for i: u64 in 0u64..9u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 9u64);
     }
 
-    async transition buy_ten_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_ten_entries(participant);
+    async transition buy_ten_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 10000000u64);
+        return (spent_ticket, add_ten_entries(ticket.owner));
     }
     async function add_ten_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
+        
+        for i: u64 in 0u64..10u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 10u64);
     }
 
-    async transition buy_eleven_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_11_entries(participant);
+    async transition buy_eleven_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 11000000u64);
+        return (spent_ticket, add_eleven_entries(ticket.owner));
     }
-    async function add_11_entries(public participant: address) {
+    async function add_eleven_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
+        
+        for i: u64 in 0u64..11u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 11u64);
     }
 
-    async transition buy_twelve_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_twelve_entries(participant);
+    async transition buy_twelve_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 12000000u64);
+        return (spent_ticket, add_twelve_entries(ticket.owner));
     }
     async function add_twelve_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
-        Mapping::set(entries, current_raffle_count + 11u64, participant);
+        
+        for i: u64 in 0u64..12u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 12u64);
     }
 
-    async transition buy_thirteen_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_thirteen_entries(participant);
+    async transition buy_thirteen_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 13000000u64);
+        return (spent_ticket, add_thirteen_entries(ticket.owner));
     }
     async function add_thirteen_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
-        Mapping::set(entries, current_raffle_count + 11u64, participant);
-        Mapping::set(entries, current_raffle_count + 12u64, participant);
+        
+        for i: u64 in 0u64..13u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 13u64);
     }
 
-    async transition buy_fourteen_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_fourteen_entries(participant);
+    async transition buy_fourteen_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 14000000u64);
+        return (spent_ticket, add_fourteen_entries(ticket.owner));
     }
     async function add_fourteen_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
-        Mapping::set(entries, current_raffle_count + 11u64, participant);
-        Mapping::set(entries, current_raffle_count + 12u64, participant);
-        Mapping::set(entries, current_raffle_count + 13u64, participant);
+
+        for i: u64 in 0u64..14u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 14u64);
     }
 
-    async transition buy_fifteen_entries(public participant: address) -> Future {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
-        return add_fifteen_entries(participant);
+    async transition buy_fifteen_entries(ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket) -> (
+      puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+      Future
+    ) {
+        let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, 15000000u64);
+        return (spent_ticket, add_fifteen_entries(ticket.owner));
     }
     async function add_fifteen_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        Mapping::set(entries, current_raffle_count, participant);
-        Mapping::set(entries, current_raffle_count + 1u64, participant);
-        Mapping::set(entries, current_raffle_count + 2u64, participant);
-        Mapping::set(entries, current_raffle_count + 3u64, participant);
-        Mapping::set(entries, current_raffle_count + 4u64, participant);
-        Mapping::set(entries, current_raffle_count + 5u64, participant);
-        Mapping::set(entries, current_raffle_count + 6u64, participant);
-        Mapping::set(entries, current_raffle_count + 7u64, participant);
-        Mapping::set(entries, current_raffle_count + 8u64, participant);
-        Mapping::set(entries, current_raffle_count + 9u64, participant);
-        Mapping::set(entries, current_raffle_count + 10u64, participant);
-        Mapping::set(entries, current_raffle_count + 11u64, participant);
-        Mapping::set(entries, current_raffle_count + 12u64, participant);
-        Mapping::set(entries, current_raffle_count + 13u64, participant);
-        Mapping::set(entries, current_raffle_count + 14u64, participant);
+        
+        for i: u64 in 0u64..15u64 {
+          Mapping::set(entries, current_raffle_count + i, participant);
+        }
+
         Mapping::set(total_entries, 0u64, current_raffle_count + 15u64);
     }
 

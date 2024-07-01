@@ -16,10 +16,11 @@ program puzzle_arcade_coin_v002.aleo {
     return (coin);
   }
 
-  transition spend(coin: PuzzleArcadeCoin) -> PuzzleArcadeCoin {
+  transition spend(coin: PuzzleArcadeCoin, amount: u64) -> PuzzleArcadeCoin {
+    assert(coin.amount >= amount);
     return PuzzleArcadeCoin {
       owner: coin.owner,
-      amount: 0u64
+      amount: coin.amount - amount
     };
   }
 }

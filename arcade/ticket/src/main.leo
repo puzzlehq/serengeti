@@ -1,4 +1,4 @@
-program puzzle_arcade_ticket_v001.aleo {
+program puzzle_arcade_ticket_v002.aleo {
 
   // game programs that can mint tickets
   mapping registry: address => bool;
@@ -30,6 +30,14 @@ program puzzle_arcade_ticket_v001.aleo {
   async function validate_caller(caller: address) {
     let registered: bool = Mapping::get_or_use(registry, caller, false);
     assert(registered);
+  }
+
+  transition spend(ticket: PuzzleArcadeTicket, amount: u64) -> PuzzleArcadeTicket {
+    assert(ticket.amount >= amount);
+    return PuzzleArcadeTicket {
+      owner: ticket.owner,
+      amount: ticket.amount - amount
+    };
   }
 
   transition join(
