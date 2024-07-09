@@ -1,4 +1,4 @@
-program puzzle_arcade_ticket_v002.aleo {
+program puzzle_arcade_ticket_v003.aleo {
 
   // game programs that can mint tickets
   mapping registry: address => bool;
@@ -41,25 +41,79 @@ program puzzle_arcade_ticket_v002.aleo {
   }
 
   transition join(
-    ticket_one: PuzzleArcadeTicket,
-    ticket_two: PuzzleArcadeTicket
+    ticket1: PuzzleArcadeTicket,
+    ticket2: PuzzleArcadeTicket
   ) -> (PuzzleArcadeTicket) {
-    // contracts can't call this
-    assert_eq(self.caller, self.signer);
-
-    // assert function caller is owner of both records
-    assert(ticket_one.owner == self.signer);
-    assert(ticket_two.owner == self.signer);
-
     // assert tickets have values > 0
-    assert(ticket_one.amount > 0u64);
-    assert(ticket_two.amount > 0u64);
+    assert(ticket1.amount > 0u64);
+    assert(ticket2.amount > 0u64);
 
     let joined: PuzzleArcadeTicket = PuzzleArcadeTicket {
       owner: self.signer,
-      amount: ticket_one.amount + ticket_two.amount
+      amount: ticket1.amount + ticket2.amount
     };
 
     return joined;
   }
+
+  transition join3(
+    ticket1: PuzzleArcadeTicket,
+    ticket2: PuzzleArcadeTicket,
+    ticket3: PuzzleArcadeTicket,
+  ) -> (PuzzleArcadeTicket) {
+    // assert tickets have values > 0
+    assert(ticket1.amount > 0u64);
+    assert(ticket2.amount > 0u64);
+    assert(ticket3.amount > 0u64);
+
+    let joined: PuzzleArcadeTicket = PuzzleArcadeTicket {
+      owner: self.signer,
+      amount: ticket1.amount + ticket2.amount + ticket3.amount
+    };
+
+    return joined;
+  }
+
+  transition join4(
+    ticket1: PuzzleArcadeTicket,
+    ticket2: PuzzleArcadeTicket,
+    ticket3: PuzzleArcadeTicket,
+    ticket4: PuzzleArcadeTicket,
+  ) -> (PuzzleArcadeTicket) {
+    // assert tickets have values > 0
+    assert(ticket1.amount > 0u64);
+    assert(ticket2.amount > 0u64);
+    assert(ticket3.amount > 0u64);
+    assert(ticket4.amount > 0u64);
+
+    let joined: PuzzleArcadeTicket = PuzzleArcadeTicket {
+      owner: self.signer,
+      amount: ticket1.amount + ticket2.amount + ticket3.amount + ticket4.amount
+    };
+
+    return joined;
+  }
+
+  transition join5(
+    ticket1: PuzzleArcadeTicket,
+    ticket2: PuzzleArcadeTicket,
+    ticket3: PuzzleArcadeTicket,
+    ticket4: PuzzleArcadeTicket,
+    ticket5: PuzzleArcadeTicket
+  ) -> (PuzzleArcadeTicket) {
+    // assert tickets have values > 0
+    assert(ticket1.amount > 0u64);
+    assert(ticket2.amount > 0u64);
+    assert(ticket3.amount > 0u64);
+    assert(ticket4.amount > 0u64);
+    assert(ticket5.amount > 0u64);
+
+    let joined: PuzzleArcadeTicket = PuzzleArcadeTicket {
+      owner: self.signer,
+      amount: ticket1.amount + ticket2.amount + ticket3.amount + ticket4.amount + ticket5.amount
+    };
+
+    return joined;
+  }
+
 }

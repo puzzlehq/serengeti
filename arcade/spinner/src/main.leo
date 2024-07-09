@@ -1,7 +1,7 @@
 import puzzle_arcade_coin_v002.aleo;
-import puzzle_arcade_ticket_v002.aleo;
+import puzzle_arcade_ticket_v003.aleo;
 
-program puzzle_spinner_v002.aleo {
+program puzzle_spinner_v004.aleo {
   mapping used_nonces: field => bool;
 
   struct Result {
@@ -13,7 +13,7 @@ program puzzle_spinner_v002.aleo {
     coin: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
     result: Result,
     sig: signature,
-  ) -> (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) {
+  ) -> (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, puzzle_arcade_ticket_v003.aleo/PuzzleArcadeTicket, Future) {
     // verify signature to guarantee arcade operator's consent
     assert_eq(sig.verify(aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw, result), true);
 
@@ -23,7 +23,7 @@ program puzzle_spinner_v002.aleo {
 
     let spent_coin: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin = puzzle_arcade_coin_v002.aleo/spend (coin, 1000000u64);
 
-    let (ticket, future): (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v002.aleo/mint (
+    let (ticket, future): (puzzle_arcade_ticket_v003.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v003.aleo/mint (
       coin.owner,
       result.tickets
     );

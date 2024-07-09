@@ -1,6 +1,6 @@
 import puzzle_arcade_coin_v002.aleo;
-import puzzle_arcade_ticket_v002.aleo;
-program puzzle_spinner_v002.aleo;
+import puzzle_arcade_ticket_v003.aleo;
+program puzzle_spinner_v004.aleo;
 
 
 
@@ -29,14 +29,14 @@ function spin:
     or r8 r9 into r10;
     assert.eq r10 true;
     call puzzle_arcade_coin_v002.aleo/spend r0 1000000u64 into r11;
-    call puzzle_arcade_ticket_v002.aleo/mint r0.owner r1.tickets into r12 r13;
+    call puzzle_arcade_ticket_v003.aleo/mint r0.owner r1.tickets into r12 r13;
     async spin r13 r1.nonce into r14;
     output r11 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
-    output r12 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r14 as puzzle_spinner_v002.aleo/spin.future;
+    output r12 as puzzle_arcade_ticket_v003.aleo/PuzzleArcadeTicket.record;
+    output r14 as puzzle_spinner_v004.aleo/spin.future;
 
 finalize spin:
-    input r0 as puzzle_arcade_ticket_v002.aleo/mint.future;
+    input r0 as puzzle_arcade_ticket_v003.aleo/mint.future;
     input r1 as field.public;
     get.or_use used_nonces[r1] false into r2;
     assert.eq r2 false;

@@ -1,17 +1,11 @@
 {
-    "program": "puzzle_raffle_v001.aleo",
+    "program": "puzzle_raffle_v002.aleo",
     "version": "0.0.0",
     "description": "",
     "license": "MIT",
     "dependencies": [
       {
-        "name": "puzzle_arcade_coin_v002.aleo",
-        "location": "local",
-        "network": null,
-        "path": "../coin"
-      },
-      {
-        "name": "puzzle_arcade_ticket_v002.aleo",
+        "name": "puzzle_arcade_ticket_v003.aleo",
         "location": "local",
         "network": null,
         "path": "../ticket"

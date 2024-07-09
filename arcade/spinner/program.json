@@ -1,5 +1,5 @@
 {
-  "program": "puzzle_spinner_v002.aleo",
+  "program": "puzzle_spinner_v004.aleo",
   "version": "0.0.0",
   "description": "",
   "license": "MIT",
@@ -11,7 +11,7 @@
       "path": "../coin"
     },
     {
-      "name": "puzzle_arcade_ticket_v002.aleo",
+      "name": "puzzle_arcade_ticket_v003.aleo",
       "location": "local",
       "network": null,
       "path": "../ticket"
