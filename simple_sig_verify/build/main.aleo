@@ -16,9 +16,23 @@ record MessageSignInfo:
     message_5 as field.private;
 
 
+function mint_message:
+    input r0 as field.private;
+    input r1 as field.private;
+    input r2 as field.private;
+    input r3 as field.private;
+    input r4 as field.private;
+    cast aleo16d0pn0dyrlfs3kqaklt9lpagyjagej93lzhzps50cyxp8m9p7gqs7krdgy r0 r1 r2 r3 r4 into r5 as MessageSignInfo.record;
+    output r5 as MessageSignInfo.record;
+
+
 function sig_verify:
-    input r0 as MessageSignInfo.record;
-    input r1 as signature.private;
-    cast r0.message_1 r0.message_2 r0.message_3 r0.message_4 r0.message_5 into r2 as Message;
-    sign.verify r1 r0.owner r2 into r3;
-    output r3 as boolean.private;
+    input r0 as field.private;
+    input r1 as field.private;
+    input r2 as field.private;
+    input r3 as field.private;
+    input r4 as field.private;
+    input r5 as signature.private;
+    cast r0 r1 r2 r3 r4 into r6 as Message;
+    sign.verify r5 aleo16d0pn0dyrlfs3kqaklt9lpagyjagej93lzhzps50cyxp8m9p7gqs7krdgy r6 into r7;
+    output r7 as boolean.private;
