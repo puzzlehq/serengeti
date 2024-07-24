@@ -1,0 +1,14 @@
+{
+    "program": "puzzle_raffle_v002.aleo",
+    "version": "0.0.0",
+    "description": "",
+    "license": "MIT",
+    "dependencies": [
+      {
+        "name": "puzzle_arcade_ticket_v003.aleo",
+        "location": "local",
+        "network": null,
+        "path": "../ticket"
+      }
+    ]
+}
