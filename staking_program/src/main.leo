@@ -1,6 +1,6 @@
 import credits.aleo;
 
-program puzzle_arc38_v004.aleo {
+program puzzle_arc38_v006.aleo {
   // Owner of the program
   const ADMIN: address = aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
   // Address of this program
@@ -99,13 +99,12 @@ program puzzle_arc38_v004.aleo {
   async transition initial_deposit(
     public microcredits: u64,
     public validator_address: address,
-    public withdrawal_address: address,
   ) -> (Future) {
     assert_eq(self.caller, ADMIN);
     // credits.aleo/transfer_public_as_signer(CORE_PROTOCOL, microcredits);
     let f1: Future = credits.aleo/transfer_public_as_signer(CORE_PROTOCOL, microcredits);
     // bond these credits to the validator
-    let f2: Future = credits.aleo/bond_public(validator_address, withdrawal_address, microcredits);
+    let f2: Future = credits.aleo/bond_public(validator_address, CORE_PROTOCOL, microcredits);
 
     return finalize_initial_deposit(f1, f2, microcredits, validator_address);
   }
@@ -212,7 +211,7 @@ program puzzle_arc38_v004.aleo {
     validator.set(1u8, validator_address);
   }
 
-  // unbond staker
+
   async transition unbond_all(public staker_address: address, public pool_balance: u64) -> (Future) {
     let f1: Future = credits.aleo/unbond_public(staker_address, pool_balance);
 
@@ -275,9 +274,9 @@ program puzzle_arc38_v004.aleo {
     pending_withdrawal.set(1u8, already_claimed);
   }
 
-  async transition bond_all(public validator_address: address, public withdrawal_address: address, public amount: u64) -> Future {
+  async transition bond_all(public validator_address: address, public amount: u64) -> Future {
     // Call will fail if there is any balance still bonded to another validator
-    let f1: Future = credits.aleo/bond_public(validator_address, withdrawal_address, amount);
+    let f1: Future = credits.aleo/bond_public(validator_address, CORE_PROTOCOL, amount);
 
     return finalize_bond_all(f1, validator_address);
   }
@@ -380,19 +379,31 @@ program puzzle_arc38_v004.aleo {
       validator: CORE_PROTOCOL,
       microcredits: 0u64
     };
+    // get the bonded amount for the protocol
     let bonded: u64 = credits.aleo/bonded.get_or_use(CORE_PROTOCOL, base).microcredits;
+    // get current balance
     let current_balance: u64 = total_balance.get(0u8);
+    // get current shares
     let current_shares: u64 = total_shares.get(0u8);
+    // get current rewards
     let rewards: i64 = bonded > current_balance ? bonded as i64 - current_balance as i64 : 0i64;
+    // get commission rate
     let commission_rate: u128 = commission_percent.get(0u8);
+    // get new commissionr rate
     let new_commission: u64 = get_commission(rewards as u128, commission_rate);
+    // get current balance
     current_balance += rewards as u64 - new_commission;
 
+    // get pending deposit pool
     let pending_deposit_pool: u64 = pending_deposits.get(0u8);
+    // calculate new commission shares
     let new_commission_shares: u64 = calculate_new_shares(current_balance as u128, pending_deposit_pool as u128, new_commission as u128, current_shares as u128);
+    // get current commission of admin
     let current_commission: u64 = delegator_shares.get_or_use(ADMIN, 0u64);
+    // set new shares for admin
     delegator_shares.set(ADMIN, current_commission + new_commission_shares);
 
+    // uodate shares and balance
     current_shares += new_commission_shares;
     current_balance += new_commission;
     // Update total balance

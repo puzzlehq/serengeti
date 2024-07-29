@@ -1,4 +1,4 @@
-# puzzle_arc38_v004.aleo
+# puzzle_arc38_v006.aleo
 
 ## Build Guide
 

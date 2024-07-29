@@ -1,5 +1,5 @@
 import credits.aleo;
-program puzzle_arc38_v004.aleo;
+program puzzle_arc38_v006.aleo;
 
 struct bond_state:
     validator as address;
@@ -73,9 +73,9 @@ function initialize:
     assert.eq r2 true;
     lte r0 500u128 into r3;
     assert.eq r3 true;
-    assert.neq r1 puzzle_arc38_v004.aleo;
+    assert.neq r1 puzzle_arc38_v006.aleo;
     async initialize r0 r1 into r4;
-    output r4 as puzzle_arc38_v004.aleo/initialize.future;
+    output r4 as puzzle_arc38_v006.aleo/initialize.future;
 
 finalize initialize:
     input r0 as u128.public;
@@ -98,12 +98,11 @@ finalize initialize:
 function initial_deposit:
     input r0 as u64.public;
     input r1 as address.public;
-    input r2 as address.public;
     assert.eq self.caller aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
-    call credits.aleo/transfer_public_as_signer puzzle_arc38_v004.aleo r0 into r3;
-    call credits.aleo/bond_public r1 r2 r0 into r4;
-    async initial_deposit r3 r4 r0 r1 into r5;
-    output r5 as puzzle_arc38_v004.aleo/initial_deposit.future;
+    call credits.aleo/transfer_public_as_signer puzzle_arc38_v006.aleo r0 into r2;
+    call credits.aleo/bond_public r1 puzzle_arc38_v006.aleo r0 into r3;
+    async initial_deposit r2 r3 r0 r1 into r4;
+    output r4 as puzzle_arc38_v006.aleo/initial_deposit.future;
 
 finalize initial_deposit:
     input r0 as credits.aleo/transfer_public_as_signer.future;
@@ -163,12 +162,12 @@ function set_commission_percent:
     lte r0 500u128 into r2;
     assert.eq r2 true;
     async set_commission_percent r0 into r3;
-    output r3 as puzzle_arc38_v004.aleo/set_commission_percent.future;
+    output r3 as puzzle_arc38_v006.aleo/set_commission_percent.future;
 
 finalize set_commission_percent:
     input r0 as u128.public;
-    cast puzzle_arc38_v004.aleo 0u64 into r1 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_arc38_v004.aleo] r1 into r2;
+    cast puzzle_arc38_v006.aleo 0u64 into r1 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_arc38_v006.aleo] r1 into r2;
     get total_balance[0u8] into r3;
     get total_shares[0u8] into r4;
     gt r2.microcredits r3 into r5;
@@ -210,9 +209,9 @@ finalize set_commission_percent:
 function set_next_validator:
     input r0 as address.public;
     assert.eq self.caller aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
-    assert.neq r0 puzzle_arc38_v004.aleo;
+    assert.neq r0 puzzle_arc38_v006.aleo;
     async set_next_validator r0 into r1;
-    output r1 as puzzle_arc38_v004.aleo/set_next_validator.future;
+    output r1 as puzzle_arc38_v006.aleo/set_next_validator.future;
 
 finalize set_next_validator:
     input r0 as address.public;
@@ -226,18 +225,18 @@ function unbond_all:
     input r1 as u64.public;
     call credits.aleo/unbond_public r0 r1 into r2;
     async unbond_all r2 into r3;
-    output r3 as puzzle_arc38_v004.aleo/unbond_all.future;
+    output r3 as puzzle_arc38_v006.aleo/unbond_all.future;
 
 finalize unbond_all:
     input r0 as credits.aleo/unbond_public.future;
     await r0;
     contains validator[1u8] into r1;
     assert.eq r1 true;
-    cast puzzle_arc38_v004.aleo 0u64 into r2 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_arc38_v004.aleo] r2 into r3;
+    cast puzzle_arc38_v006.aleo 0u64 into r2 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_arc38_v006.aleo] r2 into r3;
     assert.eq r3.microcredits 0u64;
     cast 0u64 0u32 into r4 as unbond_state;
-    get.or_use credits.aleo/unbonding[puzzle_arc38_v004.aleo] r4 into r5;
+    get.or_use credits.aleo/unbonding[puzzle_arc38_v006.aleo] r4 into r5;
     get pending_withdrawal[0u8] into r6;
     sub r5.microcredits r6 into r7;
     get total_balance[0u8] into r8;
@@ -281,7 +280,7 @@ function claim_unbond:
     input r0 as address.public;
     call credits.aleo/claim_unbond_public r0 into r1;
     async claim_unbond r1 into r2;
-    output r2 as puzzle_arc38_v004.aleo/claim_unbond.future;
+    output r2 as puzzle_arc38_v006.aleo/claim_unbond.future;
 
 finalize claim_unbond:
     input r0 as credits.aleo/claim_unbond_public.future;
@@ -298,22 +297,21 @@ finalize claim_unbond:
 
 function bond_all:
     input r0 as address.public;
-    input r1 as address.public;
-    input r2 as u64.public;
-    call credits.aleo/bond_public r0 r1 r2 into r3;
-    async bond_all r3 r0 into r4;
-    output r4 as puzzle_arc38_v004.aleo/bond_all.future;
+    input r1 as u64.public;
+    call credits.aleo/bond_public r0 puzzle_arc38_v006.aleo r1 into r2;
+    async bond_all r2 r0 into r3;
+    output r3 as puzzle_arc38_v006.aleo/bond_all.future;
 
 finalize bond_all:
     input r0 as credits.aleo/bond_public.future;
     input r1 as address.public;
     await r0;
-    get.or_use credits.aleo/account[puzzle_arc38_v004.aleo] 0u64 into r2;
+    get.or_use credits.aleo/account[puzzle_arc38_v006.aleo] 0u64 into r2;
     get pending_withdrawal[1u8] into r3;
     gte r2 r3 into r4;
     assert.eq r4 true;
-    cast puzzle_arc38_v004.aleo 0u64 into r5 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_arc38_v004.aleo] r5 into r6;
+    cast puzzle_arc38_v006.aleo 0u64 into r5 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_arc38_v006.aleo] r5 into r6;
     get total_balance[0u8] into r7;
     get pending_deposits[0u8] into r8;
     sub r2 r3 into r9;
@@ -333,14 +331,14 @@ function bond_deposits:
     input r2 as u64.public;
     call credits.aleo/bond_public r0 r1 r2 into r3;
     async bond_deposits r3 r2 r0 into r4;
-    output r4 as puzzle_arc38_v004.aleo/bond_deposits.future;
+    output r4 as puzzle_arc38_v006.aleo/bond_deposits.future;
 
 finalize bond_deposits:
     input r0 as credits.aleo/bond_public.future;
     input r1 as u64.public;
     input r2 as address.public;
     await r0;
-    get.or_use credits.aleo/account[puzzle_arc38_v004.aleo] 0u64 into r3;
+    get.or_use credits.aleo/account[puzzle_arc38_v006.aleo] 0u64 into r3;
     get pending_withdrawal[1u8] into r4;
     gte r3 r4 into r5;
     assert.eq r5 true;
@@ -360,11 +358,11 @@ finalize bond_deposits:
 function claim_commission:
     assert.eq self.caller aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
     async claim_commission into r0;
-    output r0 as puzzle_arc38_v004.aleo/claim_commission.future;
+    output r0 as puzzle_arc38_v006.aleo/claim_commission.future;
 
 finalize claim_commission:
-    cast puzzle_arc38_v004.aleo 0u64 into r0 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_arc38_v004.aleo] r0 into r1;
+    cast puzzle_arc38_v006.aleo 0u64 into r0 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_arc38_v006.aleo] r0 into r1;
     get total_balance[0u8] into r2;
     get total_shares[0u8] into r3;
     gt r1.microcredits r2 into r4;
@@ -404,17 +402,17 @@ finalize claim_commission:
 
 function deposit_public:
     input r0 as u64.public;
-    call credits.aleo/transfer_public_as_signer puzzle_arc38_v004.aleo r0 into r1;
+    call credits.aleo/transfer_public_as_signer puzzle_arc38_v006.aleo r0 into r1;
     async deposit_public r1 self.caller r0 into r2;
-    output r2 as puzzle_arc38_v004.aleo/deposit_public.future;
+    output r2 as puzzle_arc38_v006.aleo/deposit_public.future;
 
 finalize deposit_public:
     input r0 as credits.aleo/transfer_public_as_signer.future;
     input r1 as address.public;
     input r2 as u64.public;
     await r0;
-    cast puzzle_arc38_v004.aleo 0u64 into r3 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_arc38_v004.aleo] r3 into r4;
+    cast puzzle_arc38_v006.aleo 0u64 into r3 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_arc38_v006.aleo] r3 into r4;
     get total_balance[0u8] into r5;
     get total_shares[0u8] into r6;
     gt r4.microcredits r5 into r7;
@@ -478,7 +476,7 @@ function withdraw_public:
     input r2 as u64.public;
     call credits.aleo/unbond_public r0 r2 into r3;
     async withdraw_public r3 r1 r2 self.caller into r4;
-    output r4 as puzzle_arc38_v004.aleo/withdraw_public.future;
+    output r4 as puzzle_arc38_v006.aleo/withdraw_public.future;
 
 finalize withdraw_public:
     input r0 as credits.aleo/unbond_public.future;
@@ -498,15 +496,15 @@ finalize withdraw_public:
     gte r10 r1 into r11;
     assert.eq r11 true;
     cast 0u64 0u32 into r12 as unbond_state;
-    get.or_use credits.aleo/unbonding[puzzle_arc38_v004.aleo] r12 into r13;
+    get.or_use credits.aleo/unbonding[puzzle_arc38_v006.aleo] r12 into r13;
     get pending_withdrawal[0u8] into r14;
     sub r13.microcredits r14 into r15;
     get pending_deposits[0u8] into r16;
     sub r15 r2 into r17;
     add r17 r16 into r18;
     gte r18 10_000_000_000u64 into r19;
-    cast puzzle_arc38_v004.aleo 0u64 into r20 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_arc38_v004.aleo] r20 into r21;
+    cast puzzle_arc38_v006.aleo 0u64 into r20 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_arc38_v006.aleo] r20 into r21;
     gte r21.microcredits 10_000_000_000u64 into r22;
     not r19 into r23;
     or r22 r23 into r24;
@@ -580,18 +578,18 @@ function get_new_batch_height_test:
 function create_withdraw_claim:
     input r0 as u64.public;
     async create_withdraw_claim r0 self.caller into r1;
-    output r1 as puzzle_arc38_v004.aleo/create_withdraw_claim.future;
+    output r1 as puzzle_arc38_v006.aleo/create_withdraw_claim.future;
 
 finalize create_withdraw_claim:
     input r0 as u64.public;
     input r1 as address.public;
     contains withdrawals[r1] into r2;
     assert.eq r2 false;
-    cast puzzle_arc38_v004.aleo 0u64 into r3 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_arc38_v004.aleo] r3 into r4;
+    cast puzzle_arc38_v006.aleo 0u64 into r3 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_arc38_v006.aleo] r3 into r4;
     assert.eq r4.microcredits 0u64;
     cast 0u64 0u32 into r5 as unbond_state;
-    get.or_use credits.aleo/unbonding[puzzle_arc38_v004.aleo] r5 into r6;
+    get.or_use credits.aleo/unbonding[puzzle_arc38_v006.aleo] r5 into r6;
     assert.eq r6.microcredits 0u64;
     get delegator_shares[r1] into r7;
     gte r7 r0 into r8;
@@ -637,7 +635,7 @@ function claim_withdrawal_public:
     input r1 as u64.public;
     call credits.aleo/transfer_public r0 r1 into r2;
     async claim_withdrawal_public r2 r0 r1 into r3;
-    output r3 as puzzle_arc38_v004.aleo/claim_withdrawal_public.future;
+    output r3 as puzzle_arc38_v006.aleo/claim_withdrawal_public.future;
 
 finalize claim_withdrawal_public:
     input r0 as credits.aleo/transfer_public.future;
