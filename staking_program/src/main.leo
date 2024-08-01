@@ -1,6 +1,6 @@
 import credits.aleo;
 
-program puzzle_arc38_v006.aleo {
+program puzzle_arc38_v007.aleo {
   // Owner of the program
   const ADMIN: address = aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
   // Address of this program
@@ -212,8 +212,8 @@ program puzzle_arc38_v006.aleo {
   }
 
 
-  async transition unbond_all(public staker_address: address, public pool_balance: u64) -> (Future) {
-    let f1: Future = credits.aleo/unbond_public(staker_address, pool_balance);
+  async transition unbond_all(public pool_balance: u64) -> (Future) {
+    let f1: Future = credits.aleo/unbond_public(CORE_PROTOCOL, pool_balance);
 
     return finalize_unbond_all(f1);
   }
@@ -221,8 +221,8 @@ program puzzle_arc38_v006.aleo {
   async function finalize_unbond_all(f1: Future) {
     f1.await();
 
-    let next_validator: bool = validator.contains(1u8);
-    assert(next_validator);
+    // let next_validator: bool = validator.contains(1u8);
+    // assert(next_validator);
 
     let base: bond_state = bond_state {
       validator: CORE_PROTOCOL,
@@ -256,8 +256,8 @@ program puzzle_arc38_v006.aleo {
     total_balance.set(0u8, current_balance + new_commission);
   }
 
-  async transition claim_unbond(public staker_address: address) -> Future {
-    let f1: Future = credits.aleo/claim_unbond_public(staker_address);
+  async transition claim_unbond() -> Future {
+    let f1: Future = credits.aleo/claim_unbond_public(CORE_PROTOCOL);
 
     return finalize_claim_unbond(f1);
   }
@@ -301,16 +301,17 @@ program puzzle_arc38_v006.aleo {
     total_balance.set(0u8, bonded);
 
     // Set validator
-    let next_validator: address = validator.get(1u8);
-    assert_eq(validator_address, next_validator);
+    // remove next validator setting
+    // let next_validator: address = validator.get(1u8);
+    // assert_eq(validator_address, next_validator);
 
-    validator.set(0u8, next_validator);
-    validator.remove(1u8);
+    // validator.set(0u8, next_validator);
+    // validator.remove(1u8);
   }
 
-  async transition bond_deposits(public validator_address: address, public withdrawal_address: address, public amount: u64) -> Future {
+  async transition bond_deposits(public validator_address: address, public amount: u64) -> Future {
     // Call will fail if there is any balance still bonded to another validator
-    let f1: Future = credits.aleo/bond_public(validator_address, withdrawal_address, amount);
+    let f1: Future = credits.aleo/bond_public(validator_address, CORE_PROTOCOL, amount);
 
     return finalize_bond_deposits(f1, amount, validator_address);
   }
@@ -327,9 +328,9 @@ program puzzle_arc38_v006.aleo {
     pending_deposits.set(0u8, pending_deposit_balance);
     total_balance.set(0u8, current_balance + amount);
 
-    let has_next_validator: bool = validator.contains(1u8);
-    assert_eq(has_next_validator, false);
-    assert_eq(validator.get(0u8), validator_address);
+    // let has_next_validator: bool = validator.contains(1u8);
+    // assert_eq(has_next_validator, false);
+    // assert_eq(validator.get(0u8), validator_address);
   }
 
   async transition claim_commission() -> Future {
@@ -426,8 +427,8 @@ program puzzle_arc38_v006.aleo {
     pending_deposits.set(0u8, pending_deposit_pool + microcredits);
   }
 
-  async transition withdraw_public(public staker_address: address, public withdrawal_shares: u64, public total_withdrawal: u64) -> Future {
-    let f1: Future = credits.aleo/unbond_public(staker_address, total_withdrawal);
+  async transition withdraw_public(public withdrawal_shares: u64, public total_withdrawal: u64) -> Future {
+    let f1: Future = credits.aleo/unbond_public(CORE_PROTOCOL, total_withdrawal);
 
     return finalize_withdraw_public(f1, withdrawal_shares, total_withdrawal, self.caller);
   }
