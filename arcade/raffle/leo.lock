@@ -1,6 +1,6 @@
 [[package]]
-name = "puzzle_arcade_ticket_v003.aleo"
+name = "puzzle_arcade_ticket_v001.aleo"
 location = "local"
 path = "/Users/lucas/code/puzzle/serengeti/arcade/raffle/../ticket"
-checksum = "da04ff4cff5d2556c1932890ee51842e368e2eecb9aedb4b18ac39bda3629f59"
+checksum = "0de955d76ce91ce7846aadaefc207043264deb8caa79e0fd88c1c95b2ee44818"
 dependencies = []

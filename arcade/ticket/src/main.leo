@@ -1,4 +1,4 @@
-program puzzle_arcade_ticket_v003.aleo {
+program puzzle_arcade_ticket_v001.aleo {
 
   // game programs that can mint tickets
   mapping registry: address => bool;
@@ -18,7 +18,7 @@ program puzzle_arcade_ticket_v003.aleo {
     Mapping::set(registry, program_address, true);
   }
 
-  async transition mint(to: address, amount: u64) -> (PuzzleArcadeTicket, Future) {
+  async transition mint(public to: address, public amount: u64) -> (PuzzleArcadeTicket, Future) {
     let ticket: PuzzleArcadeTicket = PuzzleArcadeTicket {
       owner: to,
       amount
@@ -32,7 +32,7 @@ program puzzle_arcade_ticket_v003.aleo {
     assert(registered);
   }
 
-  transition spend(ticket: PuzzleArcadeTicket, amount: u64) -> PuzzleArcadeTicket {
+  transition spend(ticket: PuzzleArcadeTicket, public amount: u64) -> PuzzleArcadeTicket {
     assert(ticket.amount >= amount);
     return PuzzleArcadeTicket {
       owner: ticket.owner,
