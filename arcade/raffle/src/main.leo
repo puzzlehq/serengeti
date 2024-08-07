@@ -1,6 +1,6 @@
 import puzzle_arcade_ticket_v001.aleo;
 
-program puzzle_raffle_072324.aleo {
+program puzzle_raffle_080724.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
     mapping entries: u64 => address;

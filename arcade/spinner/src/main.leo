@@ -1,7 +1,7 @@
 import puzzle_arcade_coin_v001.aleo;
 import puzzle_arcade_ticket_v001.aleo;
 
-program puzzle_spinner_v001.aleo {
+program puzzle_spinner_v004.aleo {
   mapping used_nonces: field => bool;
 
   struct Result {

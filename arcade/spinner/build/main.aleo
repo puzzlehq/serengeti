@@ -1,6 +1,6 @@
 import puzzle_arcade_coin_v001.aleo;
 import puzzle_arcade_ticket_v001.aleo;
-program puzzle_spinner_v001.aleo;
+program puzzle_spinner_v004.aleo;
 
 
 
@@ -33,7 +33,7 @@ function spin:
     async spin r13 r1.nonce into r14;
     output r11 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
     output r12 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r14 as puzzle_spinner_v001.aleo/spin.future;
+    output r14 as puzzle_spinner_v004.aleo/spin.future;
 
 finalize spin:
     input r0 as puzzle_arcade_ticket_v001.aleo/mint.future;
