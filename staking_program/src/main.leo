@@ -1,6 +1,6 @@
 import credits.aleo;
 
-program puzzle_arc38_v007.aleo {
+program puzzle_arc38_v001.aleo {
   // Owner of the program
   const ADMIN: address = aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
   // Address of this program
