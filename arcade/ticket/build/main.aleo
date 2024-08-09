@@ -1,4 +1,4 @@
-program puzzle_arcade_ticket_v003.aleo;
+program puzzle_arcade_ticket_v001.aleo;
 
 record PuzzleArcadeTicket:
     owner as address.private;
@@ -15,7 +15,7 @@ function add_program_to_registry:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
     async add_program_to_registry r0 into r1;
-    output r1 as puzzle_arcade_ticket_v003.aleo/add_program_to_registry.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/add_program_to_registry.future;
 
 finalize add_program_to_registry:
     input r0 as address.public;
@@ -25,12 +25,12 @@ finalize add_program_to_registry:
 
 
 function mint:
-    input r0 as address.private;
-    input r1 as u64.private;
+    input r0 as address.public;
+    input r1 as u64.public;
     cast r0 r1 into r2 as PuzzleArcadeTicket.record;
     async mint self.caller into r3;
     output r2 as PuzzleArcadeTicket.record;
-    output r3 as puzzle_arcade_ticket_v003.aleo/mint.future;
+    output r3 as puzzle_arcade_ticket_v001.aleo/mint.future;
 
 finalize mint:
     input r0 as address.public;
@@ -41,7 +41,7 @@ finalize mint:
 
 function spend:
     input r0 as PuzzleArcadeTicket.record;
-    input r1 as u64.private;
+    input r1 as u64.public;
     gte r0.amount r1 into r2;
     assert.eq r2 true;
     sub r0.amount r1 into r3;
