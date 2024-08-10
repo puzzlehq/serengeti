@@ -1,14 +1,6 @@
 {
-  "program": "puzzle_arc38_v001.aleo",
-  "version": "0.1.0",
-  "description": "",
-  "license": "MIT",
-  "dependencies": [
-    {
-      "name": "credits.aleo",
-      "location": "network",
-      "network": "testnet",
-      "path": null
-    }
-  ]
+    "program": "puzzle_arc38_v001.aleo",
+    "version": "0.0.0",
+    "description": "",
+    "license": "MIT"
 }
