@@ -158,13 +158,13 @@ program puzzle_arc38_v001.aleo {
     let current_balance: u64 = total_balance.get(0u8);
     // get current shares
     let current_shares: u64 = total_shares.get(0u8);
-    // get current rewards
+    // get current rewards based on bonded - "current_balance" if bonded > current_balance
     let rewards: i64 = bonded > current_balance ? bonded as i64 - current_balance as i64 : 0i64;
     // get commission rate
     let commission_rate: u128 = commission_percent.get(0u8);
     // get new commissionr rate
     let new_commission: u64 = get_commission(rewards as u128, commission_rate);
-    // get current balance
+    // get current balance - the commission that is earned
     current_balance += rewards as u64 - new_commission;
 
     // get pending deposit pool
@@ -434,17 +434,12 @@ program puzzle_arc38_v001.aleo {
     pending_withdrawal.set(1u8, currently_pending - amount);
   }
 
-
-  async transition claim_commission() -> Future {
-    assert_eq(self.caller, ADMIN);
-    return finalize_claim_commission();
-  }
-
-
   inline get_commission(
     rewards: u128,
     commission_rate: u128,
   ) -> u64 {
+    // calculated as % of the rewards
+    // the total rewards accumulated * commission / precision
     let commission: u128 = rewards * commission_rate / PRECISION_UNSIGNED;
     let commission_64: u64 = commission as u64;
     return commission_64;
@@ -511,6 +506,11 @@ program puzzle_arc38_v001.aleo {
 
   async function finalize_set_next_validator(validator_address: address) {
     validator.set(1u8, validator_address);
+  }
+
+  async transition claim_commission() -> Future {
+    assert_eq(self.caller, ADMIN);
+    return finalize_claim_commission();
   }
 
   async function finalize_claim_commission() {
