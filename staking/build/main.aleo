@@ -67,24 +67,20 @@ mapping withdrawals:
 
 function initialize:
     input r0 as u128.public;
-    input r1 as address.public;
     assert.eq self.caller aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
-    lt r0 1_000u128 into r2;
+    lt r0 1_000u128 into r1;
+    assert.eq r1 true;
+    lte r0 500u128 into r2;
     assert.eq r2 true;
-    lte r0 500u128 into r3;
-    assert.eq r3 true;
-    assert.neq r1 puzzle_arc38_v001.aleo;
-    async initialize r0 r1 into r4;
-    output r4 as puzzle_arc38_v001.aleo/initialize.future;
+    async initialize r0 into r3;
+    output r3 as puzzle_arc38_v001.aleo/initialize.future;
 
 finalize initialize:
     input r0 as u128.public;
-    input r1 as address.public;
-    get.or_use is_initialized[0u8] false into r2;
-    assert.eq r2 false;
+    get.or_use is_initialized[0u8] false into r1;
+    assert.eq r1 false;
     set true into is_initialized[0u8];
     set r0 into commission_percent[0u8];
-    set r1 into validator[0u8];
     set 0u64 into total_shares[0u8];
     set 0u64 into total_balance[0u8];
     set 0u64 into pending_deposits[0u8];
@@ -97,32 +93,28 @@ finalize initialize:
 
 function initial_deposit:
     input r0 as u64.public;
-    input r1 as address.public;
     assert.eq self.caller aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
-    call credits.aleo/transfer_public_as_signer puzzle_arc38_v001.aleo r0 into r2;
-    call credits.aleo/bond_public r1 puzzle_arc38_v001.aleo r0 into r3;
-    async initial_deposit r2 r3 r0 r1 into r4;
-    output r4 as puzzle_arc38_v001.aleo/initial_deposit.future;
+    call credits.aleo/transfer_public_as_signer puzzle_arc38_v001.aleo r0 into r1;
+    call credits.aleo/bond_public aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f puzzle_arc38_v001.aleo r0 into r2;
+    async initial_deposit r1 r2 r0 into r3;
+    output r3 as puzzle_arc38_v001.aleo/initial_deposit.future;
 
 finalize initial_deposit:
     input r0 as credits.aleo/transfer_public_as_signer.future;
     input r1 as credits.aleo/bond_public.future;
     input r2 as u64.public;
-    input r3 as address.public;
     await r0;
     await r1;
-    get is_initialized[0u8] into r4;
-    assert.eq r4 true;
-    get validator[0u8] into r5;
-    assert.eq r5 r3;
-    get.or_use total_balance[0u8] 0u64 into r6;
-    get.or_use total_shares[0u8] 0u64 into r7;
-    assert.eq r6 0u64;
-    assert.eq r7 0u64;
+    get is_initialized[0u8] into r3;
+    assert.eq r3 true;
+    get.or_use total_balance[0u8] 0u64 into r4;
+    get.or_use total_shares[0u8] 0u64 into r5;
+    assert.eq r4 0u64;
+    assert.eq r5 0u64;
     set r2 into total_balance[0u8];
-    mul r2 1_000u64 into r8;
-    set r8 into total_shares[0u8];
-    set r8 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
+    mul r2 1_000u64 into r6;
+    set r6 into total_shares[0u8];
+    set r6 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
 
 
 
@@ -202,20 +194,6 @@ finalize set_commission_percent:
     add r17 r14 into r32;
     set r32 into total_balance[0u8];
     set r0 into commission_percent[0u8];
-
-
-
-
-function set_next_validator:
-    input r0 as address.public;
-    assert.eq self.caller aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
-    assert.neq r0 puzzle_arc38_v001.aleo;
-    async set_next_validator r0 into r1;
-    output r1 as puzzle_arc38_v001.aleo/set_next_validator.future;
-
-finalize set_next_validator:
-    input r0 as address.public;
-    set r0 into validator[1u8];
 
 
 
@@ -455,8 +433,6 @@ finalize deposit_public:
 
 
 
-
-
 function withdraw_public:
     input r0 as u64.public;
     input r1 as u64.public;
@@ -537,7 +513,7 @@ finalize withdraw_public:
     cast r2 into r63 as u128;
     gte r62 r63 into r64;
     assert.eq r64 true;
-    add block.height 1_000u32 into r65;
+    add block.height 360u32 into r65;
     ternary r7 r65 r5 into r66;
     set r66 into current_batch_height[0u8];
     cast r2 r66 into r67 as withdrawal_state;
@@ -552,12 +528,6 @@ finalize withdraw_public:
     sub r71 r1 into r72;
     set r72 into delegator_shares[r3];
 
-
-
-function get_new_batch_height_test:
-    input r0 as u32.private;
-    add r0 1_000u32 into r1;
-    output r1 as u32.private;
 
 
 

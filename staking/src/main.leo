@@ -3,8 +3,8 @@ import credits.aleo;
 program puzzle_arc38_v001.aleo {
   // Owner of the program
   const ADMIN: address = aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
-  // Address of this program
-  const CORE_PROTOCOL: address = self.address;
+  // todo - update this to be our validator
+  const VALIDATOR: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const SHARES_TO_MICROCREDITS: u64 = 1_000u64;
   const PRECISION_UNSIGNED: u128 = 1_000u128;
   const MAX_COMMISSION_RATE: u128 = 500u128;
@@ -76,7 +76,7 @@ program puzzle_arc38_v001.aleo {
     assert_eq(self.caller, ADMIN);
     assert(commission_rate < PRECISION_UNSIGNED);
     assert(commission_rate <= MAX_COMMISSION_RATE);
-    assert_neq(validator_address, CORE_PROTOCOL);
+    assert_neq(validator_address, self.address);
 
     return finalize_initialize(commission_rate, validator_address);
   }
@@ -98,30 +98,24 @@ program puzzle_arc38_v001.aleo {
 
   async transition initial_deposit(
     public microcredits: u64,
-    public validator_address: address,
   ) -> (Future) {
     assert_eq(self.caller, ADMIN);
-    // credits.aleo/transfer_public_as_signer(CORE_PROTOCOL, microcredits);
-    let f1: Future = credits.aleo/transfer_public_as_signer(CORE_PROTOCOL, microcredits);
-    // bond these credits to the validator
-    let f2: Future = credits.aleo/bond_public(validator_address, CORE_PROTOCOL, microcredits);
+    let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
+    let f2: Future = credits.aleo/bond_public(VALIDATOR, self.address, microcredits);
 
-    return finalize_initial_deposit(f1, f2, microcredits, validator_address);
+    return finalize_initial_deposit(f1, f2, microcredits);
   }
 
   async function finalize_initial_deposit(
     f1: Future,
     f2: Future,
     microcredits: u64,
-    validator_address: address
   ) {
     f1.await();
     f2.await();
 
     // assert that the contract is initialized
     assert(is_initialized.get(0u8));
-    // assert that the validator is properly set into the validator mapping
-    assert_eq(validator.get(0u8), validator_address);
     // validate that the balance is set to 0
     let balance: u64 = total_balance.get_or_use(0u8, 0u64);
     // validate that the shares are set to 0
@@ -177,10 +171,10 @@ program puzzle_arc38_v001.aleo {
   async function finalize_set_commission_percent(new_commission_rate: u128) {
     // Make sure all commission is claimed before changing the rate
     let base: bond_state = bond_state {
-      validator: CORE_PROTOCOL,
+      validator: self.address,
       microcredits: 0u64
     };
-    let bonded: u64 = credits.aleo/bonded.get_or_use(CORE_PROTOCOL, base).microcredits;
+    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     let current_balance: u64 = total_balance.get(0u8);
     let current_shares: u64 = total_shares.get(0u8);
     let rewards: i64 = bonded > current_balance ? bonded as i64 - current_balance as i64 : 0i64;
@@ -202,7 +196,7 @@ program puzzle_arc38_v001.aleo {
   // Update the validator address, to be applied automatically on the next bond_all call
   async transition set_next_validator(public validator_address: address) -> Future {
     assert_eq(self.caller, ADMIN);
-    assert_neq(validator_address, CORE_PROTOCOL);
+    assert_neq(validator_address, self.address);
 
     return finalize_set_next_validator(validator_address);
   }
@@ -213,7 +207,7 @@ program puzzle_arc38_v001.aleo {
 
 
   async transition unbond_all(public pool_balance: u64) -> (Future) {
-    let f1: Future = credits.aleo/unbond_public(CORE_PROTOCOL, pool_balance);
+    let f1: Future = credits.aleo/unbond_public(self.address, pool_balance);
 
     return finalize_unbond_all(f1);
   }
@@ -225,10 +219,10 @@ program puzzle_arc38_v001.aleo {
     // assert(next_validator);
 
     let base: bond_state = bond_state {
-      validator: CORE_PROTOCOL,
+      validator: self.address,
       microcredits: 0u64
     };
-    let bonded: u64 = credits.aleo/bonded.get_or_use(CORE_PROTOCOL, base).microcredits;
+    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     // Assert that the pool was fully unbonded
     assert_eq(bonded, 0u64);
 
@@ -237,7 +231,7 @@ program puzzle_arc38_v001.aleo {
       microcredits: 0u64,
       height: 0u32
     };
-    let unbonding: u64 = credits.aleo/unbonding.get_or_use(CORE_PROTOCOL, base_unbonding).microcredits;
+    let unbonding: u64 = credits.aleo/unbonding.get_or_use(self.address, base_unbonding).microcredits;
     let unbonding_withdrawals: u64 = pending_withdrawal.get(0u8);
     let previously_bonded: u64 = unbonding - unbonding_withdrawals;
     let current_balance: u64 = total_balance.get(0u8);
@@ -257,7 +251,7 @@ program puzzle_arc38_v001.aleo {
   }
 
   async transition claim_unbond() -> Future {
-    let f1: Future = credits.aleo/claim_unbond_public(CORE_PROTOCOL);
+    let f1: Future = credits.aleo/claim_unbond_public(self.address);
 
     return finalize_claim_unbond(f1);
   }
@@ -276,7 +270,7 @@ program puzzle_arc38_v001.aleo {
 
   async transition bond_all(public validator_address: address, public amount: u64) -> Future {
     // Call will fail if there is any balance still bonded to another validator
-    let f1: Future = credits.aleo/bond_public(validator_address, CORE_PROTOCOL, amount);
+    let f1: Future = credits.aleo/bond_public(validator_address, self.address, amount);
 
     return finalize_bond_all(f1, validator_address);
   }
@@ -284,15 +278,15 @@ program puzzle_arc38_v001.aleo {
   async function finalize_bond_all(f1: Future, validator_address: address) {
     f1.await();
 
-    let account_balance: u64 = credits.aleo/account.get_or_use(CORE_PROTOCOL, 0u64);
+    let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
     let pending_withdrawals: u64 = pending_withdrawal.get(1u8);
     assert(account_balance >= pending_withdrawals);
 
     let base: bond_state = bond_state {
-      validator: CORE_PROTOCOL,
+      validator: self.address,
       microcredits: 0u64
     };
-    let bonded: u64 = credits.aleo/bonded.get_or_use(CORE_PROTOCOL, base).microcredits;
+    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     let current_balance: u64 = total_balance.get(0u8);
     let pending_deposit_balance: u64 = pending_deposits.get(0u8);
 
@@ -311,7 +305,7 @@ program puzzle_arc38_v001.aleo {
 
   async transition bond_deposits(public validator_address: address, public amount: u64) -> Future {
     // Call will fail if there is any balance still bonded to another validator
-    let f1: Future = credits.aleo/bond_public(validator_address, CORE_PROTOCOL, amount);
+    let f1: Future = credits.aleo/bond_public(validator_address, self.address, amount);
 
     return finalize_bond_deposits(f1, amount, validator_address);
   }
@@ -319,7 +313,7 @@ program puzzle_arc38_v001.aleo {
   async function finalize_bond_deposits(f1: Future, amount: u64, validator_address: address) {
     f1.await();
 
-    let account_balance: u64 = credits.aleo/account.get_or_use(CORE_PROTOCOL, 0u64);
+    let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
     let pending_withdrawals: u64 = pending_withdrawal.get(1u8);
     assert(account_balance >= pending_withdrawals);
 
@@ -341,10 +335,10 @@ program puzzle_arc38_v001.aleo {
   async function finalize_claim_commission() {
     // Distribute shares for new commission
     let base: bond_state = bond_state {
-      validator: CORE_PROTOCOL,
+      validator: self.address,
       microcredits: 0u64
     };
-    let bonded: u64 = credits.aleo/bonded.get_or_use(CORE_PROTOCOL, base).microcredits;
+    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     let current_balance: u64 = total_balance.get(0u8);
     let current_shares: u64 = total_shares.get(0u8);
     let rewards: i64 = bonded > current_balance ? bonded as i64 - current_balance as i64 : 0i64;
@@ -364,8 +358,8 @@ program puzzle_arc38_v001.aleo {
   async transition deposit_public(
     public microcredits: u64
   ) -> Future {
-    // credits.aleo/transfer_public_as_signer(CORE_PROTOCOL, microcredits);
-    let f1: Future = credits.aleo/transfer_public_as_signer(CORE_PROTOCOL, microcredits);
+    // credits.aleo/transfer_public_as_signer(self.address, microcredits);
+    let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
     return finalize_deposit_public(f1, self.caller, microcredits);
   }
 
@@ -377,11 +371,11 @@ program puzzle_arc38_v001.aleo {
     f1.await();
     // Distribute shares for new commission
     let base: bond_state = bond_state {
-      validator: CORE_PROTOCOL,
+      validator: self.address,
       microcredits: 0u64
     };
     // get the bonded amount for the protocol
-    let bonded: u64 = credits.aleo/bonded.get_or_use(CORE_PROTOCOL, base).microcredits;
+    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     // get current balance
     let current_balance: u64 = total_balance.get(0u8);
     // get current shares
@@ -428,7 +422,7 @@ program puzzle_arc38_v001.aleo {
   }
 
   async transition withdraw_public(public withdrawal_shares: u64, public total_withdrawal: u64) -> Future {
-    let f1: Future = credits.aleo/unbond_public(CORE_PROTOCOL, total_withdrawal);
+    let f1: Future = credits.aleo/unbond_public(self.address, total_withdrawal);
 
     return finalize_withdraw_public(f1, withdrawal_shares, total_withdrawal, self.caller);
   }
@@ -455,17 +449,17 @@ program puzzle_arc38_v001.aleo {
       microcredits: 0u64,
       height: 0u32
     };
-    let unbonding: u64 = credits.aleo/unbonding.get_or_use(CORE_PROTOCOL, base_unbonding).microcredits;
+    let unbonding: u64 = credits.aleo/unbonding.get_or_use(self.address, base_unbonding).microcredits;
     let unbonding_withdrawals: u64 = pending_withdrawal.get(0u8);
     let newly_unbonded: u64 = unbonding - unbonding_withdrawals;
     let pending_deposit_pool: u64 = pending_deposits.get(0u8);
     let sufficient_deposits: bool = newly_unbonded - total_withdrawal + pending_deposit_pool >= MINIMUM_BOND_AMOUNT;
 
     let base: bond_state = bond_state {
-      validator: CORE_PROTOCOL,
+      validator: self.address,
       microcredits: 0u64
     };
-    let bonded: u64 = credits.aleo/bonded.get_or_use(CORE_PROTOCOL, base).microcredits;
+    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     // Allow the withdrawal if the pool is still bonded, or if there are not enough deposits to maintain the minimum bond amount
     assert(bonded >= MINIMUM_BOND_AMOUNT || !sufficient_deposits);
 
@@ -518,14 +512,6 @@ program puzzle_arc38_v001.aleo {
     delegator_shares.set(owner, delegator_balance - withdrawal_shares);
   }
 
-  inline get_new_batch_height(height: u32) -> u32 {
-    return height + 1_000u32;
-  }
-
-  transition get_new_batch_height_test(height: u32) -> u32 {
-    return get_new_batch_height(height);
-  }
-
   async transition create_withdraw_claim(public withdrawal_shares: u64) -> Future {
     return finalize_create_withdraw_claim(withdrawal_shares, self.caller);
   }
@@ -536,17 +522,17 @@ program puzzle_arc38_v001.aleo {
     assert_eq(currently_withdrawing, false);
 
     let base: bond_state = bond_state {
-      validator: CORE_PROTOCOL,
+      validator: self.address,
       microcredits: 0u64
     };
-    let bonded: u64 = credits.aleo/bonded.get_or_use(CORE_PROTOCOL, base).microcredits;
+    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     assert_eq(bonded, 0u64);
 
     let base_unbonding: unbond_state = unbond_state {
       microcredits: 0u64,
       height: 0u32
     };
-    let unbonding: u64 = credits.aleo/unbonding.get_or_use(CORE_PROTOCOL, base_unbonding).microcredits;
+    let unbonding: u64 = credits.aleo/unbonding.get_or_use(self.address, base_unbonding).microcredits;
     assert_eq(unbonding, 0u64);
 
     // Assert that they have enough to withdraw
