@@ -1,6 +1,6 @@
 import puzzle_arcade_ticket_v001.aleo;
 
-program puzzle_raffle_080724.aleo {
+program puzzle_raffle_081424.aleo {
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
     mapping entries: u64 => address;
@@ -86,7 +86,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_two_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..2u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -106,7 +106,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_three_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..3u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -126,7 +126,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_four_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..4u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -146,7 +146,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_five_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..5u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -166,7 +166,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_six_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..6u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -186,7 +186,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_seven_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..7u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -246,7 +246,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_ten_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..10u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -266,7 +266,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_eleven_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..11u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -286,7 +286,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_twelve_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..12u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -306,7 +306,7 @@ program puzzle_raffle_080724.aleo {
     }
     async function add_thirteen_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..13u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
