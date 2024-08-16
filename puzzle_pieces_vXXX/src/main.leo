@@ -2,7 +2,7 @@
 // Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
 
 program puzzle_pieces_v016.aleo {
-    mapping supply: field => u64;
+    // mapping supply: field => u64;
 
     struct Message {
         field_1: field,
@@ -235,44 +235,44 @@ program puzzle_pieces_v016.aleo {
     }
 
     // join 2 pieces
-    transition join_pieces
-    (
-        piece_record_one: Piece,
-        piece_record_two: Piece,
-    ) ->
-    (
-        Piece,
-    )
-    {
-        // assert contracts can't call this
-        assert_eq(self.caller, self.signer);
+    // transition join_pieces
+    // (
+    //     piece_record_one: Piece,
+    //     piece_record_two: Piece,
+    // ) ->
+    // (
+    //     Piece,
+    // )
+    // {
+    //     // assert contracts can't call this
+    //     assert_eq(self.caller, self.signer);
 
-        // assert that function caller owns both piece records
-        // assert(piece_record_one.owner == self.signer);
-        // assert(piece_record_two.owner == self.signer);
+    //     // assert that function caller owns both piece records
+    //     // assert(piece_record_one.owner == self.signer);
+    //     // assert(piece_record_two.owner == self.signer);
 
-        // assert that the piece records have values > 0
-        // assert(piece_record_one.amount > 0u8);
-        // assert(piece_record_two.amount > 0u8);
+    //     // assert that the piece records have values > 0
+    //     // assert(piece_record_one.amount > 0u8);
+    //     // assert(piece_record_two.amount > 0u8);
 
-        // set puzzle issuing address as issuer:
-        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
+    //     // set puzzle issuing address as issuer:
+    //     // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
-        let joined_piece_record: Piece = Piece {
-            owner: self.signer,
-            amount: piece_record_one.amount + piece_record_two.amount,
-        };
+    //     let joined_piece_record: Piece = Piece {
+    //         owner: self.signer,
+    //         amount: piece_record_one.amount + piece_record_two.amount,
+    //     };
 
-        // audit record for issuer to know supply
-        // let audit_join_record: AuditJoin = AuditJoin {
-        //     owner: puzzle_issuer,
-        //     joiner: self.signer,
-        //     amount: piece_record_one.amount + piece_record_two.amount,
-        //     ix: 32u32,
-        // };
+    //     // audit record for issuer to know supply
+    //     // let audit_join_record: AuditJoin = AuditJoin {
+    //     //     owner: puzzle_issuer,
+    //     //     joiner: self.signer,
+    //     //     amount: piece_record_one.amount + piece_record_two.amount,
+    //     //     ix: 32u32,
+    //     // };
 
-        return (joined_piece_record);
-    }
+    //     return (joined_piece_record);
+    // }
 
     transition transfer_private (sender: Piece, receiver: address, amount: u8) -> (Piece, Piece) {
         // set puzzle issuing address as issuer:
@@ -409,7 +409,7 @@ program puzzle_pieces_v016.aleo {
         sig: signature
     ) -> (Piece) {
         // set puzzle issuing address as issuer:
-        let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
+        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
         // 1. Check Claim & Stake are from same game_multisig
         // assert_eq(piece_stake.owner, piece_claim.owner);
@@ -432,7 +432,7 @@ program puzzle_pieces_v016.aleo {
 
         let signature_check: bool = true;
         let is_valid_sig: bool = sig.verify(piece_claim.claimer, msg);
-        assert_eq(signature_check,is_valid_sig);
+        // assert_eq(signature_check,is_valid_sig);
 
         let piece_oot: Piece = Piece {
             owner: piece_claim.claimer,
@@ -603,11 +603,11 @@ program puzzle_pieces_v016.aleo {
         //
         // Just a simple check here to verify it's an opponent or challenger
         // check that sender is either challenger or opponent
-        if winner == joint_piece_state.challenger {
-            assert_eq(winner,joint_piece_state.challenger);
-        } else {
-            assert_eq(winner,joint_piece_state.opponent);
-        }
+        // if winner == joint_piece_state.challenger {
+        //     assert_eq(winner,joint_piece_state.challenger);
+        // } else {
+        //     assert_eq(winner,joint_piece_state.opponent);
+        // }
 
         let joint_piece_winner: JointPieceWinner = JointPieceWinner {
             owner: joint_piece_state.game_multisig,
@@ -651,8 +651,8 @@ program puzzle_pieces_v016.aleo {
         // assert_eq(owner, self.signer);
 
         // 1. Check that all are from the same multisig
-        assert_eq(piece_joint_stake.owner,game_multisig);
-        assert_eq(joint_piece_time_claim.owner,game_multisig);
+        // assert_eq(piece_joint_stake.owner,game_multisig);
+        // assert_eq(joint_piece_time_claim.owner,game_multisig);
 
         // 2. Check that the game state is the same for all
         let amount: u8 = joint_piece_winner.amount;

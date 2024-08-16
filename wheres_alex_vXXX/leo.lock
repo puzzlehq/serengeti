@@ -3,7 +3,7 @@ name = "puzzle_pieces_v016.aleo"
 network = "testnet"
 location = "local"
 path = "/Users/asharma/code/medici/serengeti/wheres_alex_vXXX/../puzzle_pieces_vXXX"
-checksum = "beed40ac177434d9e3926962a3093be1e2f2e7a1b6167b96cc90bb7ffddd2cc1"
+checksum = "b06dfd3dc282a95229bfbf83ef679e0cd46bcb8e775acb2c4bdc8cc84b91a803"
 dependencies = []
 
 [[package]]

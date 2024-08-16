@@ -85,24 +85,11 @@ record JointPieceWinner:
     winner as address.private;
 
 
-mapping supply:
-	key as field.public;
-	value as u64.public;
-
 function mint_private:
     input r0 as u8.private;
     input r1 as address.private;
     cast r1 r0 into r2 as Piece.record;
     output r2 as Piece.record;
-
-
-function join_pieces:
-    input r0 as Piece.record;
-    input r1 as Piece.record;
-    assert.eq self.caller self.signer;
-    add r0.amount r1.amount into r2;
-    cast self.signer r2 into r3 as Piece.record;
-    output r3 as Piece.record;
 
 
 function transfer_private:
@@ -156,7 +143,6 @@ function stake_transfer_out:
     input r2 as signature.private;
     cast r1.message_1 r1.message_2 r1.message_3 r1.message_4 r1.message_5 into r3 as Message;
     sign.verify r2 r1.claimer r3 into r4;
-    assert.eq true r4;
     cast r1.claimer r1.amount into r5 as Piece.record;
     output r5 as Piece.record;
 
@@ -185,26 +171,14 @@ function joint_stake_state_update:
     cast r0.message_1 r0.message_2 r0.message_3 r0.message_4 r0.message_5 into r3 as Message;
     sign.verify r1.sig r0.state_updater_address r3 into r4;
     assert.eq true r4;
-    is.eq r2 r0.challenger into r5;
-    not r5 into r6;
-    is.eq r2 r0.challenger into r7;
-    or r6 r7 into r8;
-    assert.eq r8 true;
-    not r5 into r9;
-    not r9 into r10;
-    is.eq r2 r0.opponent into r11;
-    or r10 r11 into r12;
-    assert.eq r12 true;
-    cast r0.game_multisig r0.amount r0.time_claimer_address r0.state_updater_address r0.challenger r0.opponent r0.game_multisig r2 into r13 as JointPieceWinner.record;
-    output r13 as JointPieceWinner.record;
+    cast r0.game_multisig r0.amount r0.time_claimer_address r0.state_updater_address r0.challenger r0.opponent r0.game_multisig r2 into r5 as JointPieceWinner.record;
+    output r5 as JointPieceWinner.record;
 
 
 function joint_stake_transfer_to_winner:
     input r0 as JointPieceWinner.record;
     input r1 as PieceJointStake.record;
     input r2 as JointPieceTimeClaim.record;
-    assert.eq r1.owner r0.owner;
-    assert.eq r2.owner r0.owner;
     is.eq r0.winner r1.time_claimer_address into r3;
     not r3 into r4;
     is.eq r0.winner r1.time_claimer_address into r5;
