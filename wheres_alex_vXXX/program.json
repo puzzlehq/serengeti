@@ -1,6 +1,20 @@
 {
-    "program": "wheres_alex_v019.aleo",
-    "version": "0.0.0",
-    "description": "",
-    "license": "MIT"
+  "program": "wheres_alex_v019.aleo",
+  "version": "0.0.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "puzzle_pieces_v016.aleo",
+      "location": "local",
+      "network": "testnet",
+      "path": "../puzzle_pieces_vXXX"
+    },
+    {
+      "name": "multiparty_pvp_utils_v015.aleo",
+      "location": "local",
+      "network": "testnet",
+      "path": "../multiparty_pvp_utils_vXXX"
+    }
+  ]
 }

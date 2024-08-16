@@ -25,8 +25,6 @@ program wheres_alex_v019.aleo;
 
 
 
-
-
 record Game:
     owner as address.private;
     challenger_commit as field.private;
@@ -265,7 +263,6 @@ function accept_game:
     cast r0.opponent_address r0.owner 3field false r0.total_pot r0.challenger_address r0.opponent_address 7u32 into r14 as WaitingRevealNotification.record;
     cast r0.challenger_address r0.owner 3field true r0.total_pot r0.challenger_address r0.opponent_address r1 8u32 into r15 as RevealAnswerNotification.record;
     cast r0.owner r0.challenger_commit r1 r0.total_pot r0.challenger_address r0.opponent_address r0.game_multisig 3field 1u32 into r16 as Game.record;
-    async accept_game r6 into r17;
     output r10 as puzzle_pieces_v016.aleo/PieceJointStake.record;
     output r11 as puzzle_pieces_v016.aleo/JointPieceTimeClaim.record;
     output r12 as puzzle_pieces_v016.aleo/JointPieceState.record;
@@ -273,16 +270,6 @@ function accept_game:
     output r14 as WaitingRevealNotification.record;
     output r15 as RevealAnswerNotification.record;
     output r16 as Game.record;
-    output r17 as wheres_alex_v019.aleo/accept_game.future;
-
-finalize accept_game:
-    input r0 as u32.public;
-    sub block.height 1000u32 into r1;
-    gte r0 r1 into r2;
-    assert.eq r2 true;
-    add block.height 1000u32 into r3;
-    lte r0 r3 into r4;
-    assert.eq r4 true;
 
 
 function reveal_answer_game:
@@ -340,16 +327,8 @@ function finish_game_by_timeout:
     cast r0.challenger_address r0.game_multisig 6field false r0.total_pot r0.challenger_address r0.opponent_address r0.opponent_address r0.challenger_address 10u32 into r5 as GameFinishedNotification.record;
     cast r0.opponent_address r0.game_multisig 6field false r0.total_pot r0.challenger_address r0.opponent_address r0.opponent_address r0.challenger_address 10u32 into r6 as GameFinishedNotification.record;
     call puzzle_pieces_v016.aleo/joint_timeout_to_opponent r1 r2 r3 into r7 r8;
-    async finish_game_by_timeout r2.block_ht into r9;
     output r7 as puzzle_pieces_v016.aleo/Piece.record;
     output r8 as puzzle_pieces_v016.aleo/AuditTransferToWinner.record;
     output r4 as Game.record;
     output r5 as GameFinishedNotification.record;
     output r6 as GameFinishedNotification.record;
-    output r9 as wheres_alex_v019.aleo/finish_game_by_timeout.future;
-
-finalize finish_game_by_timeout:
-    input r0 as u32.public;
-    add r0 10000u32 into r1;
-    gt block.height r1 into r2;
-    assert.eq r2 true;

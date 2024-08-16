@@ -26,22 +26,22 @@ program multiparty_pvp_utils_v015.aleo {
     }
 
     // ix: 2u32,
-    record AuditMintAnswer {
-        owner: address,
-        answer_owner: address,
-        challenger_address: address,
-        opponent_address: address,
-        game_multisig: address,
-        amount: u64,
-        nonce: field,
-        answer: field,
-        message_1: field,
-        message_2: field,
-        message_3: field,
-        message_4: field,
-        message_5: field,
-        ix: u32,
-    }
+    // record AuditMintAnswer {
+    //     owner: address,
+    //     answer_owner: address,
+    //     challenger_address: address,
+    //     opponent_address: address,
+    //     game_multisig: address,
+    //     amount: u64,
+    //     nonce: field,
+    //     answer: field,
+    //     message_1: field,
+    //     message_2: field,
+    //     message_3: field,
+    //     message_4: field,
+    //     message_5: field,
+    //     ix: u32,
+    // }
 
     // ix: 3u32
     record RevealAnswer {
@@ -81,15 +81,15 @@ program multiparty_pvp_utils_v015.aleo {
     }
 
     // ix: 6u32
-    record AuditKey {
-        owner: address, //puzzle issuer
-        seed: field,
-        amount: u64,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
-        ix: u32,
-    }
+    // record AuditKey {
+    //     owner: address, //puzzle issuer
+    //     seed: field,
+    //     amount: u64,
+    //     challenger: address,
+    //     opponent: address,
+    //     game_multisig: address,
+    //     ix: u32,
+    // }
 
     // Created by challenger at start of the game
     // Enforce that challenger address is the person who receives Answer Record
@@ -107,7 +107,7 @@ program multiparty_pvp_utils_v015.aleo {
         message_4: field,
         message_5: field,
         sig: signature,
-    ) -> (Answer, AuditMintAnswer) {
+    ) -> (Answer) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
@@ -140,25 +140,25 @@ program multiparty_pvp_utils_v015.aleo {
             ix: 1u32,
         };
 
-        let audit_record: AuditMintAnswer = AuditMintAnswer {
-            owner: puzzle_issuer,
-            answer_owner: challenger_address,
-            challenger_address: challenger_address,
-            opponent_address: opponent_address,
-            game_multisig: game_multisig,
-            amount: amount,
-            nonce: nonce,
-            answer: answer,
-            message_1: message_1,
-            message_2: message_2,
-            message_3: message_3,
-            message_4: message_4,
-            message_5: message_5,
-            ix: 2u32,
-        };
+        // let audit_record: AuditMintAnswer = AuditMintAnswer {
+        //     owner: puzzle_issuer,
+        //     answer_owner: challenger_address,
+        //     challenger_address: challenger_address,
+        //     opponent_address: opponent_address,
+        //     game_multisig: game_multisig,
+        //     amount: amount,
+        //     nonce: nonce,
+        //     answer: answer,
+        //     message_1: message_1,
+        //     message_2: message_2,
+        //     message_3: message_3,
+        //     message_4: message_4,
+        //     message_5: message_5,
+        //     ix: 2u32,
+        // };
 
 
-        return (answer_record, audit_record);
+        return (answer_record);
     }
 
     transition mint_multisig_key(
@@ -167,7 +167,7 @@ program multiparty_pvp_utils_v015.aleo {
         challenger: address,
         opponent: address,
         game_multisig: address,
-    ) -> (Key, AuditKey) {
+    ) -> (Key) {
         // TODO -- could add a check here turning seed into multisig
         // not doing because need to turn SK_SIG_DOMAIN in keygen into
         // fields. Can do easier after string support
@@ -185,17 +185,17 @@ program multiparty_pvp_utils_v015.aleo {
             ix: 5u32,
         };
 
-        let audit_key_record: AuditKey = AuditKey {
-            owner: puzzle_issuer,
-            seed: seed,
-            amount: amount,
-            challenger: challenger,
-            opponent: opponent,
-            game_multisig: game_multisig,
-            ix: 6u32,
-        };
+        // let audit_key_record: AuditKey = AuditKey {
+        //     owner: puzzle_issuer,
+        //     seed: seed,
+        //     amount: amount,
+        //     challenger: challenger,
+        //     opponent: opponent,
+        //     game_multisig: game_multisig,
+        //     ix: 6u32,
+        // };
 
-        return (key_record, audit_key_record);
+        return (key_record);
     }
 
 
@@ -206,7 +206,7 @@ program multiparty_pvp_utils_v015.aleo {
     transition reveal_answer (
         answer: Answer,
         sig: signature,
-    ) -> (RevealAnswer, AuditRevealAnswer)
+    ) -> (RevealAnswer)
     {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
@@ -260,6 +260,6 @@ program multiparty_pvp_utils_v015.aleo {
             ix: 4u32,
         };
 
-        return (revealed_answer_record, audit_record);
+        return (revealed_answer_record);
     }
 }

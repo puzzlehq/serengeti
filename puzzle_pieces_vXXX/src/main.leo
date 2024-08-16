@@ -21,29 +21,29 @@ program puzzle_pieces_v016.aleo {
     }
 
     // ix: 1u32
-    record AuditMint {
-        owner: address,
-        minter: address,
-        amount: u64,
-        ix: u32,
-    }
+    // record AuditMint {
+    //     owner: address,
+    //     minter: address,
+    //     amount: u64,
+    //     ix: u32,
+    // }
 
     // ix: 16u32
-    record AuditJoin {
-        owner: address,
-        joiner: address,
-        amount: u64,
-        ix: u32,
-    }
+    // record AuditJoin {
+    //     owner: address,
+    //     joiner: address,
+    //     amount: u64,
+    //     ix: u32,
+    // }
 
     // ix: 2u32
-    record AuditTransfer {
-        owner: address,
-        sender: address,
-        receiver: address,
-        amount: u64,
-        ix: u32,
-    }
+    // record AuditTransfer {
+    //     owner: address,
+    //     sender: address,
+    //     receiver: address,
+    //     amount: u64,
+    //     ix: u32,
+    // }
 
     // owned by multisig
     // ix: 3u32
@@ -57,26 +57,26 @@ program puzzle_pieces_v016.aleo {
     }
 
     // ix: 4u32
-    record AuditStakeIn {
-        owner: address,
-        staker: address,
-        amount_in: u64,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
-        ix: u32,
-    }
+    // record AuditStakeIn {
+    //     owner: address,
+    //     staker: address,
+    //     amount_in: u64,
+    //     challenger: address,
+    //     opponent: address,
+    //     game_multisig: address,
+    //     ix: u32,
+    // }
 
     // ix: 5u32
-    record AuditStakeOut {
-        owner: address,
-        staker: address,
-        amount_in: u64,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
-        ix: u32,
-    }
+    // record AuditStakeOut {
+    //     owner: address,
+    //     staker: address,
+    //     amount_in: u64,
+    //     challenger: address,
+    //     opponent: address,
+    //     game_multisig: address,
+    //     ix: u32,
+    // }
 
     // owned by multisig
     // ix: 6u32
@@ -160,17 +160,17 @@ program puzzle_pieces_v016.aleo {
     }
 
     // ix: 11u32
-    record AuditJointStake {
-        owner: address,
-        amount: u64,
-        time_claimer_address: address,
-        state_updater_address: address,
-        block_ht: u32,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
-        ix: u32,
-    }
+    // record AuditJointStake {
+    //     owner: address,
+    //     amount: u64,
+    //     time_claimer_address: address,
+    //     state_updater_address: address,
+    //     block_ht: u32,
+    //     challenger: address,
+    //     opponent: address,
+    //     game_multisig: address,
+    //     ix: u32,
+    // }
 
     // owned by multisig
     // ix: 12u32
@@ -187,28 +187,28 @@ program puzzle_pieces_v016.aleo {
     }
 
     // ix: 13u32
-    record AuditJointPieceWinner {
-        owner: address,
-        amount: u64,
-        time_claimer_address: address,
-        state_updater_address: address,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
-        winner: address,
-        ix: u32,
-    }
+    // record AuditJointPieceWinner {
+    //     owner: address,
+    //     amount: u64,
+    //     time_claimer_address: address,
+    //     state_updater_address: address,
+    //     challenger: address,
+    //     opponent: address,
+    //     game_multisig: address,
+    //     winner: address,
+    //     ix: u32,
+    // }
 
     // ix: 14u32
-    record AuditTransferToWinner {
-        owner: address,
-        challenger: address,
-        opponent: address,
-        game_multisig: address,
-        receiver: address,
-        amount: u64,
-        ix: u32,
-    }
+    // record AuditTransferToWinner {
+    //     owner: address,
+    //     challenger: address,
+    //     opponent: address,
+    //     game_multisig: address,
+    //     receiver: address,
+    //     amount: u64,
+    //     ix: u32,
+    // }
 
     // ix: 15u32
     // output on transfer_joint_stake_to_winner -- use auditTransferToWinner to solve tracking games & winners -- use this data pipe for easier tracking notes
@@ -220,7 +220,7 @@ program puzzle_pieces_v016.aleo {
     }
 
 
-    transition mint_private (amount: u64, to: address) -> (Piece, AuditMint) {
+    transition mint_private (amount: u64, to: address) -> (Piece) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
@@ -234,14 +234,14 @@ program puzzle_pieces_v016.aleo {
         };
 
         // audit record for issuer to know supply
-        let audit_record: AuditMint = AuditMint {
-            owner: puzzle_issuer,
-            minter: to,
-            amount: amount,
-            ix: 1u32,
-        };
+        // let audit_record: AuditMint = AuditMint {
+        //     owner: puzzle_issuer,
+        //     minter: to,
+        //     amount: amount,
+        //     ix: 1u32,
+        // };
 
-        return (minted_puzzle_pieces, audit_record);
+        return (minted_puzzle_pieces);
     }
 
     // join 2 pieces
@@ -252,7 +252,6 @@ program puzzle_pieces_v016.aleo {
     ) ->
     (
         Piece,
-        AuditJoin,
     )
     {
         // assert contracts can't call this
@@ -276,17 +275,17 @@ program puzzle_pieces_v016.aleo {
         };
 
         // audit record for issuer to know supply
-        let audit_join_record: AuditJoin = AuditJoin {
-            owner: puzzle_issuer,
-            joiner: self.signer,
-            amount: piece_record_one.amount + piece_record_two.amount,
-            ix: 32u32,
-        };
+        // let audit_join_record: AuditJoin = AuditJoin {
+        //     owner: puzzle_issuer,
+        //     joiner: self.signer,
+        //     amount: piece_record_one.amount + piece_record_two.amount,
+        //     ix: 32u32,
+        // };
 
-        return (joined_piece_record, audit_join_record);
+        return (joined_piece_record);
     }
 
-    transition transfer_private (sender: Piece, receiver: address, amount: u64) -> (Piece, Piece, AuditTransfer) {
+    transition transfer_private (sender: Piece, receiver: address, amount: u64) -> (Piece, Piece) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
@@ -305,15 +304,15 @@ program puzzle_pieces_v016.aleo {
         };
 
         // audit record for issuer to know holders
-        let audit_record: AuditTransfer = AuditTransfer {
-            owner: puzzle_issuer,
-            sender: sender.owner,
-            receiver: receiver,
-            amount: amount,
-            ix: 2u32,
-        };
+        // let audit_record: AuditTransfer = AuditTransfer {
+        //     owner: puzzle_issuer,
+        //     sender: sender.owner,
+        //     receiver: receiver,
+        //     amount: amount,
+        //     ix: 2u32,
+        // };
 
-        return (remaining, transferred, audit_record);
+        return (remaining, transferred);
 
     }
 
@@ -341,7 +340,7 @@ program puzzle_pieces_v016.aleo {
         message_4: field,
         message_5: field,
         sig: signature
-    ) -> (PieceClaim, PieceStake, ClaimSignature, Piece, AuditStakeIn)
+    ) -> (PieceClaim, PieceStake, ClaimSignature, Piece)
     {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
@@ -402,17 +401,17 @@ program puzzle_pieces_v016.aleo {
         };
 
         // record to asset issuer to keep tabs on activity
-        let audit_record: AuditStakeIn = AuditStakeIn {
-            owner: puzzle_issuer,
-            staker: piece_token.owner,
-            amount_in: amount,
-            challenger: challenger,
-            opponent: opponent,
-            game_multisig: game_multisig,
-            ix: 4u32,
-        };
+        // let audit_record: AuditStakeIn = AuditStakeIn {
+        //     owner: puzzle_issuer,
+        //     staker: piece_token.owner,
+        //     amount_in: amount,
+        //     challenger: challenger,
+        //     opponent: opponent,
+        //     game_multisig: game_multisig,
+        //     ix: 4u32,
+        // };
 
-        return (piece_claim_record, receiver_new_record, sender_claim_sig_record, sender_change_record, audit_record);
+        return (piece_claim_record, receiver_new_record, sender_claim_sig_record, sender_change_record);
 
     }
 
@@ -425,7 +424,7 @@ program puzzle_pieces_v016.aleo {
         piece_stake: PieceStake,
         piece_claim: PieceClaim,
         sig: signature
-    ) -> (Piece, AuditStakeOut) {
+    ) -> (Piece) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
@@ -458,17 +457,17 @@ program puzzle_pieces_v016.aleo {
             ix: 0u32,
         };
 
-        let audit_record: AuditStakeOut = AuditStakeOut {
-            owner: puzzle_issuer,
-            staker: piece_claim.claimer,
-            amount_in: piece_claim.amount,
-            challenger: piece_claim.challenger,
-            opponent: piece_claim.opponent,
-            game_multisig: piece_claim.owner,
-            ix: 5u32
-        };
+        // let audit_record: AuditStakeOut = AuditStakeOut {
+        //     owner: puzzle_issuer,
+        //     staker: piece_claim.claimer,
+        //     amount_in: piece_claim.amount,
+        //     challenger: piece_claim.challenger,
+        //     opponent: piece_claim.opponent,
+        //     game_multisig: piece_claim.owner,
+        //     ix: 5u32
+        // };
 
-        return (piece_oot, audit_record);
+        return (piece_oot);
     }
 
     // Jointly staking both pieces to the Multisig
@@ -480,7 +479,7 @@ program puzzle_pieces_v016.aleo {
         piece_stake_opponent: PieceStake,
         piece_claim_opponent: PieceClaim,
         block_ht: u32 //good actor uses our api endpoint on FE to get blockheight and use as inputs
-    ) -> (PieceJointStake, JointPieceTimeClaim, JointPieceState, AuditJointStake) {
+    ) -> (PieceJointStake, JointPieceTimeClaim, JointPieceState) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
@@ -559,19 +558,19 @@ program puzzle_pieces_v016.aleo {
         };
 
         // send to issuer for analytics
-        let audit_record: AuditJointStake = AuditJointStake {
-            owner: opponent,
-            amount: amount + amount,
-            time_claimer_address: opponent,
-            state_updater_address: challenger,
-            block_ht: block_ht,
-            challenger: challenger,
-            opponent: opponent,
-            game_multisig: owner,
-            ix: 11u32,
-        };
+        // let audit_record: AuditJointStake = AuditJointStake {
+        //     owner: opponent,
+        //     amount: amount + amount,
+        //     time_claimer_address: opponent,
+        //     state_updater_address: challenger,
+        //     block_ht: block_ht,
+        //     challenger: challenger,
+        //     opponent: opponent,
+        //     game_multisig: owner,
+        //     ix: 11u32,
+        // };
 
-        return (piece_joint_stake, joint_piece_time_claim, joint_piece_state, audit_record );
+        return (piece_joint_stake, joint_piece_time_claim, joint_piece_state );
     }
 
     // Challenger calls this function with the challenger key
@@ -585,7 +584,7 @@ program puzzle_pieces_v016.aleo {
         joint_piece_state: JointPieceState,
         sig: ClaimSignature,
         winner: address
-    ) -> (JointPieceWinner, AuditJointPieceWinner) {
+    ) -> (JointPieceWinner) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
@@ -644,19 +643,19 @@ program puzzle_pieces_v016.aleo {
         };
 
         // for the piece keepers
-        let audit_record: AuditJointPieceWinner = AuditJointPieceWinner {
-            owner: joint_piece_state.game_multisig,
-            amount: joint_piece_state.amount,
-            time_claimer_address: joint_piece_state.time_claimer_address,
-            state_updater_address: joint_piece_state.state_updater_address,
-            challenger: joint_piece_state.challenger,
-            opponent: joint_piece_state.opponent,
-            game_multisig: joint_piece_state.game_multisig,
-            winner: winner,
-            ix: 13u32,
-        };
+        // let audit_record: AuditJointPieceWinner = AuditJointPieceWinner {
+        //     owner: joint_piece_state.game_multisig,
+        //     amount: joint_piece_state.amount,
+        //     time_claimer_address: joint_piece_state.time_claimer_address,
+        //     state_updater_address: joint_piece_state.state_updater_address,
+        //     challenger: joint_piece_state.challenger,
+        //     opponent: joint_piece_state.opponent,
+        //     game_multisig: joint_piece_state.game_multisig,
+        //     winner: winner,
+        //     ix: 13u32,
+        // };
 
-        return (joint_piece_winner, audit_record);
+        return (joint_piece_winner);
     }
 
     // Called with multisig key
@@ -665,7 +664,7 @@ program puzzle_pieces_v016.aleo {
         joint_piece_winner: JointPieceWinner,
         piece_joint_stake: PieceJointStake,
         joint_piece_time_claim: JointPieceTimeClaim,
-    ) -> (Piece,AuditTransferToWinner, AuditPieceOwner) {
+    ) -> (Piece) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
@@ -704,24 +703,24 @@ program puzzle_pieces_v016.aleo {
             ix: 0u32,
         };
 
-        let audit_record: AuditTransferToWinner = AuditTransferToWinner {
-            owner: puzzle_issuer,
-            challenger: challenger,
-            opponent: opponent,
-            game_multisig: game_multisig,
-            receiver: winner,
-            amount: amount,
-            ix: 14u32
-        };
+        // let audit_record: AuditTransferToWinner = AuditTransferToWinner {
+        //     owner: puzzle_issuer,
+        //     challenger: challenger,
+        //     opponent: opponent,
+        //     game_multisig: game_multisig,
+        //     receiver: winner,
+        //     amount: amount,
+        //     ix: 14u32
+        // };
 
-        let audit_piece_owner: AuditPieceOwner = AuditPieceOwner {
-            owner: puzzle_issuer,
-            piece_holder: winner,
-            amount: amount,
-            ix: 15u32
-        };
+        // let audit_piece_owner: AuditPieceOwner = AuditPieceOwner {
+        //     owner: puzzle_issuer,
+        //     piece_holder: winner,
+        //     amount: amount,
+        //     ix: 15u32
+        // };
 
-        return (piece_to_winner, audit_record, audit_piece_owner);
+        return (piece_to_winner);
     }
 
     // The challenger has not updated joint piece state for a winner in time of blockheight
@@ -740,7 +739,7 @@ program puzzle_pieces_v016.aleo {
         piece_joint_stake: PieceJointStake,
         joint_piece_time_claim: JointPieceTimeClaim,
         sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
-    ) -> (Piece, AuditTransferToWinner)
+    ) -> (Piece)
     {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
@@ -781,16 +780,16 @@ program puzzle_pieces_v016.aleo {
             ix: 0u32,
         };
 
-        let audit_record: AuditTransferToWinner = AuditTransferToWinner {
-            owner: puzzle_issuer,
-            challenger: challenger,
-            opponent: opponent,
-            game_multisig: game_multisig,
-            receiver: opponent,
-            amount: amount,
-            ix: 14u32
-        };
+        // let audit_record: AuditTransferToWinner = AuditTransferToWinner {
+        //     owner: puzzle_issuer,
+        //     challenger: challenger,
+        //     opponent: opponent,
+        //     game_multisig: game_multisig,
+        //     receiver: opponent,
+        //     amount: amount,
+        //     ix: 14u32
+        // };
 
-        return (piece_to_winner, audit_record);
+        return (piece_to_winner);
     }
 }
