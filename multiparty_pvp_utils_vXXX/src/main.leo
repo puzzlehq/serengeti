@@ -14,7 +14,7 @@ program multiparty_pvp_utils_v015.aleo {
         challenger_address: address,
         opponent_address: address,
         game_multisig: address,
-        amount: u64,
+        amount: u8,
         nonce: field,
         answer: field,
         message_1: field,
@@ -22,7 +22,6 @@ program multiparty_pvp_utils_v015.aleo {
         message_3: field,
         message_4: field,
         message_5: field,
-        ix: u32,
     }
 
     // ix: 2u32,
@@ -49,35 +48,32 @@ program multiparty_pvp_utils_v015.aleo {
         challenger_address: address,
         opponent_address: address,
         game_multisig: address,
-        amount: u64,
+        amount: u8,
         nonce: field,
         answer: field,
         sig: signature,
-        ix: u32,
     }
 
     // ix: 4u32
-    record AuditRevealAnswer {
-        owner: address, //challenger
-        challenger_address: address,
-        opponent_address: address,
-        game_multisig: address,
-        amount: u64,
-        nonce: field,
-        answer: field,
-        sig: signature
-        ix: u32,
-    }
+    // record AuditRevealAnswer {
+    //     owner: address, //challenger
+    //     challenger_address: address,
+    //     opponent_address: address,
+    //     game_multisig: address,
+    //     amount: u8,
+    //     nonce: field,
+    //     answer: field,
+    //     sig: signature
+    // }
 
     // ix: 5u32
     record Key {
         owner: address, //opponent
         seed: field,
-        amount: u64,
-        challenger: address,
-        opponent: address,
+        amount: u8,
+        // challenger: address,
+        // opponent: address,
         game_multisig: address,
-        ix: u32,
     }
 
     // ix: 6u32
@@ -98,7 +94,7 @@ program multiparty_pvp_utils_v015.aleo {
         challenger_address: address,
         opponent_address: address,
         game_multisig: address,
-        amount: u64,
+        amount: u8,
         nonce: field,
         answer: field,
         message_1: field,
@@ -109,7 +105,7 @@ program multiparty_pvp_utils_v015.aleo {
         sig: signature,
     ) -> (Answer) {
         // set puzzle issuing address as issuer:
-        let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
+        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
         let msg: Mssage = Mssage {
             field_1: message_1,
@@ -137,7 +133,6 @@ program multiparty_pvp_utils_v015.aleo {
             message_3: message_3,
             message_4: message_4,
             message_5: message_5,
-            ix: 1u32,
         };
 
         // let audit_record: AuditMintAnswer = AuditMintAnswer {
@@ -163,7 +158,7 @@ program multiparty_pvp_utils_v015.aleo {
 
     transition mint_multisig_key(
         seed: field,
-        amount: u64,
+        amount: u8,
         challenger: address,
         opponent: address,
         game_multisig: address,
@@ -173,16 +168,15 @@ program multiparty_pvp_utils_v015.aleo {
         // fields. Can do easier after string support
 
         // set puzzle issuing address as issuer:
-        let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
+        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
         let key_record: Key = Key {
             owner: opponent,
             seed: seed,
             amount: amount,
-            challenger: challenger,
-            opponent: opponent,
+            // challenger: challenger,
+            // opponent: opponent,
             game_multisig: game_multisig,
-            ix: 5u32,
         };
 
         // let audit_key_record: AuditKey = AuditKey {
@@ -209,7 +203,7 @@ program multiparty_pvp_utils_v015.aleo {
     ) -> (RevealAnswer)
     {
         // set puzzle issuing address as issuer:
-        let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
+        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
         // Verify that owner is challenger
         assert_eq(answer.owner, answer.challenger_address);
@@ -232,7 +226,7 @@ program multiparty_pvp_utils_v015.aleo {
         let answer_challenger_address: address = answer.challenger_address;
         let answer_opponent_address: address = answer.opponent_address;
         let game_multisig: address = answer.game_multisig;
-        let answer_amount: u64 = answer.amount;
+        let answer_amount: u8 = answer.amount;
         let answer_nonce: field = answer.nonce;
         let answer_answer: field = answer.answer;
 
@@ -245,20 +239,18 @@ program multiparty_pvp_utils_v015.aleo {
             nonce: answer_nonce,
             answer: answer_answer,
             sig: sig,
-            ix: 3u32,
         };
 
-        let audit_record: AuditRevealAnswer = AuditRevealAnswer {
-            owner: puzzle_issuer,
-            challenger_address: answer_challenger_address,
-            opponent_address: answer_opponent_address,
-            game_multisig: game_multisig,
-            amount: answer_amount,
-            nonce: answer_nonce,
-            answer: answer_answer,
-            sig: sig,
-            ix: 4u32,
-        };
+        // let audit_record: AuditRevealAnswer = AuditRevealAnswer {
+        //     owner: puzzle_issuer,
+        //     challenger_address: answer_challenger_address,
+        //     opponent_address: answer_opponent_address,
+        //     game_multisig: game_multisig,
+        //     amount: answer_amount,
+        //     nonce: answer_nonce,
+        //     answer: answer_answer,
+        //     sig: sig,
+        // };
 
         return (revealed_answer_record);
     }
