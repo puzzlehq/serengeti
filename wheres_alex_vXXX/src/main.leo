@@ -13,7 +13,7 @@ program wheres_alex_v019.aleo {
         challenger_address: address,
         opponent_address: address,
         game_multisig: address,
-        game_state: field,
+        game_state: u8,
     }
 
     // GAME STATE RECORDED ON NOTIFICATIONS
@@ -39,7 +39,7 @@ program wheres_alex_v019.aleo {
     record GameReqNotification {
         owner: address, //opponent
         game_multisig: address,
-        game_state: field,
+        game_state: u8,
         your_turn: bool,
         total_pot: u8,
         challenger_address: address,
@@ -114,7 +114,7 @@ program wheres_alex_v019.aleo {
     record RevealAnswerNotification {
         owner: address, //opponent
         game_multisig: address,
-        game_state: field,
+        game_state: u8,
         your_turn: bool,
         total_pot: u8,
         // challenger_address: address,
@@ -127,7 +127,7 @@ program wheres_alex_v019.aleo {
     record GameFinishReqNotification {
         owner: address, //opponent
         game_multisig: address,
-        game_state: field,
+        game_state: u8,
         your_turn: bool,
         total_pot: u8,
         // challenger_address: address,
@@ -143,7 +143,7 @@ program wheres_alex_v019.aleo {
     record GameFinishedNotification {
         owner: address,
         game_multisig: address,
-        game_state: field,
+        game_state: u8,
         // your_turn: bool,
         total_pot: u8,
         // challenger_address: address,
@@ -235,7 +235,7 @@ program wheres_alex_v019.aleo {
         let game_request_notification_record: GameReqNotification = GameReqNotification {
             owner: opponent, //opponent
             game_multisig: game_multisig,
-            game_state: 1field,
+            game_state: 1u8,
             your_turn: true,
             total_pot: challenger_wager_amount + challenger_wager_amount,
             challenger_address: challenger,
@@ -260,7 +260,7 @@ program wheres_alex_v019.aleo {
             challenger_address: challenger,
             opponent_address: opponent,
             game_multisig: game_multisig,
-            game_state: 1field,
+            game_state: 1u8,
         };
 
         let (challenger_answer_record): multiparty_pvp_utils_v015.aleo/Answer = multiparty_pvp_utils_v015.aleo/mint_answer(
@@ -546,7 +546,7 @@ program wheres_alex_v019.aleo {
         let reveal_answer_notification_record: RevealAnswerNotification = RevealAnswerNotification {
             owner: game_record.challenger_address,
             game_multisig: game_record.owner,
-            game_state: 3field,
+            game_state: 3u8,
             your_turn: true,
             total_pot: game_record.total_pot,
             // challenger_address: game_record.challenger_address,
@@ -562,7 +562,7 @@ program wheres_alex_v019.aleo {
             challenger_address: game_record.challenger_address,
             opponent_address: game_record.opponent_address,
             game_multisig: game_record.game_multisig,
-            game_state: 3field,
+            game_state: 3u8,
         };
 
         return (
@@ -631,7 +631,7 @@ program wheres_alex_v019.aleo {
         let game_finish_req_notification_record_opponent: GameFinishReqNotification = GameFinishReqNotification {
             owner: challenger_answer_record.opponent_address,
             game_multisig: challenger_answer_record.game_multisig,
-            game_state: 4field,
+            game_state: 4u8,
             your_turn: true,
             total_pot: joint_piece_state.amount,
             // challenger_address: challenger_answer_record.challenger_address,
@@ -645,7 +645,7 @@ program wheres_alex_v019.aleo {
         let game_finish_req_notification_record_challenger: GameFinishReqNotification = GameFinishReqNotification{
             owner: challenger_answer_record.challenger_address,
             game_multisig: challenger_answer_record.game_multisig,
-            game_state: 4field,
+            game_state: 4u8,
             your_turn: true,
             total_pot: joint_piece_state.amount,
             // challenger_address: challenger_answer_record.challenger_address,
@@ -695,13 +695,13 @@ program wheres_alex_v019.aleo {
             challenger_address: game_record.challenger_address,
             opponent_address: game_record.opponent_address,
             game_multisig: game_record.game_multisig,
-            game_state: 5field,
+            game_state: 5u8,
         };
 
         let game_finished_notification_challenger_record: GameFinishedNotification = GameFinishedNotification {
             owner: game_record.challenger_address,
             game_multisig: game_record.game_multisig,
-            game_state: 5field,
+            game_state: 5u8,
             // your_turn: false,
             total_pot: game_record.total_pot,
             // challenger_address: game_record.challenger_address,
@@ -713,7 +713,7 @@ program wheres_alex_v019.aleo {
         let game_finished_notification_opponent_record: GameFinishedNotification = GameFinishedNotification {
             owner: game_record.opponent_address,
             game_multisig: game_record.game_multisig,
-            game_state: 5field,
+            game_state: 5u8,
             // your_turn: false,
             total_pot: game_record.total_pot,
             // challenger_address: game_record.challenger_address,
