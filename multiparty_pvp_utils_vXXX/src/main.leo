@@ -7,34 +7,20 @@ program multiparty_pvp_utils_v015.aleo {
         field_5: field,
     }
 
+    // owned by challenger
     record Answer {
-        owner: address, // challenger
-        challenger_address: address,
+        owner: address,
+        challenger_address: address, // needed if owner == challenger ?
         opponent_address: address,
         game_multisig: address,
         amount: u64,
         nonce: field,
-        answer: u8,
-        message_1: field,
-        message_2: field,
-        message_3: field,
-        message_4: field,
-        message_5: field,
+        answer: u8
     }
 
-    record RevealAnswer {
-        owner: address, // challenger
-        challenger_address: address,
-        opponent_address: address,
-        game_multisig: address,
-        amount: u64,
-        nonce: field,
-        answer: u8,
-        sig: signature,
-    }
-
+    // owned by opponent
     record Key {
-        owner: address, // opponent
+        owner: address,
         seed: field,
         amount: u64,
         // challenger: address,
@@ -78,11 +64,6 @@ program multiparty_pvp_utils_v015.aleo {
             amount: amount,
             nonce: nonce,
             answer: answer,
-            message_1: message_1,
-            message_2: message_2,
-            message_3: message_3,
-            message_4: message_4,
-            message_5: message_5,
         };
 
         return (answer_record);
@@ -99,7 +80,7 @@ program multiparty_pvp_utils_v015.aleo {
         // not doing because need to turn SK_SIG_DOMAIN in keygen into
         // fields. Can do easier after string support
 
-        let key_record: Key = Key {
+        let key: Key = Key {
             owner: opponent,
             seed: seed,
             amount: amount,
@@ -108,31 +89,13 @@ program multiparty_pvp_utils_v015.aleo {
             game_multisig: game_multisig,
         };
 
-        return (key_record);
+        return (key);
     }
 
-    // Only callable by the challenger.
-    // Enforced by checkinig that owner == challenger (and caller when fixed)
-    // a signature from the ClaimSignature record from the token is used here
-    transition reveal_answer (
-        answer: Answer,
-        sig: signature,
-    ) -> (RevealAnswer) {
-        // Verify that owner is challenger
-        assert_eq(answer.owner, answer.challenger_address);
-
-        // Verify signature from Cagainst message to guarantee challenger is caller
-        let msg: Mssage = Mssage {
-            field_1: answer.message_1,
-            field_2: answer.message_2,
-            field_3: answer.message_3,
-            field_4: answer.message_4,
-            field_5: answer.message_5
-        };
-
-        assert(sig.verify(answer.challenger_address, msg));
-
-        let revealed_answer_record: RevealAnswer = RevealAnswer {
+    // Only callable by challenger (Answer owner)
+    // Reveals the answer by minting the Answer to the game_multisig
+    transition reveal_answer (answer: Answer) -> (Answer) {
+        let revealed_answer_record: Answer = Answer {
             owner: answer.game_multisig,
             challenger_address: answer.challenger_address,
             opponent_address: answer.opponent_address,
@@ -140,7 +103,6 @@ program multiparty_pvp_utils_v015.aleo {
             amount: answer.amount,
             nonce: answer.nonce,
             answer: answer.answer,
-            sig: sig,
         };
 
         return (revealed_answer_record);

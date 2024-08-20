@@ -12,7 +12,6 @@ program wheres_alex_v019.aleo;
 
 
 
-
 record Game:
     owner as address.private;
     challenger_commit as field.private;
@@ -160,11 +159,11 @@ function reveal_answer_game:
     ternary r4 r1.opponent_address r1.challenger_address into r5;
     is.eq r5 r1.challenger_address into r6;
     ternary r6 r1.opponent_address r1.challenger_address into r7;
-    call multiparty_pvp_utils_v015.aleo/reveal_answer r1 r3.sig into r8;
+    call multiparty_pvp_utils_v015.aleo/reveal_answer r1 into r8;
     call puzzle_pieces_v016.aleo/joint_stake_state_update r2 r3 r5 into r9;
     cast r1.opponent_address r1.game_multisig 4u8 true r2.amount r1.answer r0.opponent_answer into r10 as GameFinishReqNotification.record;
     cast r1.challenger_address r1.game_multisig 4u8 true r2.amount r1.answer r0.opponent_answer into r11 as GameFinishReqNotification.record;
-    output r8 as multiparty_pvp_utils_v015.aleo/RevealAnswer.record;
+    output r8 as multiparty_pvp_utils_v015.aleo/Answer.record;
     output r9 as puzzle_pieces_v016.aleo/JointPieceWinner.record;
     output r10 as GameFinishReqNotification.record;
     output r11 as GameFinishReqNotification.record;

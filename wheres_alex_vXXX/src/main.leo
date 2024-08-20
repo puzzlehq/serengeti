@@ -574,7 +574,7 @@ program wheres_alex_v019.aleo {
         joint_piece_state: puzzle_pieces_v016.aleo/JointPieceState,
         challenger_claim_signature: puzzle_pieces_v016.aleo/ClaimSignature,
     ) -> (
-        multiparty_pvp_utils_v015.aleo/RevealAnswer,
+        multiparty_pvp_utils_v015.aleo/Answer,
         puzzle_pieces_v016.aleo/JointPieceWinner,
         GameFinishReqNotification,
         GameFinishReqNotification,
@@ -590,10 +590,10 @@ program wheres_alex_v019.aleo {
         // determine winner! If opponent correctly picked where the challenger hid alex, the opponent wins otherwise the challenger wins
         let winner_address: address = reveal_answer_notification_record.opponent_answer == challenger_answer_record.answer ? challenger_answer_record.opponent_address : challenger_answer_record.challenger_address;
         let loser_address: address = winner_address == challenger_answer_record.challenger_address ? challenger_answer_record.opponent_address : challenger_answer_record.challenger_address;
-        let challenger_sig: signature = challenger_claim_signature.sig;
+        // let challenger_sig: signature = challenger_claim_signature.sig;
 
         // retrieve revealedanswer record
-        let (revealed_answer_record): multiparty_pvp_utils_v015.aleo/RevealAnswer = multiparty_pvp_utils_v015.aleo/reveal_answer(challenger_answer_record, challenger_sig);
+        let (revealed_answer_record): multiparty_pvp_utils_v015.aleo/Answer = multiparty_pvp_utils_v015.aleo/reveal_answer(challenger_answer_record);
 
         let (joint_piece_winner): puzzle_pieces_v016.aleo/JointPieceWinner = puzzle_pieces_v016.aleo/joint_stake_state_update(joint_piece_state, challenger_claim_signature, winner_address);
 
