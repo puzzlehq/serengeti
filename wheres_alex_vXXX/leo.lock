@@ -1,15 +1,13 @@
 [[package]]
 name = "puzzle_pieces_v016.aleo"
-network = "testnet"
 location = "local"
-path = "/Users/asharma/code/medici/serengeti/wheres_alex_vXXX/../puzzle_pieces_vXXX"
-checksum = "b06dfd3dc282a95229bfbf83ef679e0cd46bcb8e775acb2c4bdc8cc84b91a803"
+path = "/Users/lucas/code/puzzle/serengeti/wheres_alex_vXXX/../puzzle_pieces_vXXX"
+checksum = "d2342c9445c501db0cc6310e13a271401486bbe8809945353ea04ceb6ecaf9cc"
 dependencies = []
 
 [[package]]
 name = "multiparty_pvp_utils_v015.aleo"
-network = "testnet"
 location = "local"
-path = "/Users/asharma/code/medici/serengeti/wheres_alex_vXXX/../multiparty_pvp_utils_vXXX"
-checksum = "4a0d071c10abddb17bff8497c915f3b4cc554b1d8d8c3c476b48d79073178047"
+path = "/Users/lucas/code/puzzle/serengeti/wheres_alex_vXXX/../multiparty_pvp_utils_vXXX"
+checksum = "6ca4903945e8d1dfe19e4ed6d9955e91b36c48a94b50dcbbcb273c76d3d5f602"
 dependencies = []

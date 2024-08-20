@@ -9,18 +9,18 @@ struct Message:
 
 record Piece:
     owner as address.private;
-    amount as u8.private;
+    amount as u64.private;
 
 record PieceStake:
     owner as address.private;
-    amount as u8.private;
+    amount as u64.private;
     challenger as address.private;
     opponent as address.private;
     staker as address.private;
 
 record PieceClaim:
     owner as address.private;
-    amount as u8.private;
+    amount as u64.private;
     claimer as address.private;
     message_1 as field.private;
     message_2 as field.private;
@@ -33,14 +33,14 @@ record PieceClaim:
 record ClaimSignature:
     owner as address.private;
     sig as signature.private;
-    amount as u8.private;
+    amount as u64.private;
     game_multisig as address.private;
     challenger as address.private;
     opponent as address.private;
 
 record JointPieceTimeClaim:
     owner as address.private;
-    amount as u8.private;
+    amount as u64.private;
     time_claimer_address as address.private;
     state_updater_address as address.private;
     message_1 as field.private;
@@ -55,14 +55,14 @@ record JointPieceTimeClaim:
 
 record PieceJointStake:
     owner as address.private;
-    amount as u8.private;
+    amount as u64.private;
     time_claimer_address as address.private;
     state_updater_address as address.private;
     block_ht as u32.private;
 
 record JointPieceState:
     owner as address.private;
-    amount as u8.private;
+    amount as u64.private;
     time_claimer_address as address.private;
     state_updater_address as address.private;
     message_1 as field.private;
@@ -76,7 +76,7 @@ record JointPieceState:
 
 record JointPieceWinner:
     owner as address.private;
-    amount as u8.private;
+    amount as u64.private;
     time_claimer_address as address.private;
     state_updater_address as address.private;
     challenger as address.private;
@@ -86,21 +86,10 @@ record JointPieceWinner:
 
 
 function mint_private:
-    input r0 as u8.private;
+    input r0 as u64.private;
     input r1 as address.private;
     cast r1 r0 into r2 as Piece.record;
     output r2 as Piece.record;
-
-
-function transfer_private:
-    input r0 as Piece.record;
-    input r1 as address.private;
-    input r2 as u8.private;
-    sub r0.amount r2 into r3;
-    cast r0.owner r3 into r4 as Piece.record;
-    cast r1 r2 into r5 as Piece.record;
-    output r4 as Piece.record;
-    output r5 as Piece.record;
 
 
 function stake_transfer_in:
@@ -109,7 +98,7 @@ function stake_transfer_in:
     input r2 as address.private;
     input r3 as address.private;
     input r4 as address.private;
-    input r5 as u8.private;
+    input r5 as u64.private;
     input r6 as field.private;
     input r7 as field.private;
     input r8 as field.private;

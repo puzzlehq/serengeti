@@ -1,9 +1,4 @@
-// The 'puzzle_pieces_v016' program.
-// Without nested imports -- puzzle pieces is going to need Piece Keepers to enforce
-
 program puzzle_pieces_v016.aleo {
-    // mapping supply: field => u64;
-
     struct Message {
         field_1: field,
         field_2: field,
@@ -12,75 +7,25 @@ program puzzle_pieces_v016.aleo {
         field_5: field,
     }
 
-    // Never owned by multisig
-    // ix: 0u32
+    // owned by individual
     record Piece {
         owner: address,
-        amount: u8,
+        amount: u64,
     }
 
-    // ix: 1u32
-    // record AuditMint {
-    //     owner: address,
-    //     minter: address,
-    //     amount: u64,
-    //     ix: u32,
-    // }
-
-    // ix: 16u32
-    // record AuditJoin {
-    //     owner: address,
-    //     joiner: address,
-    //     amount: u64,
-    //     ix: u32,
-    // }
-
-    // ix: 2u32
-    // record AuditTransfer {
-    //     owner: address,
-    //     sender: address,
-    //     receiver: address,
-    //     amount: u64,
-    //     ix: u32,
-    // }
-
     // owned by multisig
-    // ix: 3u32
     record PieceStake {
         owner: address,
-        amount: u8,
+        amount: u64,
         challenger: address,
         opponent: address,
         staker: address,
     }
 
-    // ix: 4u32
-    // record AuditStakeIn {
-    //     owner: address,
-    //     staker: address,
-    //     amount_in: u64,
-    //     challenger: address,
-    //     opponent: address,
-    //     game_multisig: address,
-    //     ix: u32,
-    // }
-
-    // ix: 5u32
-    // record AuditStakeOut {
-    //     owner: address,
-    //     staker: address,
-    //     amount_in: u64,
-    //     challenger: address,
-    //     opponent: address,
-    //     game_multisig: address,
-    //     ix: u32,
-    // }
-
     // owned by multisig
-    // ix: 6u32
     record PieceClaim {
         owner: address,
-        amount: u8,
+        amount: u64,
         claimer: address,
         message_1: field,
         message_2: field,
@@ -92,21 +37,19 @@ program puzzle_pieces_v016.aleo {
     }
 
     // owned by individual
-    // ix: 7u32
     record ClaimSignature {
         owner: address,
         sig: signature,
-        amount: u8,
+        amount: u64,
         game_multisig: address,
         challenger: address,
         opponent: address,
     }
 
     // owned by multsig
-    // ix: 8u32
     record JointPieceTimeClaim {
         owner: address,
-        amount: u8,
+        amount: u64,
         time_claimer_address: address,
         state_updater_address: address,
         message_1: field,
@@ -121,25 +64,24 @@ program puzzle_pieces_v016.aleo {
     }
 
     // owned by multisig
-    // ix: 9u32
     record PieceJointStake {
         owner: address,
-        amount: u8,
+        amount: u64,
         time_claimer_address: address,
         state_updater_address: address,
         block_ht: u32,
     }
-    //For block height — user can set it but can’t pull it onchain to check until a finalize
+
+    // For block height — user can set it but can’t pull it onchain to check until a finalize
     // So a multisig Alice may want to penalize Bob and take bob’s stake if he inputs the wrong on
     // - We should track who updates this multisig state to who sets block height to be able to penalize
     // something like adding input (address, sig) where address is individual key with signature set to something
     // and set JointPieceCreator: address (challenger or opponent) ---> question about what is field vulnerabilities for msg
 
     // owned by challenger only
-    // ix: 10u32
     record JointPieceState {
         owner: address,
-        amount: u8,
+        amount: u64,
         time_claimer_address: address,
         state_updater_address: address,
         message_1: field,
@@ -152,24 +94,10 @@ program puzzle_pieces_v016.aleo {
         game_multisig: address,
     }
 
-    // ix: 11u32
-    // record AuditJointStake {
-    //     owner: address,
-    //     amount: u64,
-    //     time_claimer_address: address,
-    //     state_updater_address: address,
-    //     block_ht: u32,
-    //     challenger: address,
-    //     opponent: address,
-    //     game_multisig: address,
-    //     ix: u32,
-    // }
-
     // owned by multisig
-    // ix: 12u32
     record JointPieceWinner {
         owner: address,
-        amount: u8,
+        amount: u64,
         time_claimer_address: address,
         state_updater_address: address,
         challenger: address,
@@ -178,129 +106,20 @@ program puzzle_pieces_v016.aleo {
         winner: address,
     }
 
-    // ix: 13u32
-    // record AuditJointPieceWinner {
-    //     owner: address,
-    //     amount: u64,
-    //     time_claimer_address: address,
-    //     state_updater_address: address,
-    //     challenger: address,
-    //     opponent: address,
-    //     game_multisig: address,
-    //     winner: address,
-    //     ix: u32,
-    // }
-
-    // ix: 14u32
-    // record AuditTransferToWinner {
-    //     owner: address,
-    //     challenger: address,
-    //     opponent: address,
-    //     game_multisig: address,
-    //     receiver: address,
-    //     amount: u64,
-    //     ix: u32,
-    // }
-
-    // ix: 15u32
     // output on transfer_joint_stake_to_winner -- use auditTransferToWinner to solve tracking games & winners -- use this data pipe for easier tracking notes
     record AuditPieceOwner {
         owner: address,
         piece_holder: address,
-        amount: u8,
+        amount: u64,
     }
 
-
-    transition mint_private (amount: u8, to: address) -> (Piece) {
-        // set puzzle issuing address as issuer:
-        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
-        // no checks on minting right now. test actions and audit without address check
-
-        // puzzle pieces minted
+    transition mint_private (amount: u64, to: address) -> (Piece) {
         let minted_puzzle_pieces: Piece = Piece {
             owner: to,
             amount: amount,
         };
 
-        // audit record for issuer to know supply
-        // let audit_record: AuditMint = AuditMint {
-        //     owner: puzzle_issuer,
-        //     minter: to,
-        //     amount: amount,
-        //     ix: 1u32,
-        // };
-
-        return (minted_puzzle_pieces);
-    }
-
-    // join 2 pieces
-    // transition join_pieces
-    // (
-    //     piece_record_one: Piece,
-    //     piece_record_two: Piece,
-    // ) ->
-    // (
-    //     Piece,
-    // )
-    // {
-    //     // assert contracts can't call this
-    //     assert_eq(self.caller, self.signer);
-
-    //     // assert that function caller owns both piece records
-    //     // assert(piece_record_one.owner == self.signer);
-    //     // assert(piece_record_two.owner == self.signer);
-
-    //     // assert that the piece records have values > 0
-    //     // assert(piece_record_one.amount > 0u8);
-    //     // assert(piece_record_two.amount > 0u8);
-
-    //     // set puzzle issuing address as issuer:
-    //     // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
-    //     let joined_piece_record: Piece = Piece {
-    //         owner: self.signer,
-    //         amount: piece_record_one.amount + piece_record_two.amount,
-    //     };
-
-    //     // audit record for issuer to know supply
-    //     // let audit_join_record: AuditJoin = AuditJoin {
-    //     //     owner: puzzle_issuer,
-    //     //     joiner: self.signer,
-    //     //     amount: piece_record_one.amount + piece_record_two.amount,
-    //     //     ix: 32u32,
-    //     // };
-
-    //     return (joined_piece_record);
-    // }
-
-    transition transfer_private (sender: Piece, receiver: address, amount: u8) -> (Piece, Piece) {
-        // set puzzle issuing address as issuer:
-        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
-        let difference: u8 = sender.amount - amount;
-
-        let remaining: Piece = Piece {
-            owner: sender.owner,
-            amount: difference,
-        };
-
-        let transferred: Piece = Piece {
-            owner: receiver,
-            amount: amount,
-        };
-
-        // audit record for issuer to know holders
-        // let audit_record: AuditTransfer = AuditTransfer {
-        //     owner: puzzle_issuer,
-        //     sender: sender.owner,
-        //     receiver: receiver,
-        //     amount: amount,
-        //     ix: 2u32,
-        // };
-
-        return (remaining, transferred);
-
+        return minted_puzzle_pieces;
     }
 
     // transferring pieces into multisig for a 1v1 game between a challenger and an opponent
@@ -308,9 +127,9 @@ program puzzle_pieces_v016.aleo {
     // opponent can convert two staked puzzles pieces into a joint-stake
     // once challenger reveals answer, joint-stake is converted to full amount of pieces & sent to winner
     //
-    // Exit states exist such that
-    // challenger or opponent can retrieve their respective stake before locked in joint-stake
-    // if challenger never reveals answer, after time T then joint-stake is awarded to opponent (ie an auto win)
+    // Exit states exist such that:
+    //   - challenger or opponent can retrieve their respective stake before locked in joint-stake
+    //   - if challenger never reveals answer, after time T then joint-stake is awarded to opponent (ie an auto win)
     //
     // Winner gets all the puzzle pieces.
     // called by each individual key
@@ -320,22 +139,14 @@ program puzzle_pieces_v016.aleo {
         challenger: address,
         opponent: address,
         game_multisig: address,
-        amount: u8,
+        amount: u64,
         message_1: field,
         message_2: field,
         message_3: field,
         message_4: field,
         message_5: field,
         sig: signature
-    ) -> (PieceClaim, PieceStake, ClaimSignature, Piece)
-    {
-        // set puzzle issuing address as issuer:
-        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
-        // ownership checks on sender == self.caller cant be done until Leo is updated
-        // can't use self.caller or self.signer until leo fixed
-        // assert_eq(piece_token.owner, sender);
-
+    ) -> (PieceClaim, PieceStake, ClaimSignature, Piece) {
         // check that sender is either challenger or opponent
         if sender == challenger {
             assert_eq(sender, challenger);
@@ -383,17 +194,6 @@ program puzzle_pieces_v016.aleo {
             amount: piece_token.amount - amount,
         };
 
-        // record to asset issuer to keep tabs on activity
-        // let audit_record: AuditStakeIn = AuditStakeIn {
-        //     owner: puzzle_issuer,
-        //     staker: piece_token.owner,
-        //     amount_in: amount,
-        //     challenger: challenger,
-        //     opponent: opponent,
-        //     game_multisig: game_multisig,
-        //     ix: 4u32,
-        // };
-
         return (piece_claim_record, receiver_new_record, sender_claim_sig_record, sender_change_record);
 
     }
@@ -408,9 +208,6 @@ program puzzle_pieces_v016.aleo {
         piece_claim: PieceClaim,
         sig: signature
     ) -> (Piece) {
-        // set puzzle issuing address as issuer:
-        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
         // 1. Check Claim & Stake are from same game_multisig
         // assert_eq(piece_stake.owner, piece_claim.owner);
 
@@ -428,8 +225,6 @@ program puzzle_pieces_v016.aleo {
             field_5: piece_claim.message_5
         };
 
-
-
         let signature_check: bool = true;
         let is_valid_sig: bool = sig.verify(piece_claim.claimer, msg);
         // assert_eq(signature_check,is_valid_sig);
@@ -438,16 +233,6 @@ program puzzle_pieces_v016.aleo {
             owner: piece_claim.claimer,
             amount: piece_claim.amount,
         };
-
-        // let audit_record: AuditStakeOut = AuditStakeOut {
-        //     owner: puzzle_issuer,
-        //     staker: piece_claim.claimer,
-        //     amount_in: piece_claim.amount,
-        //     challenger: piece_claim.challenger,
-        //     opponent: piece_claim.opponent,
-        //     game_multisig: piece_claim.owner,
-        //     ix: 5u32
-        // };
 
         return (piece_oot);
     }
@@ -462,8 +247,6 @@ program puzzle_pieces_v016.aleo {
         piece_claim_opponent: PieceClaim,
         block_ht: u32 //good actor uses our api endpoint on FE to get blockheight and use as inputs
     ) -> (PieceJointStake, JointPieceTimeClaim, JointPieceState) {
-        // set puzzle issuing address as issuer:
-        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
         // 0. Add a self.signer check against
         let owner: address = piece_stake_challenger.owner;
@@ -475,7 +258,7 @@ program puzzle_pieces_v016.aleo {
         // assert_eq(piece_claim_opponent.owner,owner);
 
         // 2. Check that the game state is the same for all
-        let amount: u8 = piece_stake_challenger.amount;
+        let amount: u64 = piece_stake_challenger.amount;
         // assert_eq(piece_claim_challenger.amount,amount);
         // assert_eq(piece_stake_opponent.amount,amount);
         // assert_eq(piece_claim_opponent.amount,amount);
@@ -536,19 +319,6 @@ program puzzle_pieces_v016.aleo {
             block_ht: block_ht,
         };
 
-        // send to issuer for analytics
-        // let audit_record: AuditJointStake = AuditJointStake {
-        //     owner: opponent,
-        //     amount: amount + amount,
-        //     time_claimer_address: opponent,
-        //     state_updater_address: challenger,
-        //     block_ht: block_ht,
-        //     challenger: challenger,
-        //     opponent: opponent,
-        //     game_multisig: owner,
-        //     ix: 11u32,
-        // };
-
         return (piece_joint_stake, joint_piece_time_claim, joint_piece_state );
     }
 
@@ -564,18 +334,15 @@ program puzzle_pieces_v016.aleo {
         sig: ClaimSignature,
         winner: address
     ) -> (JointPieceWinner) {
-        // set puzzle issuing address as issuer:
-        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
         // 0. Check that owner matches
         // assert_eq(joint_piece_state.owner, sig.owner);
 
         // 1. Check that owner is the one allowed to udpate state
-        // assert_eq(joint_piece_state.state_updater_address,sig.owner);
-        // assert_eq(joint_piece_state.state_updater_address,sig.challenger);
+        // assert_eq(joint_piece_state.state_updater_address, sig.owner);
+        // assert_eq(joint_piece_state.state_updater_address, sig.challenger);
 
         // 2. Check the rest of the details of the game
-        // assert_eq(joint_piece_state.amount, sig.amount + sig.amount );
+        // assert_eq(joint_piece_state.amount, sig.amount + sig.amount);
         // assert_eq(joint_piece_state.opponent,sig.opponent);
         // assert_eq(joint_piece_state.game_multisig,joint_piece_state.game_multisig);
 
@@ -620,19 +387,6 @@ program puzzle_pieces_v016.aleo {
             winner: winner,
         };
 
-        // for the piece keepers
-        // let audit_record: AuditJointPieceWinner = AuditJointPieceWinner {
-        //     owner: joint_piece_state.game_multisig,
-        //     amount: joint_piece_state.amount,
-        //     time_claimer_address: joint_piece_state.time_claimer_address,
-        //     state_updater_address: joint_piece_state.state_updater_address,
-        //     challenger: joint_piece_state.challenger,
-        //     opponent: joint_piece_state.opponent,
-        //     game_multisig: joint_piece_state.game_multisig,
-        //     winner: winner,
-        //     ix: 13u32,
-        // };
-
         return (joint_piece_winner);
     }
 
@@ -643,19 +397,16 @@ program puzzle_pieces_v016.aleo {
         piece_joint_stake: PieceJointStake,
         joint_piece_time_claim: JointPieceTimeClaim,
     ) -> (Piece) {
-        // set puzzle issuing address as issuer:
-        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
         // 0. Add a self.signer check against
         let game_multisig: address = joint_piece_winner.owner;
         // assert_eq(owner, self.signer);
 
         // 1. Check that all are from the same multisig
-        // assert_eq(piece_joint_stake.owner,game_multisig);
-        // assert_eq(joint_piece_time_claim.owner,game_multisig);
+        // assert_eq(piece_joint_stake.owner, game_multisig);
+        // assert_eq(joint_piece_time_claim.owner, game_multisig);
 
         // 2. Check that the game state is the same for all
-        let amount: u8 = joint_piece_winner.amount;
+        let amount: u64 = joint_piece_winner.amount;
         // assert_eq(piece_joint_stake.amount,amount);
         // assert_eq(joint_piece_time_claim.amount,amount);
 
@@ -680,23 +431,6 @@ program puzzle_pieces_v016.aleo {
             amount: amount,
         };
 
-        // let audit_record: AuditTransferToWinner = AuditTransferToWinner {
-        //     owner: puzzle_issuer,
-        //     challenger: challenger,
-        //     opponent: opponent,
-        //     game_multisig: game_multisig,
-        //     receiver: winner,
-        //     amount: amount,
-        //     ix: 14u32
-        // };
-
-        // let audit_piece_owner: AuditPieceOwner = AuditPieceOwner {
-        //     owner: puzzle_issuer,
-        //     piece_holder: winner,
-        //     amount: amount,
-        //     ix: 15u32
-        // };
-
         return (piece_to_winner);
     }
 
@@ -710,8 +444,6 @@ program puzzle_pieces_v016.aleo {
     // If this is called -- we are going to be stranded with a ClaimSignature & JointPieceState on the above
     //
     // This function is called with the multisig key
-    //
-    //
     transition joint_timeout_to_opponent (
         piece_joint_stake: PieceJointStake,
         joint_piece_time_claim: JointPieceTimeClaim,
@@ -726,7 +458,7 @@ program puzzle_pieces_v016.aleo {
         assert_eq(piece_joint_stake.owner, game_multisig);
 
         // 2. Check that the game state is the same for all
-        let amount: u8 = joint_piece_time_claim.amount;
+        let amount: u64 = joint_piece_time_claim.amount;
         assert_eq(piece_joint_stake.amount, amount);
 
         // 2. Check that the game state is the same for all
@@ -755,16 +487,6 @@ program puzzle_pieces_v016.aleo {
             owner: opponent,
             amount: amount,
         };
-
-        // let audit_record: AuditTransferToWinner = AuditTransferToWinner {
-        //     owner: puzzle_issuer,
-        //     challenger: challenger,
-        //     opponent: opponent,
-        //     game_multisig: game_multisig,
-        //     receiver: opponent,
-        //     amount: amount,
-        //     ix: 14u32
-        // };
 
         return (piece_to_winner);
     }

@@ -16,7 +16,7 @@
 
 # Swap in the private key of the challenger -- Alice.
 echo "
-NETWORK=testnet3
+NETWORK=testnet
 PRIVATE_KEY=APrivateKey1zkp9p8bttYsy3EuwiGrb4PXmrtjzZkpGvBCGVCgvpcwVjUV
 " > .env
 
@@ -72,7 +72,7 @@ leo run stake_transfer_in "{
 
 # Swap in the private key of the opponent - Bob.
 echo "
-NETWORK=testnet3
+NETWORK=testnet
 PRIVATE_KEY=APrivateKey1zkpALDDK4zAigs387emvnuxWXvGjFw2AmmYcQH7TBt8nhof
 " > .env
 
@@ -99,7 +99,7 @@ leo run stake_transfer_in "{
 # Swap in the private key of the multisig.
 
 echo "
-NETWORK=testnet3
+NETWORK=testnet
 PRIVATE_KEY=APrivateKey1zkp8pmTMT4FxG5qXZ9McEYDdY1G6YokY1BYzwoxTYJEKubF
 " > .env
 
@@ -261,7 +261,7 @@ leo run transfer_stakes_to_joint "{
 
 # Swap in the private key of the challenger -- Alice.
 echo "
-NETWORK=testnet3
+NETWORK=testnet
 PRIVATE_KEY=APrivateKey1zkp9p8bttYsy3EuwiGrb4PXmrtjzZkpGvBCGVCgvpcwVjUV
 " > .env
 
@@ -327,7 +327,7 @@ leo run joint_stake_state_update "{
 # Swap in the private key of the multisig.
 
 echo "
-NETWORK=testnet3
+NETWORK=testnet
 PRIVATE_KEY=APrivateKey1zkp8pmTMT4FxG5qXZ9McEYDdY1G6YokY1BYzwoxTYJEKubF
 " > .env
 
