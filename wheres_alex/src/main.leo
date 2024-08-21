@@ -1,7 +1,24 @@
-import puzzle_pieces_v016.aleo;
-import multiparty_pvp_utils_v015.aleo;
+import puzzle_multiparty_coin_v001.aleo;
 
 program wheres_alex_v019.aleo {
+    // owned by challenger
+    record Answer {
+        owner: address,
+        challenger_address: address, // needed if owner == challenger ?
+        opponent_address: address,
+        game_multisig: address,
+        amount: u64,
+        nonce: field,
+        answer: u8
+    }
+
+    // owned by opponent
+    record Key {
+        owner: address,
+        seed: field,
+        game_multisig: address,
+    }
+
     record Game {
         owner: address,
         challenger_commit: field,
@@ -30,16 +47,14 @@ program wheres_alex_v019.aleo {
         // true -> your turn or ms turn
         // false -> awaiting other party turn
 
-    // sent to opponent on propose game for FE/client detection.
-    // consumed in match wager
-    record GameReqNotification {
-        owner: address, //opponent
+    // sent to opponent on propose_game
+    // consumed in submit_wager
+    record Proposal {
+        owner: address, // opponent
         game_multisig: address,
         game_state: u8,
-        your_turn: bool,
         total_pot: u64,
-        challenger_address: address,
-        opponent_address: address,
+        challenger_address: address
     }
 
     // sent to challenger on propose game for FE/client detection.
@@ -139,35 +154,34 @@ program wheres_alex_v019.aleo {
         // loser: address,
     }
 
+    // called by challenger
     transition propose_game (
         // puzzle_pieces.stake_transfer_in() data
-        wager_record: puzzle_pieces_v016.aleo/Piece,
-        challenger_wager_amount: u64,
-        sender: address, // Challenger address proposing game
+        wager: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        wager_amount: u64,
         challenger: address,
         opponent: address,
         game_multisig: address,
-        challenger_message_1: field, // from output of useSignature
-        challenger_message_2: field,
-        challenger_message_3: field,
-        challenger_message_4: field,
-        challenger_message_5: field,
-        challenger_sig: signature, // from output of useSignature
+        message_1: field, // from output of useSignature
+        message_2: field,
+        message_3: field,
+        message_4: field,
+        message_5: field,
+        sig: signature, // from output of useSignature
         // multiparty_pvp_utils data
-        challenger_nonce: field,
-        challenger_answer: u8,
+        nonce: field,
+        answer: u8,
         game_multisig_seed: field, // game_multisig seed to send to user
         // wheres_alex data
     ) -> (
-        puzzle_pieces_v016.aleo/PieceClaim,
-        puzzle_pieces_v016.aleo/PieceStake,
-        puzzle_pieces_v016.aleo/ClaimSignature,
-        puzzle_pieces_v016.aleo/Piece,
-        multiparty_pvp_utils_v015.aleo/Answer,
-        multiparty_pvp_utils_v015.aleo/Key,
+        puzzle_multiparty_coin_v001.aleo/StakeClaim,
+        puzzle_multiparty_coin_v001.aleo/Stake,
+        puzzle_multiparty_coin_v001.aleo/ClaimSignature,
+        puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        Answer,
+        Key,
         Game,
-        GameReqNotification,
-        // WaitingAcceptanceNotification,
+        Proposal,
     ) {
         // assert contracts can't call this
         assert_eq(self.caller, self.signer);
@@ -175,104 +189,100 @@ program wheres_alex_v019.aleo {
         // random edge case, maybe unnecessary
         assert_neq(game_multisig, opponent);
 
-        // assert that player 1s answer is either "in weeds" or "behind building"
-        assert(challenger_answer == 0u8 || challenger_answer == 1u8);
+        // assert that the answer is valid
+        assert(answer == 0u8 || answer == 1u8);
 
-        // hash the answer and nonce
-        let challenger_commit: field = BHP256::commit_to_field(challenger_answer, challenger_nonce as scalar);
+        // commit to answer by hashing the answer and nonce
+        let answer_commitment: field = BHP256::commit_to_field(answer, nonce as scalar);
 
         // assert that the wager amount > 0 and wager record has at least that much
-        assert((challenger_wager_amount > 0u64) && (wager_record.amount >= challenger_wager_amount));
+        assert((wager_amount > 0u64) && (wager.amount >= wager_amount));
 
+        // transfer wager to multisig
         let (
-            piece_claim_challenger,
-            piece_stake_challenger,
-            claim_signature_challenger,
-            piece_change_challenger,
+            piece_claim,
+            piece_stake,
+            claim_signature,
+            piece_change,
         ): (
-            puzzle_pieces_v016.aleo/PieceClaim,
-            puzzle_pieces_v016.aleo/PieceStake,
-            puzzle_pieces_v016.aleo/ClaimSignature,
-            puzzle_pieces_v016.aleo/Piece,
-        ) = puzzle_pieces_v016.aleo/stake_transfer_in(
-            wager_record,
-            sender,
+            puzzle_multiparty_coin_v001.aleo/StakeClaim,
+            puzzle_multiparty_coin_v001.aleo/Stake,
+            puzzle_multiparty_coin_v001.aleo/ClaimSignature,
+            puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        ) = puzzle_multiparty_coin_v001.aleo/stake_transfer_in(
+            wager,
+            wager_amount,
             challenger,
             opponent,
             game_multisig,
-            challenger_wager_amount,
-            challenger_message_1,
-            challenger_message_2,
-            challenger_message_3,
-            challenger_message_4,
-            challenger_message_5,
-            challenger_sig
+            message_1,
+            message_2,
+            message_3,
+            message_4,
+            message_5,
+            sig
         );
 
-        let key_record: multiparty_pvp_utils_v015.aleo/Key = multiparty_pvp_utils_v015.aleo/mint_multisig_key(
-          game_multisig_seed,
-          challenger_wager_amount,
-          challenger,
-          opponent,
-          game_multisig
-        );
+        // let key: multiparty_pvp_utils_v015.aleo/Key = 
+        //   multiparty_pvp_utils_v015.aleo/mint_multisig_key(
+        //     game_multisig_seed,
+        //     opponent,
+        //     game_multisig
+        //   );
+        let key: Key = Key {
+            owner: opponent,
+            seed: game_multisig_seed,
+            game_multisig: game_multisig,
+        };
 
-        let game_request_notification_record: GameReqNotification = GameReqNotification {
+        let proposal: Proposal = Proposal {
             owner: opponent,
             game_multisig: game_multisig,
             game_state: 1u8,
-            your_turn: true,
-            total_pot: challenger_wager_amount + challenger_wager_amount,
+            total_pot: wager_amount + wager_amount,
             challenger_address: challenger,
-            opponent_address: opponent,
         };
 
-        // let game_waiting_acceptance_notification_record: WaitingAcceptanceNotification = WaitingAcceptanceNotification {
-        //     owner: challenger, //challenger
-        //     game_multisig: game_multisig,
-        //     game_state: 1u8,
-        //     your_turn: false,
-        //     total_pot: challenger_wager_amount + challenger_wager_amount,
-        //     challenger_address: challenger,
-        //     opponent_address: opponent,
-        // };
-
-        let game_record: Game = Game {
+        let game: Game = Game {
             owner: game_multisig,
-            challenger_commit: challenger_commit,
+            challenger_commit: answer_commitment,
             opponent_answer: 0u8, // placeholder until opponent answer in accept_game
-            total_pot: challenger_wager_amount + challenger_wager_amount,
+            total_pot: wager_amount + wager_amount,
             challenger_address: challenger,
             opponent_address: opponent,
             game_multisig: game_multisig,
             game_state: 1u8,
         };
 
-        let (challenger_answer_record): multiparty_pvp_utils_v015.aleo/Answer = multiparty_pvp_utils_v015.aleo/mint_answer(
-            challenger,
-            opponent,
-            game_multisig,
-            challenger_wager_amount,
-            challenger_nonce,
-            challenger_answer,
-            challenger_message_1,
-            challenger_message_2,
-            challenger_message_3,
-            challenger_message_4,
-            challenger_message_5,
-            challenger_sig
-        );
+        // let (challenger_answer): multiparty_pvp_utils_v015.aleo/Answer = 
+        //   multiparty_pvp_utils_v015.aleo/mint_answer(
+        //       challenger,
+        //       opponent,
+        //       game_multisig,
+        //       wager_amount,
+        //       nonce,
+        //       answer,
+        //   );
+
+        let answer_: Answer = Answer {
+            owner: challenger,
+            challenger_address: challenger,
+            opponent_address: opponent,
+            game_multisig: game_multisig,
+            amount: wager_amount,
+            nonce: nonce,
+            answer: answer,
+        };
 
         return (
-            piece_claim_challenger,
-            piece_stake_challenger,
-            claim_signature_challenger,
-            piece_change_challenger,
-            challenger_answer_record,
-            key_record,
-            game_record,
-            game_request_notification_record,
-            // game_waiting_acceptance_notification_record,
+            piece_claim,
+            piece_stake,
+            claim_signature,
+            piece_change,
+            answer_,
+            key,
+            game,
+            proposal,
         );
     }
 
@@ -281,12 +291,12 @@ program wheres_alex_v019.aleo {
     // transition challenger_renege_stake
     // (
     //     waiting_accept_game_notification: WaitingAcceptanceNotification,
-    //     piece_stake_challenger: puzzle_pieces_v016.aleo/PieceStake,
-    //     piece_claim_challenger: puzzle_pieces_v016.aleo/PieceClaim,
+    //     piece_stake_challenger: puzzle_multiparty_coin_v001.aleo/Stake,
+    //     piece_claim_challenger: puzzle_multiparty_coin_v001.aleo/StakeClaim,
     //     challenger_sig: signature,
     // ) -> (
-    //     puzzle_pieces_v016.aleo/Piece,
-    //     // puzzle_pieces_v016.aleo/AuditStakeOut,
+    //     puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+    //     // puzzle_multiparty_coin_v001.aleo/AuditStakeOut,
     //     StakeRenegedNotification,
     //     StakeRenegedNotification,
     //     )
@@ -294,7 +304,7 @@ program wheres_alex_v019.aleo {
     //     // assert contracts can't call this
     //     assert_eq(self.caller, self.signer);
 
-    //     let (piece_record): puzzle_pieces_v016.aleo/Piece = puzzle_pieces_v016.aleo/stake_transfer_out(piece_stake_challenger, piece_claim_challenger, challenger_sig);
+    //     let (piece_record): puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_multiparty_coin_v001.aleo/stake_transfer_out(piece_stake_challenger, piece_claim_challenger, challenger_sig);
 
     //     let notify_challenger_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
     //         owner: waiting_accept_game_notification.challenger_address, //opponent
@@ -323,92 +333,56 @@ program wheres_alex_v019.aleo {
 
     // }
 
+    // called by opponent
     transition submit_wager (
-        opponent_wager_record: puzzle_pieces_v016.aleo/Piece,
-        key_record: multiparty_pvp_utils_v015.aleo/Key,
-        game_req_notification: GameReqNotification,
-        opponent_message_1: field, //from output of useSignature
-        opponent_message_2: field,
-        opponent_message_3: field,
-        opponent_message_4: field,
-        opponent_message_5: field,
-        opponent_sig: signature, //from output of useSignature
+        wager: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        key: Key,
+        proposal: Proposal,
+        message_1: field,
+        message_2: field,
+        message_3: field,
+        message_4: field,
+        message_5: field,
+        sig: signature,
     ) -> (
-        puzzle_pieces_v016.aleo/PieceClaim,
-        puzzle_pieces_v016.aleo/PieceStake,
-        puzzle_pieces_v016.aleo/ClaimSignature,
-        puzzle_pieces_v016.aleo/Piece,
-        // puzzle_pieces_v016.aleo/AuditStakeIn,
-        // ChallengerWagerNotification,
-        // OpponentWagerNotification,
+        puzzle_multiparty_coin_v001.aleo/StakeClaim,
+        puzzle_multiparty_coin_v001.aleo/Stake,
+        puzzle_multiparty_coin_v001.aleo/ClaimSignature,
+        puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
     )
     {
-
-        // Logic Checks
-        // limit calls to only users
-        assert_eq(self.caller, self.signer);
-
-        // assert that the wager amount > 0 and wager inside credit == wager amt passed
-        assert(opponent_wager_record.amount > 0u64);
-        // assert that the wager record has >= total pot / 2u8
-        assert(opponent_wager_record.amount >= game_req_notification.total_pot / 2u64);
+        // assert that the wager record has enough to match the proposal
+        assert(wager.amount >= proposal.total_pot / 2u64);
 
         let (
             piece_claim_opponent,
             piece_stake_opponent,
             claim_signature_opponent,
             piece_change_opponent,
-            // audit_stake_in_record,
         ): (
-            puzzle_pieces_v016.aleo/PieceClaim,
-            puzzle_pieces_v016.aleo/PieceStake,
-            puzzle_pieces_v016.aleo/ClaimSignature,
-            puzzle_pieces_v016.aleo/Piece,
-            // puzzle_pieces_v016.aleo/AuditStakeIn
-        ) = puzzle_pieces_v016.aleo/stake_transfer_in(
-            opponent_wager_record,
-            game_req_notification.opponent_address, // sender
-            game_req_notification.challenger_address, // challenger
-            game_req_notification.opponent_address,
-            game_req_notification.game_multisig,
-            game_req_notification.total_pot / 2u64, // divide total pot by 2
-            opponent_message_1,
-            opponent_message_2,
-            opponent_message_3,
-            opponent_message_4,
-            opponent_message_5,
-            opponent_sig,
+            puzzle_multiparty_coin_v001.aleo/StakeClaim,
+            puzzle_multiparty_coin_v001.aleo/Stake,
+            puzzle_multiparty_coin_v001.aleo/ClaimSignature,
+            puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        ) = puzzle_multiparty_coin_v001.aleo/stake_transfer_in(
+            wager,
+            proposal.total_pot / 2u64, // amount = half total_pot
+            proposal.challenger_address,
+            self.signer,
+            proposal.game_multisig,
+            message_1,
+            message_2,
+            message_3,
+            message_4,
+            message_5,
+            sig,
         );
-
-        // let challenger_submitted_wager_notification_record: ChallengerWagerNotification = ChallengerWagerNotification {
-        //     owner: game_req_notification.challenger_address,
-        //     game_multisig: game_req_notification.game_multisig,
-        //     game_state: 2field,
-        //     your_turn: false,
-        //     total_pot: game_req_notification.total_pot,
-        //     challenger_address: game_req_notification.challenger_address,
-        //     opponent_address: game_req_notification.opponent_address,
-
-        // };
-
-        // let opponent_submitted_wager_notification_record: OpponentWagerNotification = OpponentWagerNotification {
-        //     owner: game_req_notification.opponent_address,
-        //     game_multisig: game_req_notification.game_multisig,
-        //     game_state: 2field,
-        //     your_turn: true,
-        //     total_pot: game_req_notification.total_pot,
-        //     challenger_address: game_req_notification.challenger_address,
-        //     opponent_address: game_req_notification.opponent_address,
-        // };
 
         return (
             piece_claim_opponent,
             piece_stake_opponent,
             claim_signature_opponent,
             piece_change_opponent,
-            // audit_stake_in_record,
-            // challenger_submitted_wager_notification_record,
-            // opponent_submitted_wager_notification_record,
         );
     }
 
@@ -418,12 +392,12 @@ program wheres_alex_v019.aleo {
     // transition opponent_renege_stake
     // (
     //     waiting_accept_game_notification: WaitingAcceptanceNotification,
-    //     piece_stake_opponent: puzzle_pieces_v016.aleo/PieceStake,
-    //     piece_claim_opponent: puzzle_pieces_v016.aleo/PieceClaim,
+    //     piece_stake_opponent: puzzle_multiparty_coin_v001.aleo/Stake,
+    //     piece_claim_opponent: puzzle_multiparty_coin_v001.aleo/StakeClaim,
     //     opponent_sig: signature,
     // ) -> (
-    //     puzzle_pieces_v016.aleo/Piece,
-    //     // puzzle_pieces_v016.aleo/AuditStakeOut,
+    //     puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+    //     // puzzle_multiparty_coin_v001.aleo/AuditStakeOut,
     //     StakeRenegedNotification,
     //     StakeRenegedNotification,
     //     )
@@ -431,7 +405,7 @@ program wheres_alex_v019.aleo {
     //     // assert contracts can't call this
     //     assert_eq(self.caller, self.signer);
 
-    //     let (piece_record): puzzle_pieces_v016.aleo/Piece = puzzle_pieces_v016.aleo/stake_transfer_out(piece_stake_opponent, piece_claim_opponent, opponent_sig);
+    //     let (piece_record): puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_multiparty_coin_v001.aleo/stake_transfer_out(piece_stake_opponent, piece_claim_opponent, opponent_sig);
 
     //     let notify_challenger_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
     //         owner: waiting_accept_game_notification.challenger_address, //opponent
@@ -460,31 +434,24 @@ program wheres_alex_v019.aleo {
 
     // }
 
-    // called by ms key after wager is confirmed on network
+    // called by opponent (via ms key) after wager is confirmed on network
     transition accept_game
     (
-        game_record: Game,
+        game: Game,
         opponent_answer: u8,
-        piece_stake_challenger: puzzle_pieces_v016.aleo/PieceStake,
-        piece_claim_challenger: puzzle_pieces_v016.aleo/PieceClaim,
-        piece_stake_opponent: puzzle_pieces_v016.aleo/PieceStake,
-        piece_claim_opponent: puzzle_pieces_v016.aleo/PieceClaim,
+        stake_challenger: puzzle_multiparty_coin_v001.aleo/Stake,
+        claim_challenger: puzzle_multiparty_coin_v001.aleo/StakeClaim,
+        stake_opponent: puzzle_multiparty_coin_v001.aleo/Stake,
+        claim_opponent: puzzle_multiparty_coin_v001.aleo/StakeClaim,
         block_ht: u32,
     ) -> (
-        puzzle_pieces_v016.aleo/PieceJointStake,
-        puzzle_pieces_v016.aleo/JointPieceTimeClaim,
-        puzzle_pieces_v016.aleo/JointPieceState,
-        // WaitingRevealNotification,
+        puzzle_multiparty_coin_v001.aleo/JointStake,
+        puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
+        puzzle_multiparty_coin_v001.aleo/JointState,
         RevealAnswerNotification,
         Game,
     )
     {
-        // assert that the game address/multiisg is calling this
-        assert_eq(game_record.owner, self.signer);
-
-        // assert contracts can't call this
-        assert_eq(self.caller, self.signer);
-
         // assert that opponent's answer is valid
         assert(opponent_answer == 0u8 || opponent_answer == 1u8);
 
@@ -493,48 +460,39 @@ program wheres_alex_v019.aleo {
             joint_piece_time_claim,
             joint_piece_state,
         ): (
-            puzzle_pieces_v016.aleo/PieceJointStake,
-            puzzle_pieces_v016.aleo/JointPieceTimeClaim,
-            puzzle_pieces_v016.aleo/JointPieceState,
-        ) = puzzle_pieces_v016.aleo/transfer_stakes_to_joint(
-            piece_stake_challenger,
-            piece_claim_challenger,
-            piece_stake_opponent,
-            piece_claim_opponent,
+            puzzle_multiparty_coin_v001.aleo/JointStake,
+            puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
+            puzzle_multiparty_coin_v001.aleo/JointState,
+        ) = puzzle_multiparty_coin_v001.aleo/join_stakes(
+            stake_challenger,
+            claim_challenger,
+            stake_opponent,
+            claim_opponent,
             block_ht,
         );
 
-        // sent to opponent on accept_game
-        // let waiting_reveal_answer_notifcation_record: WaitingRevealNotification = WaitingRevealNotification {
-        //     owner: game_record.opponent_address,
-        //     game_multisig: game_record.owner,
-        //     game_state: 3field,
-        //     your_turn: false,
-        //     total_pot: game_record.total_pot,
-        //     // challenger_address: game_record.challenger_address,
-        //     // opponent_address: game_record.opponent_address,
-        // };
-
         // sent to challenger on accept_game
-        let reveal_answer_notification_record: RevealAnswerNotification = RevealAnswerNotification {
-            owner: game_record.challenger_address,
-            game_multisig: game_record.owner,
+        let reveal_answer_notification: RevealAnswerNotification = RevealAnswerNotification {
+            owner: game.challenger_address,
+            game_multisig: game.owner,
             game_state: 3u8,
             your_turn: true,
-            total_pot: game_record.total_pot,
+            total_pot: game.total_pot,
             // challenger_address: game_record.challenger_address,
             // opponent_address: game_record.opponent_address,
             opponent_answer: opponent_answer,
         };
 
-        let updated_game_record: Game = Game {
-            owner: game_record.owner,
-            challenger_commit: game_record.challenger_commit,
+        // question -- is Game ever _not_ owned by the multisig?
+        //   if so, can remove game_multisig?
+        let updated_game: Game = Game {
+            owner: game.owner,
+            challenger_commit: game.challenger_commit,
             opponent_answer: opponent_answer,
-            total_pot: game_record.total_pot,
-            challenger_address: game_record.challenger_address,
-            opponent_address: game_record.opponent_address,
-            game_multisig: game_record.game_multisig,
+            total_pot: game.total_pot,
+            challenger_address: game.challenger_address,
+            opponent_address: game.opponent_address,
+            game_multisig: game.game_multisig,
             game_state: 3u8,
         };
 
@@ -542,9 +500,8 @@ program wheres_alex_v019.aleo {
             piece_joint_stake,
             joint_piece_time_claim,
             joint_piece_state,
-            // waiting_reveal_answer_notifcation_record,
-            reveal_answer_notification_record,
-            updated_game_record,
+            reveal_answer_notification,
+            updated_game,
         );
     }
 
@@ -570,73 +527,82 @@ program wheres_alex_v019.aleo {
     transition reveal_answer_game
     (
         reveal_answer_notification_record: RevealAnswerNotification,
-        challenger_answer_record: multiparty_pvp_utils_v015.aleo/Answer,
-        joint_piece_state: puzzle_pieces_v016.aleo/JointPieceState,
-        challenger_claim_signature: puzzle_pieces_v016.aleo/ClaimSignature,
+        challenger_answer: Answer,
+        joint_state: puzzle_multiparty_coin_v001.aleo/JointState,
+        challenger_claim_signature: puzzle_multiparty_coin_v001.aleo/ClaimSignature,
     ) -> (
-        multiparty_pvp_utils_v015.aleo/Answer,
-        puzzle_pieces_v016.aleo/JointPieceWinner,
+        Answer,
+        puzzle_multiparty_coin_v001.aleo/JointWinner,
         GameFinishReqNotification,
         GameFinishReqNotification,
     )
     {
         // assert that the correct state updater address is the challenger and the challenger
         // is invoking this
-        assert_eq(joint_piece_state.state_updater_address, self.signer);
+        assert_eq(joint_state.state_updater_address, self.signer);
 
         // assert contracts can't call this
         assert_eq(self.caller, self.signer);
 
         // determine winner! If opponent correctly picked where the challenger hid alex, the opponent wins otherwise the challenger wins
-        let winner_address: address = reveal_answer_notification_record.opponent_answer == challenger_answer_record.answer ? challenger_answer_record.opponent_address : challenger_answer_record.challenger_address;
-        let loser_address: address = winner_address == challenger_answer_record.challenger_address ? challenger_answer_record.opponent_address : challenger_answer_record.challenger_address;
+        let winner_address: address = reveal_answer_notification_record.opponent_answer == challenger_answer.answer ? challenger_answer.opponent_address : challenger_answer.challenger_address;
+        let loser_address: address = winner_address == challenger_answer.challenger_address ? challenger_answer.opponent_address : challenger_answer.challenger_address;
         // let challenger_sig: signature = challenger_claim_signature.sig;
 
         // retrieve revealedanswer record
-        let (revealed_answer_record): multiparty_pvp_utils_v015.aleo/Answer = multiparty_pvp_utils_v015.aleo/reveal_answer(challenger_answer_record);
+        // let (revealed_answer_record): multiparty_pvp_utils_v015.aleo/Answer = multiparty_pvp_utils_v015.aleo/reveal_answer(challenger_answer_record);
+        let revealed_answer: Answer = Answer {
+            owner: challenger_answer.game_multisig,
+            challenger_address: challenger_answer.challenger_address,
+            opponent_address: challenger_answer.opponent_address,
+            game_multisig: challenger_answer.game_multisig,
+            amount: challenger_answer.amount,
+            nonce: challenger_answer.nonce,
+            answer: challenger_answer.answer,
+        };
 
-        let (joint_piece_winner): puzzle_pieces_v016.aleo/JointPieceWinner = puzzle_pieces_v016.aleo/joint_stake_state_update(joint_piece_state, challenger_claim_signature, winner_address);
+        let (joint_winner): puzzle_multiparty_coin_v001.aleo/JointWinner = puzzle_multiparty_coin_v001.aleo/joint_stake_state_update(joint_state, challenger_claim_signature, winner_address);
 
         let game_finish_req_notification_record_opponent: GameFinishReqNotification = GameFinishReqNotification {
-            owner: challenger_answer_record.opponent_address,
-            game_multisig: challenger_answer_record.game_multisig,
+            owner: challenger_answer.opponent_address,
+            game_multisig: challenger_answer.game_multisig,
             game_state: 4u8,
             your_turn: true,
-            total_pot: joint_piece_state.amount,
+            total_pot: joint_state.amount,
             // challenger_address: challenger_answer_record.challenger_address,
             // opponent_address: challenger_answer_record.opponent_address,
-            challenger_answer: challenger_answer_record.answer,
+            challenger_answer: challenger_answer.answer,
             opponent_answer: reveal_answer_notification_record.opponent_answer,
             // winner: winner_address,
             // loser: loser_address,
         };
 
         let game_finish_req_notification_record_challenger: GameFinishReqNotification = GameFinishReqNotification{
-            owner: challenger_answer_record.challenger_address,
-            game_multisig: challenger_answer_record.game_multisig,
+            owner: challenger_answer.challenger_address,
+            game_multisig: challenger_answer.game_multisig,
             game_state: 4u8,
             your_turn: true,
-            total_pot: joint_piece_state.amount,
+            total_pot: joint_state.amount,
             // challenger_address: challenger_answer_record.challenger_address,
             // opponent_address: challenger_answer_record.opponent_address,
-            challenger_answer: challenger_answer_record.answer,
+            challenger_answer: challenger_answer.answer,
             opponent_answer: reveal_answer_notification_record.opponent_answer,
             // winner: winner_address,
             // loser: loser_address,
         };
 
-        return (revealed_answer_record, joint_piece_winner, game_finish_req_notification_record_opponent, game_finish_req_notification_record_challenger);
+        return (revealed_answer, joint_winner, game_finish_req_notification_record_opponent, game_finish_req_notification_record_challenger);
     }
 
     // called by ms key to finish the game and get the total pot!
     transition finish_game
     (
         game_record: Game,
-        joint_piece_winner: puzzle_pieces_v016.aleo/JointPieceWinner,
-        piece_joint_stake: puzzle_pieces_v016.aleo/PieceJointStake,
-        joint_piece_time_claim: puzzle_pieces_v016.aleo/JointPieceTimeClaim,
+        joint_winner: puzzle_multiparty_coin_v001.aleo/JointWinner,
+        joint_stake: puzzle_multiparty_coin_v001.aleo/JointStake,
+        joint_timeout_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
     ) -> (
-        puzzle_pieces_v016.aleo/Piece,
+        puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
         Game,
         GameFinishedNotification,
         GameFinishedNotification)
@@ -647,12 +613,12 @@ program wheres_alex_v019.aleo {
         // assert contracts can't call this
         assert_eq(self.caller, self.signer);
 
-        let loser_address: address = joint_piece_winner.winner == game_record.challenger_address ? game_record.opponent_address : game_record.challenger_address;
+        let loser_address: address = joint_winner.winner == game_record.challenger_address ? game_record.opponent_address : game_record.challenger_address;
 
-        let (piece_record): puzzle_pieces_v016.aleo/Piece = puzzle_pieces_v016.aleo/joint_stake_transfer_to_winner(
-            joint_piece_winner,
-            piece_joint_stake,
-            joint_piece_time_claim,
+        let (piece_record): puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_multiparty_coin_v001.aleo/joint_stake_transfer_to_winner(
+            joint_winner,
+            joint_stake,
+            joint_timeout_claim,
         );
 
         let updated_game_record: Game = Game {
@@ -696,12 +662,12 @@ program wheres_alex_v019.aleo {
     // called by ms key via opponent to finish the game and get the total pot!
     // transition finish_game_by_timeout(
     //     game_record: Game,
-    //     piece_joint_stake: puzzle_pieces_v016.aleo/PieceJointStake,
-    //     joint_piece_time_claim: puzzle_pieces_v016.aleo/JointPieceTimeClaim,
+    //     piece_joint_stake: puzzle_multiparty_coin_v001.aleo/JointStake,
+    //     joint_piece_time_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
     //     sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
     // ) -> (
-    //     puzzle_pieces_v016.aleo/Piece,
-    //     // puzzle_pieces_v016.aleo/AuditTransferToWinner,
+    //     puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+    //     // puzzle_multiparty_coin_v001.aleo/AuditTransferToWinner,
     //     Game,
     //     GameFinishedNotification,
     //     GameFinishedNotification)
@@ -751,7 +717,7 @@ program wheres_alex_v019.aleo {
     //     };
 
     //     // Payout to winner
-    //     let (piece_record_winner): puzzle_pieces_v016.aleo/Piece = puzzle_pieces_v016.aleo/joint_timeout_to_opponent(piece_joint_stake, joint_piece_time_claim, sig);
+    //     let (piece_record_winner): puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_multiparty_coin_v001.aleo/joint_timeout_to_opponent(piece_joint_stake, joint_piece_time_claim, sig);
 
     //     return (
     //         piece_record_winner,

@@ -78,7 +78,7 @@ Function:
 ```rust
 joint_stake_transfer_to_winner (
   joint_piece_winner: JointPieceWinner,
-  piece_joint_stake: PieceJointStake,
+  piece_joint_stake: JointPieceStake,
   joint_piece_time_claim: JointPieceTimeClaim,
 )
 ```

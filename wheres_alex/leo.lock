@@ -1,0 +1,13 @@
+[[package]]
+name = "puzzle_arcade_coin_v001.aleo"
+location = "local"
+path = "/Users/lucas/code/puzzle/serengeti/wheres_alex/../puzzle_multiparty_coin/../arcade/coin"
+checksum = "afbfa1cd9ebd09b325d3d2dea9178a9dfe91e9e1749f2526d731b54cca93b1ae"
+dependencies = []
+
+[[package]]
+name = "puzzle_multiparty_coin_v001.aleo"
+location = "local"
+path = "/Users/lucas/code/puzzle/serengeti/wheres_alex/../puzzle_multiparty_coin"
+checksum = "ae68be0be14db4c9d71ff8e72b075847ac1d4b2678e81ab98464c6b6fde5d6ed"
+dependencies = ["puzzle_arcade_coin_v001.aleo"]

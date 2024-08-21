@@ -1,4 +1,4 @@
-# multiparty_pvp_utils_v015.aleo
+# puzzle_multiparty_coin_v001.aleo
 
 ## Build Guide
 

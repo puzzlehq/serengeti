@@ -1,4 +1,6 @@
-program puzzle_pieces_v016.aleo {
+import puzzle_arcade_coin_v001.aleo;
+
+program puzzle_multiparty_coin_v001.aleo {
     struct Message {
         field_1: field,
         field_2: field,
@@ -7,14 +9,8 @@ program puzzle_pieces_v016.aleo {
         field_5: field,
     }
 
-    // owned by individual
-    record Piece {
-        owner: address,
-        amount: u64,
-    }
-
     // owned by multisig
-    record PieceStake {
+    record Stake {
         owner: address,
         amount: u64,
         challenger: address,
@@ -23,7 +19,7 @@ program puzzle_pieces_v016.aleo {
     }
 
     // owned by multisig
-    record PieceClaim {
+    record StakeClaim {
         owner: address,
         amount: u64,
         claimer: address,
@@ -47,7 +43,7 @@ program puzzle_pieces_v016.aleo {
     }
 
     // owned by multsig
-    record JointPieceTimeClaim {
+    record JointTimeoutClaim {
         owner: address,
         amount: u64,
         time_claimer_address: address,
@@ -64,7 +60,7 @@ program puzzle_pieces_v016.aleo {
     }
 
     // owned by multisig
-    record PieceJointStake {
+    record JointStake {
         owner: address,
         amount: u64,
         time_claimer_address: address,
@@ -79,7 +75,7 @@ program puzzle_pieces_v016.aleo {
     // and set JointPieceCreator: address (challenger or opponent) ---> question about what is field vulnerabilities for msg
 
     // owned by challenger only
-    record JointPieceState {
+    record JointState {
         owner: address,
         amount: u64,
         time_claimer_address: address,
@@ -95,7 +91,7 @@ program puzzle_pieces_v016.aleo {
     }
 
     // owned by multisig
-    record JointPieceWinner {
+    record JointWinner {
         owner: address,
         amount: u64,
         time_claimer_address: address,
@@ -113,53 +109,33 @@ program puzzle_pieces_v016.aleo {
         amount: u64,
     }
 
-    transition mint_private (amount: u64, to: address) -> (Piece) {
-        let minted_puzzle_pieces: Piece = Piece {
-            owner: to,
-            amount: amount,
-        };
-
-        return minted_puzzle_pieces;
-    }
-
     // transferring pieces into multisig for a 1v1 game between a challenger and an opponent
-    // challenger and opponent both transfer pieces to the multisig and multisig gets two staked pieces
-    // opponent can convert two staked puzzles pieces into a joint-stake
-    // once challenger reveals answer, joint-stake is converted to full amount of pieces & sent to winner
+    // challenger and opponent both transfer pieces to the multisig and multisig gets two PieceStake
+    // on accept_game, the two PieceStakes are merged into a JointStake
+    // once challenger reveals answer, JointStake is converted to full amount of pieces & sent to winner
     //
     // Exit states exist such that:
     //   - challenger or opponent can retrieve their respective stake before locked in joint-stake
     //   - if challenger never reveals answer, after time T then joint-stake is awarded to opponent (ie an auto win)
     //
-    // Winner gets all the puzzle pieces.
     // called by each individual key
     transition stake_transfer_in (
-        piece_token: Piece,
-        sender: address, // can't use self.caller or self.signer until leo fixed
+        coin: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        amount: u64,
         challenger: address,
         opponent: address,
         game_multisig: address,
-        amount: u64,
         message_1: field,
         message_2: field,
         message_3: field,
         message_4: field,
         message_5: field,
         sig: signature
-    ) -> (PieceClaim, PieceStake, ClaimSignature, Piece) {
-        // check that sender is either challenger or opponent
-        if sender == challenger {
-            assert_eq(sender, challenger);
-        } else {
-            assert_eq(sender, opponent);
-        }
-        // check that challenger & opponent are different addresses
-        // assert_neq( challenger , opponent);
-
-        let piece_claim_record: PieceClaim = PieceClaim {
+    ) -> (StakeClaim, Stake, ClaimSignature, puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin) {
+        let stake_claim_receipt: StakeClaim = StakeClaim {
             owner: game_multisig,
             amount: amount,
-            claimer: sender,
+            claimer: self.signer,
             message_1: message_1,
             message_2: message_2,
             message_3: message_3,
@@ -169,9 +145,17 @@ program puzzle_pieces_v016.aleo {
             opponent: opponent,
         };
 
+        let stake: Stake = Stake {
+            owner: game_multisig,
+            amount: amount,
+            challenger: challenger,
+            opponent: opponent,
+            staker: self.signer,
+        };
+
         // claim signature to depositor -- signature against message and used to redeem
         let sender_claim_sig_record: ClaimSignature = ClaimSignature {
-            owner: sender,
+            owner: self.signer,
             sig: sig,
             amount: amount,
             game_multisig: game_multisig,
@@ -179,23 +163,11 @@ program puzzle_pieces_v016.aleo {
             opponent: opponent,
         };
 
-        // new puzz record to receiver
-        let receiver_new_record: PieceStake = PieceStake {
-            owner: game_multisig,
-            amount: amount,
-            challenger: challenger,
-            opponent: opponent,
-            staker: sender,
-        };
+        let change: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_arcade_coin_v001.aleo/spend(
+          coin, amount
+        );
 
-        // puzz record with change for sender
-        let sender_change_record: Piece = Piece {
-            owner: sender,
-            amount: piece_token.amount - amount,
-        };
-
-        return (piece_claim_record, receiver_new_record, sender_claim_sig_record, sender_change_record);
-
+        return (stake_claim_receipt, stake, sender_claim_sig_record, change);
     }
 
     // Unstaking PieceStake from Multisig to Staker
@@ -204,10 +176,10 @@ program puzzle_pieces_v016.aleo {
     //
     // stake amount returned is equal to amount in claim and returned to staking key
     transition stake_transfer_out (
-        piece_stake: PieceStake,
-        piece_claim: PieceClaim,
+        stake: Stake,
+        piece_claim: StakeClaim,
         sig: signature
-    ) -> (Piece) {
+    ) -> (puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin) {
         // 1. Check Claim & Stake are from same game_multisig
         // assert_eq(piece_stake.owner, piece_claim.owner);
 
@@ -225,14 +197,12 @@ program puzzle_pieces_v016.aleo {
             field_5: piece_claim.message_5
         };
 
-        let signature_check: bool = true;
-        let is_valid_sig: bool = sig.verify(piece_claim.claimer, msg);
-        // assert_eq(signature_check,is_valid_sig);
+        assert(sig.verify(piece_claim.claimer, msg));
 
-        let piece_oot: Piece = Piece {
-            owner: piece_claim.claimer,
-            amount: piece_claim.amount,
-        };
+        let piece_oot: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_arcade_coin_v001.aleo/mint (
+            piece_claim.claimer,
+            piece_claim.amount,
+        );
 
         return (piece_oot);
     }
@@ -240,35 +210,27 @@ program puzzle_pieces_v016.aleo {
     // Jointly staking both pieces to the Multisig
     // calls this function with the Multisig key
     // JointStake note amount is the combination of the two
-    transition transfer_stakes_to_joint(
-        piece_stake_challenger: PieceStake,
-        piece_claim_challenger: PieceClaim,
-        piece_stake_opponent: PieceStake,
-        piece_claim_opponent: PieceClaim,
-        block_ht: u32 //good actor uses our api endpoint on FE to get blockheight and use as inputs
-    ) -> (PieceJointStake, JointPieceTimeClaim, JointPieceState) {
-
-        // 0. Add a self.signer check against
-        let owner: address = piece_stake_challenger.owner;
-        // assert_eq(owner, self.signer);
-
-        // 1. Check that all are from the same multisig
-        // assert_eq(piece_claim_challenger.owner,owner);
-        // assert_eq(piece_stake_opponent.owner,owner);
-        // assert_eq(piece_claim_opponent.owner,owner);
+    transition join_stakes(
+        stake_challenger: Stake,
+        claim_challenger: StakeClaim,
+        stake_opponent: Stake,
+        claim_opponent: StakeClaim,
+        block_ht: u32 // good actor uses our api endpoint on FE to get blockheight and use as inputs
+    ) -> (JointStake, JointTimeoutClaim, JointState) {
+        let multisig: address = stake_challenger.owner;
 
         // 2. Check that the game state is the same for all
-        let amount: u64 = piece_stake_challenger.amount;
+        let amount: u64 = stake_challenger.amount;
         // assert_eq(piece_claim_challenger.amount,amount);
         // assert_eq(piece_stake_opponent.amount,amount);
         // assert_eq(piece_claim_opponent.amount,amount);
 
-        let challenger: address = piece_stake_challenger.challenger;
+        let challenger: address = stake_challenger.challenger;
         // assert_eq(piece_claim_challenger.challenger,challenger);
         // assert_eq(piece_stake_opponent.challenger,challenger);
         // assert_eq(piece_claim_opponent.challenger,challenger);
 
-        let opponent: address = piece_stake_challenger.opponent;
+        let opponent: address = stake_challenger.opponent;
         // assert_eq(piece_claim_challenger.opponent,opponent);
         // assert_eq(piece_stake_opponent.opponent,opponent);
         // assert_eq(piece_claim_opponent.opponent,opponent);
@@ -278,48 +240,48 @@ program puzzle_pieces_v016.aleo {
         // assert_eq(piece_claim_opponent.claimer, piece_stake_opponent.opponent);
 
         // Create JointStake and send to multisig key
-        let piece_joint_stake: PieceJointStake = PieceJointStake {
-            owner: owner,
+        let joint_stake: JointStake = JointStake {
+            owner: multisig,
             amount: amount + amount,
             time_claimer_address: opponent,
             state_updater_address: challenger,
             block_ht: block_ht,
         };
 
-        // Create JointPieceState such that challenger can update state and send to
-        let joint_piece_state: JointPieceState = JointPieceState {
+        // Create JointState such that challenger can update state and send to
+        let joint_state: JointState = JointState {
             owner: challenger,
             amount: amount + amount,
             time_claimer_address: opponent,
             state_updater_address: challenger,
-            message_1: piece_claim_challenger.message_1,
-            message_2: piece_claim_challenger.message_2,
-            message_3: piece_claim_challenger.message_3,
-            message_4: piece_claim_challenger.message_4,
-            message_5: piece_claim_challenger.message_5,
+            message_1: claim_challenger.message_1,
+            message_2: claim_challenger.message_2,
+            message_3: claim_challenger.message_3,
+            message_4: claim_challenger.message_4,
+            message_5: claim_challenger.message_5,
             challenger: challenger,
             opponent: opponent,
-            game_multisig: owner,
+            game_multisig: multisig,
         };
 
-        // Create JointPieceTimeClaim -- note current block production is ~ 1 block/5 sec --> 12 blocks/min
-        let joint_piece_time_claim: JointPieceTimeClaim = JointPieceTimeClaim {
-            owner: owner,
+        // Create JointTimeoutClaim -- note current block production is ~ 1 block/5 sec --> 12 blocks/min
+        let joint_time_claim: JointTimeoutClaim = JointTimeoutClaim {
+            owner: multisig,
             amount: amount + amount,
             time_claimer_address: opponent,
             state_updater_address: challenger,
-            message_1: piece_claim_opponent.message_1,
-            message_2: piece_claim_opponent.message_2,
-            message_3: piece_claim_opponent.message_3,
-            message_4: piece_claim_opponent.message_4,
-            message_5: piece_claim_opponent.message_5,
-            game_multisig: owner,
+            message_1: claim_opponent.message_1,
+            message_2: claim_opponent.message_2,
+            message_3: claim_opponent.message_3,
+            message_4: claim_opponent.message_4,
+            message_5: claim_opponent.message_5,
+            game_multisig: multisig,
             challenger: challenger,
             opponent: opponent,
             block_ht: block_ht,
         };
 
-        return (piece_joint_stake, joint_piece_time_claim, joint_piece_state );
+        return (joint_stake, joint_time_claim, joint_state);
     }
 
     // Challenger calls this function with the challenger key
@@ -330,10 +292,10 @@ program puzzle_pieces_v016.aleo {
     //
     // Burns their claim signature record here
     transition joint_stake_state_update(
-        joint_piece_state: JointPieceState,
-        sig: ClaimSignature,
+        joint_state: JointState,
+        claim_signature: ClaimSignature,
         winner: address
-    ) -> (JointPieceWinner) {
+    ) -> (JointWinner) {
         // 0. Check that owner matches
         // assert_eq(joint_piece_state.owner, sig.owner);
 
@@ -348,21 +310,18 @@ program puzzle_pieces_v016.aleo {
 
         // 3. Check Claimer has verified this with a signature against the message from beginning
         let msg: Message = Message {
-            field_1: joint_piece_state.message_1,
-            field_2: joint_piece_state.message_2,
-            field_3: joint_piece_state.message_3,
-            field_4: joint_piece_state.message_4,
-            field_5: joint_piece_state.message_5
+            field_1: joint_state.message_1,
+            field_2: joint_state.message_2,
+            field_3: joint_state.message_3,
+            field_4: joint_state.message_4,
+            field_5: joint_state.message_5
         };
 
-        let sign: signature = sig.sig;
-        let signature_check: bool = true;
-        let is_valid_sig: bool = sign.verify(joint_piece_state.state_updater_address, msg);
-        assert_eq(signature_check,is_valid_sig);
+        assert(claim_signature.sig.verify(joint_state.state_updater_address, msg));
 
         // The logic for the answer and computing winner is in wheres_alex program
         // The enforcement to prevent the challenger calling this function without going through
-        // where's alex is via the Piece Keepers
+        // where's alex is via the puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin Keepers
         //
         // Logic is if a piece keeper sees that there is an address that is different from the answer record for the game,
         // then can submit to public mapping then person can not spend pieces again. Also lets you mint their amount
@@ -376,27 +335,27 @@ program puzzle_pieces_v016.aleo {
         //     assert_eq(winner,joint_piece_state.opponent);
         // }
 
-        let joint_piece_winner: JointPieceWinner = JointPieceWinner {
-            owner: joint_piece_state.game_multisig,
-            amount: joint_piece_state.amount,
-            time_claimer_address: joint_piece_state.time_claimer_address,
-            state_updater_address: joint_piece_state.state_updater_address,
-            challenger: joint_piece_state.challenger,
-            opponent: joint_piece_state.opponent,
-            game_multisig: joint_piece_state.game_multisig,
+        let joint_winner: JointWinner = JointWinner {
+            owner: joint_state.game_multisig,
+            amount: joint_state.amount,
+            time_claimer_address: joint_state.time_claimer_address,
+            state_updater_address: joint_state.state_updater_address,
+            challenger: joint_state.challenger,
+            opponent: joint_state.opponent,
+            game_multisig: joint_state.game_multisig,
             winner: winner,
         };
 
-        return (joint_piece_winner);
+        return (joint_winner);
     }
 
     // Called with multisig key
     // Any multisig member calls this function to end the game and transfer the pieces
     transition joint_stake_transfer_to_winner(
-        joint_piece_winner: JointPieceWinner,
-        piece_joint_stake: PieceJointStake,
-        joint_piece_time_claim: JointPieceTimeClaim,
-    ) -> (Piece) {
+        joint_piece_winner: JointWinner,
+        piece_joint_stake: JointStake,
+        joint_piece_time_claim: JointTimeoutClaim,
+    ) -> (puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin) {
         // 0. Add a self.signer check against
         let game_multisig: address = joint_piece_winner.owner;
         // assert_eq(owner, self.signer);
@@ -426,10 +385,10 @@ program puzzle_pieces_v016.aleo {
             assert_eq(winner,piece_joint_stake.state_updater_address);
         }
 
-        let piece_to_winner: Piece = Piece {
-            owner: winner,
-            amount: amount,
-        };
+        let piece_to_winner: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_arcade_coin_v001.aleo/mint (
+            winner,
+            amount,
+        );
 
         return (piece_to_winner);
     }
@@ -441,52 +400,46 @@ program puzzle_pieces_v016.aleo {
     // Assume signature used in this is done signature from ClaimSignature
     // we are going to be stranded with the ClaimSignature owned by the user's key
     //
-    // If this is called -- we are going to be stranded with a ClaimSignature & JointPieceState on the above
+    // If this is called -- we are going to be stranded with a ClaimSignature & JointState on the above
     //
-    // This function is called with the multisig key
+    // called with the multisig key
     transition joint_timeout_to_opponent (
-        piece_joint_stake: PieceJointStake,
-        joint_piece_time_claim: JointPieceTimeClaim,
+        joint_stake: JointStake,
+        joint_timeout_claim: JointTimeoutClaim,
         sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
-    ) -> (Piece)
+    ) -> (puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin)
     {
-        // set puzzle issuing address as issuer:
-        // let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
-
         // 1. Check that all are from the same multisig
-        let game_multisig: address = joint_piece_time_claim.owner;
-        assert_eq(piece_joint_stake.owner, game_multisig);
+        let game_multisig: address = joint_timeout_claim.owner;
+        assert_eq(joint_stake.owner, game_multisig);
 
         // 2. Check that the game state is the same for all
-        let amount: u64 = joint_piece_time_claim.amount;
-        assert_eq(piece_joint_stake.amount, amount);
+        let amount: u64 = joint_timeout_claim.amount;
+        assert_eq(joint_stake.amount, amount);
 
         // 2. Check that the game state is the same for all
-        let challenger: address = joint_piece_time_claim.challenger;
-        assert_eq(piece_joint_stake.state_updater_address, challenger);
+        let challenger: address = joint_timeout_claim.challenger;
+        assert_eq(joint_stake.state_updater_address, challenger);
 
-        let opponent: address = joint_piece_time_claim.opponent;
-        assert_eq(piece_joint_stake.time_claimer_address, opponent);
+        let opponent: address = joint_timeout_claim.opponent;
+        assert_eq(joint_stake.time_claimer_address, opponent);
 
         // 3. Check Claimer has verified this with a signature against the message from beginning
         // FE -- use the claim signature record for opponent address here to fill in
         let msg: Message = Message {
-            field_1: joint_piece_time_claim.message_1,
-            field_2: joint_piece_time_claim.message_2,
-            field_3: joint_piece_time_claim.message_3,
-            field_4: joint_piece_time_claim.message_4,
-            field_5: joint_piece_time_claim.message_5
+            field_1: joint_timeout_claim.message_1,
+            field_2: joint_timeout_claim.message_2,
+            field_3: joint_timeout_claim.message_3,
+            field_4: joint_timeout_claim.message_4,
+            field_5: joint_timeout_claim.message_5
         };
 
-        let signature_check: bool = true;
-        let is_valid_sig: bool = sig.verify(joint_piece_time_claim.time_claimer_address, msg);
-        assert_eq(signature_check,is_valid_sig);
+        assert(sig.verify(joint_timeout_claim.time_claimer_address, msg));
 
-
-        let piece_to_winner: Piece = Piece {
-            owner: opponent,
-            amount: amount,
-        };
+        let piece_to_winner: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_arcade_coin_v001.aleo/mint (
+            opponent,
+            amount,
+        );
 
         return (piece_to_winner);
     }

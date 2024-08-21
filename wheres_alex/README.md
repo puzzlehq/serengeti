@@ -234,7 +234,7 @@ Function:
 finish_game (
   game_record: Game,
   joint_piece_winner: puzzle_pieces_v007.leo/JointPieceWinner.record,
-  piece_joint_stake: puzzle_pieces_v007.leo/PieceJointStake.record,
+  piece_joint_stake: puzzle_pieces_v007.leo/JointPieceStake.record,
   joint_piece_time_claim: puzzle_pieces_v007.leo/JointPieceTimeClaim.record,
 )
 ```

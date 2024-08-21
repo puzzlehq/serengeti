@@ -127,7 +127,7 @@ program puzzle_pieces_v016.aleo {
 
     // owned by multisig
     // ix: 9u32
-    record PieceJointStake {
+    record JointPieceStake {
         owner: address,
         amount: u64,
         time_claimer_address: address,
@@ -480,7 +480,7 @@ program puzzle_pieces_v016.aleo {
         piece_stake_opponent: PieceStake,
         piece_claim_opponent: PieceClaim,
         block_ht: u32 //good actor uses our api endpoint on FE to get blockheight and use as inputs
-    ) -> (PieceJointStake, JointPieceTimeClaim, JointPieceState, AuditJointStake) {
+    ) -> (JointPieceStake, JointPieceTimeClaim, JointPieceState, AuditJointStake) {
         // set puzzle issuing address as issuer:
         let puzzle_issuer: address = aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls;
 
@@ -514,7 +514,7 @@ program puzzle_pieces_v016.aleo {
         assert_eq(piece_claim_opponent.claimer, piece_stake_opponent.opponent);
 
         // Create JointStake and send to multisig key
-        let piece_joint_stake: PieceJointStake = PieceJointStake {
+        let piece_joint_stake: JointPieceStake = JointPieceStake {
             owner: owner,
             amount: amount + amount,
             time_claimer_address: opponent,
@@ -663,7 +663,7 @@ program puzzle_pieces_v016.aleo {
     // Any multisig member calls this function to end the game and transfer the pieces
     transition joint_stake_transfer_to_winner(
         joint_piece_winner: JointPieceWinner,
-        piece_joint_stake: PieceJointStake,
+        piece_joint_stake: JointPieceStake,
         joint_piece_time_claim: JointPieceTimeClaim,
     ) -> (Piece,AuditTransferToWinner, AuditPieceOwner) {
         // set puzzle issuing address as issuer:
@@ -737,7 +737,7 @@ program puzzle_pieces_v016.aleo {
     //
     //
     transition joint_timeout_to_opponent (
-        piece_joint_stake: PieceJointStake,
+        piece_joint_stake: JointPieceStake,
         joint_piece_time_claim: JointPieceTimeClaim,
         sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
     ) -> (Piece, AuditTransferToWinner)

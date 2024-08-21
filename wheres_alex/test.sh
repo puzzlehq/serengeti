@@ -307,7 +307,7 @@ echo "
 #     (
 #         game_record: Game,
 #         joint_piece_winner: puzzle_pieces_v008.leo/JointPieceWinner.record,
-#         piece_joint_stake: puzzle_pieces_v008.leo/PieceJointStake.record,
+#         piece_joint_stake: puzzle_pieces_v008.leo/JointPieceStake.record,
 #         joint_piece_time_claim: puzzle_pieces_v008.leo/JointPieceTimeClaim.record,
 #     )
 
@@ -358,7 +358,7 @@ leo run finish_game "{
 
   # transition finish_game_by_timeout(
   #       game_record: Game,
-  #       piece_joint_stake: PieceJointStake,
+  #       piece_joint_stake: JointPieceStake,
   #       joint_piece_time_claim: JointPieceTimeClaim,
   #       opponent_sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
   #   )

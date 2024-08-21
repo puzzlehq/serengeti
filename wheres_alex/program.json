@@ -1,0 +1,13 @@
+{
+  "program": "wheres_alex_v019.aleo",
+  "version": "0.0.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "puzzle_multiparty_coin_v001.aleo",
+      "location": "local",
+      "path": "../puzzle_multiparty_coin"
+    }
+  ]
+}
