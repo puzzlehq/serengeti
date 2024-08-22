@@ -7,7 +7,7 @@
     {
       "name": "puzzle_multiparty_coin_v001.aleo",
       "location": "local",
-      "path": "../puzzle_multiparty_coin"
+      "path": "../multiparty_coin"
     }
   ]
 }
