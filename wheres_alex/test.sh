@@ -132,7 +132,6 @@ echo "
 leo run accept_game \
   "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-    challenger_commit: 1632338669887332693450432112819554759682427161589172463360656597380489639523field.private,
     opponent_answer: 0u8.private,
     total_pot: 200u64.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
@@ -264,7 +263,6 @@ echo "
 leo run finish_game \
   "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-    challenger_commit: 1632338669887332693450432112819554759682427161589172463360656597380489639523field.private,
     opponent_answer: 0u8.private,
     total_pot: 200u64.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,

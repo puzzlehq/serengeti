@@ -31,7 +31,6 @@ program wheres_alex_v001.aleo {
     //   0 -> Game reneged
     record Game {
         owner: address, // always multisig
-        challenger_commit: field,
         opponent_answer: u8,
         total_pot: u64,
         challenger: address,
@@ -84,9 +83,6 @@ program wheres_alex_v001.aleo {
         // assert that the answer is valid
         assert(answer == 0u8 || answer == 1u8);
 
-        // commit to answer by hashing the answer and nonce
-        let answer_commitment: field = BHP256::commit_to_field(answer, nonce as scalar);
-
         // assert that the wager amount > 0 and wager record has at least that much
         assert((wager_amount > 0u64) && (wager.amount >= wager_amount));
 
@@ -123,7 +119,6 @@ program wheres_alex_v001.aleo {
 
         let game: Game = Game {
             owner: game_multisig,
-            challenger_commit: answer_commitment,
             opponent_answer: 0u8, // placeholder until opponent answer in accept_game
             total_pot: wager_amount + wager_amount,
             challenger: challenger,
@@ -266,7 +261,6 @@ program wheres_alex_v001.aleo {
 
         let updated_game: Game = Game {
             owner: game.owner,
-            challenger_commit: game.challenger_commit,
             opponent_answer: opponent_answer,
             total_pot: game.total_pot,
             challenger: game.challenger,
@@ -340,7 +334,6 @@ program wheres_alex_v001.aleo {
 
         let finished_game: Game = Game {
             owner: game.owner,
-            challenger_commit: game.challenger_commit,
             opponent_answer: game.opponent_answer,
             total_pot: game.total_pot,
             challenger: game.challenger,
@@ -368,7 +361,6 @@ program wheres_alex_v001.aleo {
     {
         let finished_game: Game = Game {
             owner: game.owner,
-            challenger_commit: game.challenger_commit,
             opponent_answer: game.opponent_answer,
             total_pot: game.total_pot,
             challenger: game.challenger,

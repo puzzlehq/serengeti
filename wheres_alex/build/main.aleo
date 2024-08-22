@@ -26,7 +26,6 @@ record Key:
 
 record Game:
     owner as address.private;
-    challenger_commit as field.private;
     opponent_answer as u8.private;
     total_pot as u64.private;
     challenger as address.private;
@@ -60,26 +59,24 @@ function propose_game:
     is.eq r6 1u8 into r9;
     or r8 r9 into r10;
     assert.eq r10 true;
-    cast r5 into r11 as scalar;
-    commit.bhp256 r6 r11 into r12 as field;
-    gt r1 0u64 into r13;
-    gte r0.amount r1 into r14;
-    and r13 r14 into r15;
-    assert.eq r15 true;
-    call puzzle_multiparty_coin_v001.aleo/stake_transfer_in r0 r1 r2 r3 r4 into r16 r17 r18;
-    cast r3 r7 r4 into r19 as Key.record;
+    gt r1 0u64 into r11;
+    gte r0.amount r1 into r12;
+    and r11 r12 into r13;
+    assert.eq r13 true;
+    call puzzle_multiparty_coin_v001.aleo/stake_transfer_in r0 r1 r2 r3 r4 into r14 r15 r16;
+    cast r3 r7 r4 into r17 as Key.record;
+    add r1 r1 into r18;
+    cast r3 r4 1u8 r18 r2 into r19 as Proposal.record;
     add r1 r1 into r20;
-    cast r3 r4 1u8 r20 r2 into r21 as Proposal.record;
-    add r1 r1 into r22;
-    cast r4 r12 0u8 r22 r2 r3 1u8 into r23 as Game.record;
-    cast r2 r4 r3 r1 r5 r6 into r24 as Answer.record;
-    output r16 as puzzle_multiparty_coin_v001.aleo/StakeClaim.record;
-    output r17 as puzzle_multiparty_coin_v001.aleo/Stake.record;
-    output r18 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
-    output r24 as Answer.record;
-    output r19 as Key.record;
-    output r23 as Game.record;
-    output r21 as Proposal.record;
+    cast r4 0u8 r20 r2 r3 1u8 into r21 as Game.record;
+    cast r2 r4 r3 r1 r5 r6 into r22 as Answer.record;
+    output r14 as puzzle_multiparty_coin_v001.aleo/StakeClaim.record;
+    output r15 as puzzle_multiparty_coin_v001.aleo/Stake.record;
+    output r16 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
+    output r22 as Answer.record;
+    output r17 as Key.record;
+    output r21 as Game.record;
+    output r19 as Proposal.record;
 
 
 function submit_wager:
@@ -146,7 +143,7 @@ function accept_game:
     assert.eq r9 true;
     call puzzle_multiparty_coin_v001.aleo/join_stakes r2 r3 r4 r5 r6 into r10 r11 r12;
     cast r0.challenger r1 into r13 as OpponentGuess.record;
-    cast r0.owner r0.challenger_commit r1 r0.total_pot r0.challenger r0.opponent 3u8 into r14 as Game.record;
+    cast r0.owner r1 r0.total_pot r0.challenger r0.opponent 3u8 into r14 as Game.record;
     output r10 as puzzle_multiparty_coin_v001.aleo/JointStake.record;
     output r11 as puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim.record;
     output r12 as puzzle_multiparty_coin_v001.aleo/JointState.record;
@@ -173,7 +170,7 @@ function finish_game:
     input r2 as puzzle_multiparty_coin_v001.aleo/JointStake.record;
     input r3 as puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim.record;
     call puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner r1 r2 r3 into r4 r5;
-    cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger r0.opponent 5u8 into r6 as Game.record;
+    cast r0.owner r0.opponent_answer r0.total_pot r0.challenger r0.opponent 5u8 into r6 as Game.record;
     async finish_game r5 into r7;
     output r4 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
     output r6 as Game.record;
@@ -190,7 +187,7 @@ function finish_game_by_timeout:
     input r0 as Game.record;
     input r1 as puzzle_multiparty_coin_v001.aleo/JointStake.record;
     input r2 as puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim.record;
-    cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger r0.opponent 6u8 into r3 as Game.record;
+    cast r0.owner r0.opponent_answer r0.total_pot r0.challenger r0.opponent 6u8 into r3 as Game.record;
     call puzzle_multiparty_coin_v001.aleo/transfer_via_timeout r1 r2 into r4 r5;
     async finish_game_by_timeout r2.block_height r5 into r6;
     output r4 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
