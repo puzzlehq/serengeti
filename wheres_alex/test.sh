@@ -21,36 +21,35 @@ PRIVATE_KEY=APrivateKey1zkp9p8bttYsy3EuwiGrb4PXmrtjzZkpGvBCGVCgvpcwVjUV
 " > .env
 
 echo "
-#       :::::::::  :::::::::   ::::::::  :::::::::   ::::::::   ::::::::  ::::::::::
-#      :+:    :+: :+:    :+: :+:    :+: :+:    :+: :+:    :+: :+:    :+: :+:
-#     +:+    +:+ +:+    +:+ +:+    +:+ +:+    +:+ +:+    +:+ +:+        +:+
-#    +#++:++#+  +#++:++#:  +#+    +:+ +#++:++#+  +#+    +:+ +#++:++#++ +#++:++#
-#   +#+        +#+    +#+ +#+    +#+ +#+        +#+    +#+        +#+ +#+
-#  #+#        #+#    #+# #+#    #+# #+#        #+#    #+# #+#    #+# #+#
-# ###        ###    ###  ########  ###         ########   ########  ##########
-#       ::::::::      :::       :::   :::   ::::::::::
-#     :+:    :+:   :+: :+:    :+:+: :+:+:  :+:
-#    +:+         +:+   +:+  +:+ +:+:+ +:+ +:+
-#   :#:        +#++:++#++: +#+  +:+  +#+ +#++:++#
-#  +#+   +#+# +#+     +#+ +#+       +#+ +#+
-# #+#    #+# #+#     #+# #+#       #+# #+#
-# ########  ###     ### ###       ### ##########
+        :::::::::  :::::::::   ::::::::  :::::::::   ::::::::   ::::::::  ::::::::::
+       :+:    :+: :+:    :+: :+:    :+: :+:    :+: :+:    :+: :+:    :+: :+:
+      +:+    +:+ +:+    +:+ +:+    +:+ +:+    +:+ +:+    +:+ +:+        +:+
+     +#++:++#+  +#++:++#:  +#+    +:+ +#++:++#+  +#+    +:+ +#++:++#++ +#++:++#
+    +#+        +#+    +#+ +#+    +#+ +#+        +#+    +#+        +#+ +#+
+   #+#        #+#    #+# #+#    #+# #+#        #+#    #+# #+#    #+# #+#
+  ###        ###    ###  ########  ###         ########   ########  ##########
+        ::::::::      :::       :::   :::   ::::::::::
+      :+:    :+:   :+: :+:    :+:+: :+:+:  :+:
+     +:+         +:+   +:+  +:+ +:+:+ +:+ +:+
+    :#:        +#++:++#++: +#+  +:+  +#+ +#++:++#
+   +#+   +#+# +#+     +#+ +#+       +#+ +#+
+  #+#    #+# #+#     #+# #+#       #+# #+#
+  ########  ###     ### ###       ### ##########
 "
 
-leo run propose_game "{
-        owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-        amount: 500u64.private,
-        _nonce: 5117772722354704202838157764917930913180509833961648133377098024993045952079group.public
-    }" \
-    100u64 \
-    aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls \
-    aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a \
-    aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6 \
-    8062328565641143710315198539395259864274213782537700083868207132716559019626field \
-    sign1h04lnsl0t4aau8lzp06rzcm5eqrzr9ew63ljnw43v2nr7nkmsqqcx8cksna2ajwgk80rv0s7prrndw5k56sey3nrl487552lvaukuq8xe0cgu6x809qetnn35ufm3gl6ecyvtpgaavu9y5754j27utrwq8amruqyq2x6dvqs790yqsrctwmjnh3k7thslm0r9c3hpdvjrywpzts24xr \
-    12345field \
-    0u8 \
-    98765field
+leo run propose_game \
+  "{
+    owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    amount: 500u64.private,
+    _nonce: 5117772722354704202838157764917930913180509833961648133377098024993045952079group.public
+  }" \
+  100u64 \
+  aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls \
+  aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a \
+  aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6 \
+  12345field \
+  0u8 \
+  98765field
 
 # Swap in the private key of the opponent - Bob.
 echo "
@@ -60,23 +59,24 @@ PRIVATE_KEY=APrivateKey1zkpALDDK4zAigs387emvnuxWXvGjFw2AmmYcQH7TBt8nhof
 " > .env
 
 echo "
-#       ::::::::  :::    ::: :::::::::    :::   :::   ::::::::::: :::::::::::
-#     :+:    :+: :+:    :+: :+:    :+:  :+:+: :+:+:      :+:         :+:
-#    +:+        +:+    +:+ +:+    +:+ +:+ +:+:+ +:+     +:+         +:+
-#   +#++:++#++ +#+    +:+ +#++:++#+  +#+  +:+  +#+     +#+         +#+
-#         +#+ +#+    +#+ +#+    +#+ +#+       +#+     +#+         +#+
-# #+#    #+# #+#    #+# #+#    #+# #+#       #+#     #+#         #+#
-# ########   ########  #########  ###       ### ###########     ###
-#     :::       :::     :::      ::::::::  :::::::::: :::::::::
-#    :+:       :+:   :+: :+:   :+:    :+: :+:        :+:    :+:
-#   +:+       +:+  +:+   +:+  +:+        +:+        +:+    +:+
-#  +#+  +:+  +#+ +#++:++#++: :#:        +#++:++#   +#++:++#:
-# +#+ +#+#+ +#+ +#+     +#+ +#+   +#+# +#+        +#+    +#+
-# #+#+# #+#+#  #+#     #+# #+#    #+# #+#        #+#    #+#
-# ###   ###   ###     ###  ########  ########## ###    ###
+        ::::::::  :::    ::: :::::::::    :::   :::   ::::::::::: :::::::::::
+      :+:    :+: :+:    :+: :+:    :+:  :+:+: :+:+:      :+:         :+:
+     +:+        +:+    +:+ +:+    +:+ +:+ +:+:+ +:+     +:+         +:+
+    +#++:++#++ +#+    +:+ +#++:++#+  +#+  +:+  +#+     +#+         +#+
+          +#+ +#+    +#+ +#+    +#+ +#+       +#+     +#+         +#+
+  #+#    #+# #+#    #+# #+#    #+# #+#       #+#     #+#         #+#
+  ########   ########  #########  ###       ### ###########     ###
+      :::       :::     :::      ::::::::  :::::::::: :::::::::
+     :+:       :+:   :+: :+:   :+:    :+: :+:        :+:    :+:
+    +:+       +:+  +:+   +:+  +:+        +:+        +:+    +:+
+   +#+  +:+  +#+ +#++:++#++: :#:        +#++:++#   +#++:++#:
+  +#+ +#+#+ +#+ +#+     +#+ +#+   +#+# +#+        +#+    +#+
+  #+#+# #+#+#  #+#     #+# #+#    #+# #+#        #+#    #+#
+  ###   ###   ###     ###  ########  ########## ###    ###
 "
 
-leo run submit_wager "{
+leo run submit_wager \
+  "{
     owner: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     amount: 500u64.private,
     _nonce: 3004940205258698961047675300612628178407977124226246568871909567528102781306group.public
@@ -90,11 +90,9 @@ leo run submit_wager "{
     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     game_state: 1u8.private,
     total_pot: 200u64.private,
-    challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     _nonce: 5007203806498158254911228558413488930295100188486359169745660062379448997833group.public
-  }" \
-  4299148155668445410404796665478412871867472362428312345599969289162437917169field \
-  sign1j0hhruukxrlddx4tzzpe8gccgy3l430el69e0jpclrzk2x3kecpq7zteu9z5qqqttk4xltyplgwzt4famkfxar5wjncz5ttssdur2qslse2uz49ljzhxz82y28gy0un45z8w2jgwk7jhdgxqh58qgcvwqpcuf9estpjsv9n9jln3x08mzl2rc8z25j6s6r4uf8rq9r7ddkxqyaahcxh
+  }"
 
 # Swap in the private key of the multisig.
 echo "
@@ -104,20 +102,20 @@ PRIVATE_KEY=APrivateKey1zkp8pmTMT4FxG5qXZ9McEYDdY1G6YokY1BYzwoxTYJEKubF
 " > .env
 
 echo "
-#           :::      ::::::::   ::::::::  :::::::::: ::::::::: :::::::::::
-#        :+: :+:   :+:    :+: :+:    :+: :+:        :+:    :+:    :+:
-#      +:+   +:+  +:+        +:+        +:+        +:+    +:+    +:+
-#    +#++:++#++: +#+        +#+        +#++:++#   +#++:++#+     +#+
-#   +#+     +#+ +#+        +#+        +#+        +#+           +#+
-#  #+#     #+# #+#    #+# #+#    #+# #+#        #+#           #+#
-# ###     ###  ########   ########  ########## ###           ###
-#       ::::::::      :::       :::   :::   ::::::::::
-#     :+:    :+:   :+: :+:    :+:+: :+:+:  :+:
-#    +:+         +:+   +:+  +:+ +:+:+ +:+ +:+
-#   :#:        +#++:++#++: +#+  +:+  +#+ +#++:++#
-#  +#+   +#+# +#+     +#+ +#+       +#+ +#+
-# #+#    #+# #+#     #+# #+#       #+# #+#
-# ########  ###     ### ###       ### ##########
+            :::      ::::::::   ::::::::  :::::::::: ::::::::: :::::::::::
+         :+: :+:   :+:    :+: :+:    :+: :+:        :+:    :+:    :+:
+       +:+   +:+  +:+        +:+        +:+        +:+    +:+    +:+
+     +#++:++#++: +#+        +#+        +#++:++#   +#++:++#+     +#+
+    +#+     +#+ +#+        +#+        +#+        +#+           +#+
+   #+#     #+# #+#    #+# #+#    #+# #+#        #+#           #+#
+  ###     ###  ########   ########  ########## ###           ###
+        ::::::::      :::       :::   :::   ::::::::::
+      :+:    :+:   :+: :+:    :+:+: :+:+:  :+:
+     +:+         +:+   +:+  +:+ +:+:+ +:+ +:+
+    :#:        +#++:++#++: +#+  +:+  +#+ +#++:++#
+   +#+   +#+# +#+     +#+ +#+       +#+ +#+
+  #+#    #+# #+#     #+# #+#       #+# #+#
+  ########  ###     ### ###       ### ##########
 "
 
 # transition accept_game
@@ -131,14 +129,14 @@ echo "
 #         block_ht: u32,
 #     )
 
-leo run accept_game "{
+leo run accept_game \
+  "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     challenger_commit: 1632338669887332693450432112819554759682427161589172463360656597380489639523field.private,
     opponent_answer: 0u8.private,
     total_pot: 200u64.private,
-    challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+    challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     game_state: 1u8.private,
     _nonce: 7317720964287754030180000298351657566658550240415053730543526730746196923728group.public
   }" \
@@ -150,13 +148,11 @@ leo run accept_game "{
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     staker: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     _nonce: 1171432541040874548250929502681399288885050493667972397387185700646746850159group.public
-    }" "{
+  }" \
+  "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 100u64.private,
     claimer: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    message: 8062328565641143710315198539395259864274213782537700083868207132716559019626field.private,
-    challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     _nonce: 4810662774726267156301158455083092801351285424752992399701699702277668157037group.public
   }" \
   "{
@@ -171,9 +167,6 @@ leo run accept_game "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 100u64.private,
     claimer: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    message: 1776434703100582373204662861254489704580562394216162942464580870040464243050field.private,
-    challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     _nonce: 6914679112537858302476465449822610182325897881098010092113211151799315162492group.public
   }" \
   100000u32
@@ -186,20 +179,20 @@ PRIVATE_KEY=APrivateKey1zkp9p8bttYsy3EuwiGrb4PXmrtjzZkpGvBCGVCgvpcwVjUV
 " > .env
 
 echo "
-#       :::::::::  :::::::::: :::     ::: ::::::::::     :::     :::
-#      :+:    :+: :+:        :+:     :+: :+:          :+: :+:   :+:
-#     +:+    +:+ +:+        +:+     +:+ +:+         +:+   +:+  +:+
-#    +#++:++#:  +#++:++#   +#+     +:+ +#++:++#   +#++:++#++: +#+
-#   +#+    +#+ +#+         +#+   +#+  +#+        +#+     +#+ +#+
-#  #+#    #+# #+#          #+#+#+#   #+#        #+#     #+# #+#
-# ###    ### ##########     ###     ########## ###     ### ##########
-#           :::     ::::    :::  ::::::::  :::       ::: :::::::::: :::::::::
-#        :+: :+:   :+:+:   :+: :+:    :+: :+:       :+: :+:        :+:    :+:
-#      +:+   +:+  :+:+:+  +:+ +:+        +:+       +:+ +:+        +:+    +:+
-#    +#++:++#++: +#+ +:+ +#+ +#++:++#++ +#+  +:+  +#+ +#++:++#   +#++:++#:
-#   +#+     +#+ +#+  +#+#+#        +#+ +#+ +#+#+ +#+ +#+        +#+    +#+
-#  #+#     #+# #+#   #+#+# #+#    #+#  #+#+# #+#+#  #+#        #+#    #+#
-# ###     ### ###    ####  ########    ###   ###   ########## ###    ###
+        :::::::::  :::::::::: :::     ::: ::::::::::     :::     :::
+       :+:    :+: :+:        :+:     :+: :+:          :+: :+:   :+:
+      +:+    +:+ +:+        +:+     +:+ +:+         +:+   +:+  +:+
+     +#++:++#:  +#++:++#   +#+     +:+ +#++:++#   +#++:++#++: +#+
+    +#+    +#+ +#+         +#+   +#+  +#+        +#+     +#+ +#+
+   #+#    #+# #+#          #+#+#+#   #+#        #+#     #+# #+#
+  ###    ### ##########     ###     ########## ###     ### ##########
+            :::     ::::    :::  ::::::::  :::       ::: :::::::::: :::::::::
+         :+: :+:   :+:+:   :+: :+:    :+: :+:       :+: :+:        :+:    :+:
+       +:+   +:+  :+:+:+  +:+ +:+        +:+       +:+ +:+        +:+    +:+
+     +#++:++#++: +#+ +:+ +#+ +#++:++#++ +#+  +:+  +#+ +#++:++#   +#++:++#:
+    +#+     +#+ +#+  +#+#+#        +#+ +#+ +#+#+ +#+ +#+        +#+    +#+
+   #+#     #+# #+#   #+#+# #+#    #+#  #+#+# #+#+#  #+#        #+#    #+#
+  ###     ### ###    ####  ########    ###   ###   ########## ###    ###
 "
 
 #leo run reveal_answer
@@ -209,24 +202,18 @@ echo "
 #         reveal_answer_notification_record: RevealAnswerNotification,
 #         answer_record: multiparty_pvp_utils_v008.leo/Answer.record,
 #         joint_piece_state: puzzle_pieces_v008.leo/JointPieceState.record,
-#         claim_signature: puzzle_pieces_v008.leo/ClaimSignature.record,
-#         // sig: signature // using claimSignature record from beginning for this
 #     )
 
-leo run reveal_answer_game "{
+leo run reveal_answer_game \
+  "{
     owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-    game_state: 2u8.private,
-    your_turn: true.private,
-    total_pot: 200u64.private,
-    opponent_answer: 0u8.private,
+    guess: 0u8.private,
     _nonce: 1091792808197594721170902092665224630304882664167687449788333149679412516284group.public
-    }" \
-    "{
+  }" \
+  "{
     owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+    opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     amount: 100u64.private,
     nonce: 12345field.private,
     answer: 0u8.private,
@@ -235,22 +222,9 @@ leo run reveal_answer_game "{
   "{
     owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     amount: 200u64.private,
-    time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    message: 8062328565641143710315198539395259864274213782537700083868207132716559019626field.private,
-    challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     _nonce: 2470010722608988519677726442477530592921661968898332863336157467478307956734group.public
-  }" \
-  "{
-    owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    sig: sign1h04lnsl0t4aau8lzp06rzcm5eqrzr9ew63ljnw43v2nr7nkmsqqcx8cksna2ajwgk80rv0s7prrndw5k56sey3nrl487552lvaukuq8xe0cgu6x809qetnn35ufm3gl6ecyvtpgaavu9y5754j27utrwq8amruqyq2x6dvqs790yqsrctwmjnh3k7thslm0r9c3hpdvjrywpzts24xr.private,
-    amount: 100u64.private,
-    game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-    challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    _nonce: 4194021521584400665115656892726113988149706319889301017657236676279353942892group.public
   }"
 
 
@@ -263,111 +237,105 @@ PRIVATE_KEY=APrivateKey1zkp8pmTMT4FxG5qXZ9McEYDdY1G6YokY1BYzwoxTYJEKubF
 " > .env
 
 echo "
-#       :::::::::: ::::::::::: ::::    ::: ::::::::::: ::::::::  :::    :::
-#      :+:            :+:     :+:+:   :+:     :+:    :+:    :+: :+:    :+:
-#     +:+            +:+     :+:+:+  +:+     +:+    +:+        +:+    +:+
-#    :#::+::#       +#+     +#+ +:+ +#+     +#+    +#++:++#++ +#++:++#++
-#   +#+            +#+     +#+  +#+#+#     +#+           +#+ +#+    +#+
-#  #+#            #+#     #+#   #+#+#     #+#    #+#    #+# #+#    #+#
-# ###        ########### ###    #### ########### ########  ###    ###
-#       ::::::::      :::       :::   :::   ::::::::::
-#     :+:    :+:   :+: :+:    :+:+: :+:+:  :+:
-#    +:+         +:+   +:+  +:+ +:+:+ +:+ +:+
-#   :#:        +#++:++#++: +#+  +:+  +#+ +#++:++#
-#  +#+   +#+# +#+     +#+ +#+       +#+ +#+
-# #+#    #+# #+#     #+# #+#       #+# #+#
-# ########  ###     ### ###       ### ##########
+      :::::::::: ::::::::::: ::::    ::: ::::::::::: ::::::::  :::    :::
+     :+:            :+:     :+:+:   :+:     :+:    :+:    :+: :+:    :+:
+    +:+            +:+     :+:+:+  +:+     +:+    +:+        +:+    +:+
+   :#::+::#       +#+     +#+ +:+ +#+     +#+    +#++:++#++ +#++:++#++
+  +#+            +#+     +#+  +#+#+#     +#+           +#+ +#+    +#+
+ #+#            #+#     #+#   #+#+#     #+#    #+#    #+# #+#    #+#
+###        ########### ###    #### ########### ########  ###    ###
+      ::::::::      :::       :::   :::   ::::::::::
+    :+:    :+:   :+: :+:    :+:+: :+:+:  :+:
+   +:+         +:+   +:+  +:+ +:+:+ +:+ +:+
+  :#:        +#++:++#++: +#+  +:+  +#+ +#++:++#
+ +#+   +#+# +#+     +#+ +#+       +#+ +#+
+#+#    #+# #+#     #+# #+#       #+# #+#
+########  ###     ### ###       ### ##########
 "
 
 # transition finish_game
 #     (
-#         game_record: Game,
-#         joint_piece_winner: puzzle_pieces_v008.leo/JointPieceWinner.record,
-#         piece_joint_stake: puzzle_pieces_v008.leo/JointPieceStake.record,
-#         joint_piece_time_claim: puzzle_pieces_v008.leo/JointPieceTimeClaim.record,
+#         game: Game,
+#         winner: puzzle_multiparty_coin_v001.aleo/JointWinner,
+#         stake: puzzle_multiparty_coin_v001.aleo/JointStake,
+#         timeout_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
 #     )
 
-leo run finish_game "{
+leo run finish_game \
+  "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     challenger_commit: 1632338669887332693450432112819554759682427161589172463360656597380489639523field.private,
     opponent_answer: 0u8.private,
     total_pot: 200u64.private,
-    challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+    challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+    opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
     game_state: 2u8.private,
     _nonce: 6948608249986613510548613368363016201727215274114585598126958153407391794356group.public
-  }" "{
+  }" \
+  "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 200u64.private,
-    time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     winner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     _nonce: 2941739561580251680610526948102666726700629610306996571161200799611740404159group.public
-  }" "{
+  }" \
+  "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 200u64.private,
-    time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    block_ht: 100000u32.private,
+    block_height: 100000u32.private,
     _nonce: 2240713899390860994917694134343841722032477963540160502162988371192957651151group.public
-  }" "{
+  }" \
+  "{
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     amount: 200u64.private,
-    time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-    message: 1776434703100582373204662861254489704580562394216162942464580870040464243050field.private,
-    game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-    block_ht: 100000u32.private,
+    block_height: 100000u32.private,
     _nonce: 274384839497127952384736973185974643077364641215250178954909534832130043014group.public
   }"
 
 
-  # transition finish_game_by_timeout(
-  #       game_record: Game,
-  #       piece_joint_stake: JointPieceStake,
-  #       joint_piece_time_claim: JointPieceTimeClaim,
-  #       opponent_sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
-  #   )
+#   # transition finish_game_by_timeout(
+#   #       game_record: Game,
+#   #       piece_joint_stake: JointPieceStake,
+#   #       joint_piece_time_claim: JointPieceTimeClaim,
+#   #       opponent_sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
+#   #   )
 
-# leo run finish_game_by_timeout "{
-#     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-#     challenger_commit: 1632338669887332693450432112819554759682427161589172463360656597380489639523field.private,
-#     opponent_answer: 0u8.private,
-#     total_pot: 200u64.private,
-#     challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-#     opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-#     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-#     game_state: 2u8.private,
-#     _nonce: 6948608249986613510548613368363016201727215274114585598126958153407391794356group.public
-#   }" \
-#   "{
-#     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-#     amount: 200u64.private,
-#     time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-#     state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-#     block_ht: 100000u32.private,
-#     _nonce: 2240713899390860994917694134343841722032477963540160502162988371192957651151group.public
-#   }" \
-#   "{
-#     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-#     amount: 200u64.private,
-#     time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-#     state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-#     message_1: 4299148155668445410404796665478412871867472362428312345599969289162437917169field.private,
-#     message_2: 251561861986387641133995513088278466362266230978294643355666629668300490271field.private,
-#     message_3: 1152742118437172617676919179607096353215168002720611159713055309066048881777field.private,
-#     message_4: 6965356107999508170054292104522311809055538516545196583411503498743541220125field.private,
-#     message_5: 478560413032field.private,
-#     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-#     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-#     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-#     block_ht: 100000u32.private,
-#     _nonce: 274384839497127952384736973185974643077364641215250178954909534832130043014group.public
-#   }" \
-#   sign1j0hhruukxrlddx4tzzpe8gccgy3l430el69e0jpclrzk2x3kecpq7zteu9z5qqqttk4xltyplgwzt4famkfxar5wjncz5ttssdur2qslse2uz49ljzhxz82y28gy0un45z8w2jgwk7jhdgxqh58qgcvwqpcuf9estpjsv9n9jln3x08mzl2rc8z25j6s6r4uf8rq9r7ddkxqyaahcxh
+# # leo run finish_game_by_timeout "{
+# #     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+# #     challenger_commit: 1632338669887332693450432112819554759682427161589172463360656597380489639523field.private,
+# #     opponent_answer: 0u8.private,
+# #     total_pot: 200u64.private,
+# #     challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+# #     opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+# #     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+# #     game_state: 2u8.private,
+# #     _nonce: 6948608249986613510548613368363016201727215274114585598126958153407391794356group.public
+# #   }" \
+# #   "{
+# #     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+# #     amount: 200u64.private,
+# #     time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+# #     state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+# #     block_ht: 100000u32.private,
+# #     _nonce: 2240713899390860994917694134343841722032477963540160502162988371192957651151group.public
+# #   }" \
+# #   "{
+# #     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+# #     amount: 200u64.private,
+# #     time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+# #     state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+# #     message_1: 4299148155668445410404796665478412871867472362428312345599969289162437917169field.private,
+# #     message_2: 251561861986387641133995513088278466362266230978294643355666629668300490271field.private,
+# #     message_3: 1152742118437172617676919179607096353215168002720611159713055309066048881777field.private,
+# #     message_4: 6965356107999508170054292104522311809055538516545196583411503498743541220125field.private,
+# #     message_5: 478560413032field.private,
+# #     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+# #     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+# #     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
+# #     block_ht: 100000u32.private,
+# #     _nonce: 274384839497127952384736973185974643077364641215250178954909534832130043014group.public
+# #   }" \
+# #   sign1j0hhruukxrlddx4tzzpe8gccgy3l430el69e0jpclrzk2x3kecpq7zteu9z5qqqttk4xltyplgwzt4famkfxar5wjncz5ttssdur2qslse2uz49ljzhxz82y28gy0un45z8w2jgwk7jhdgxqh58qgcvwqpcuf9estpjsv9n9jln3x08mzl2rc8z25j6s6r4uf8rq9r7ddkxqyaahcxh
