@@ -1,6 +1,6 @@
 import puzzle_arcade_coin_v002.aleo;
 import puzzle_multiparty_coin_v001.aleo;
-program wheres_alex_v019.aleo;
+program wheres_alex_v001.aleo;
 
 
 
@@ -101,7 +101,7 @@ function renege_stake:
     call puzzle_multiparty_coin_v001.aleo/stake_transfer_out r0 r1 into r2 r3;
     async renege_stake r3 into r4;
     output r2 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
-    output r4 as wheres_alex_v019.aleo/renege_stake.future;
+    output r4 as wheres_alex_v001.aleo/renege_stake.future;
 
 finalize renege_stake:
     input r0 as puzzle_multiparty_coin_v001.aleo/stake_transfer_out.future;
@@ -120,7 +120,7 @@ function renege_stake_all:
     async renege_stake_all r5 r7 into r8;
     output r4 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
     output r6 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
-    output r8 as wheres_alex_v019.aleo/renege_stake_all.future;
+    output r8 as wheres_alex_v001.aleo/renege_stake_all.future;
 
 finalize renege_stake_all:
     input r0 as puzzle_multiparty_coin_v001.aleo/stake_transfer_out.future;
@@ -175,7 +175,7 @@ function finish_game:
     async finish_game r5 into r7;
     output r4 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
     output r6 as Game.record;
-    output r7 as wheres_alex_v019.aleo/finish_game.future;
+    output r7 as wheres_alex_v001.aleo/finish_game.future;
 
 finalize finish_game:
     input r0 as puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner.future;
@@ -193,7 +193,7 @@ function finish_game_by_timeout:
     async finish_game_by_timeout r2.block_height r5 into r6;
     output r4 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
     output r3 as Game.record;
-    output r6 as wheres_alex_v019.aleo/finish_game_by_timeout.future;
+    output r6 as wheres_alex_v001.aleo/finish_game_by_timeout.future;
 
 finalize finish_game_by_timeout:
     input r0 as u32.public;

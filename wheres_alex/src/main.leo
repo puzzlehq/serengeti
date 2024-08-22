@@ -1,6 +1,6 @@
 import puzzle_multiparty_coin_v001.aleo;
 
-program wheres_alex_v019.aleo {
+program wheres_alex_v001.aleo {
     // owned by challenger
     // sent to multisig on reveal_answer
     record Answer {
