@@ -1,4 +1,4 @@
-import puzzle_arcade_coin_v001.aleo;
+import puzzle_arcade_coin_v002.aleo;
 import puzzle_multiparty_coin_v001.aleo;
 program wheres_alex_v019.aleo;
 
@@ -44,7 +44,7 @@ record OpponentGuess:
 
 
 function propose_game:
-    input r0 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
+    input r0 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
     input r1 as u64.private;
     input r2 as address.private;
     input r3 as address.private;
@@ -73,7 +73,7 @@ function propose_game:
     cast r2 r4 r3 r1 r5 r6 into r24 as Answer.record;
     output r16 as puzzle_multiparty_coin_v001.aleo/StakeClaim.record;
     output r17 as puzzle_multiparty_coin_v001.aleo/Stake.record;
-    output r18 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
+    output r18 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
     output r24 as Answer.record;
     output r19 as Key.record;
     output r23 as Game.record;
@@ -81,7 +81,7 @@ function propose_game:
 
 
 function submit_wager:
-    input r0 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
+    input r0 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
     input r1 as Key.record;
     input r2 as Proposal.record;
     div r2.total_pot 2u64 into r3;
@@ -91,14 +91,23 @@ function submit_wager:
     call puzzle_multiparty_coin_v001.aleo/stake_transfer_in r0 r5 r2.challenger self.signer r2.game_multisig into r6 r7 r8;
     output r6 as puzzle_multiparty_coin_v001.aleo/StakeClaim.record;
     output r7 as puzzle_multiparty_coin_v001.aleo/Stake.record;
-    output r8 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
+    output r8 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
+
 
 
 function renege_stake:
     input r0 as puzzle_multiparty_coin_v001.aleo/Stake.record;
     input r1 as puzzle_multiparty_coin_v001.aleo/StakeClaim.record;
-    call puzzle_multiparty_coin_v001.aleo/stake_transfer_out r0 r1 into r2;
-    output r2 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
+    call puzzle_multiparty_coin_v001.aleo/stake_transfer_out r0 r1 into r2 r3;
+    async renege_stake r3 into r4;
+    output r2 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
+    output r4 as wheres_alex_v019.aleo/renege_stake.future;
+
+finalize renege_stake:
+    input r0 as puzzle_multiparty_coin_v001.aleo/stake_transfer_out.future;
+    await r0;
+
+
 
 
 function renege_stake_all:
@@ -106,10 +115,19 @@ function renege_stake_all:
     input r1 as puzzle_multiparty_coin_v001.aleo/StakeClaim.record;
     input r2 as puzzle_multiparty_coin_v001.aleo/Stake.record;
     input r3 as puzzle_multiparty_coin_v001.aleo/StakeClaim.record;
-    call puzzle_multiparty_coin_v001.aleo/stake_transfer_out r0 r1 into r4;
-    call puzzle_multiparty_coin_v001.aleo/stake_transfer_out r2 r3 into r5;
-    output r4 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
-    output r5 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
+    call puzzle_multiparty_coin_v001.aleo/stake_transfer_out r0 r1 into r4 r5;
+    call puzzle_multiparty_coin_v001.aleo/stake_transfer_out r2 r3 into r6 r7;
+    async renege_stake_all r5 r7 into r8;
+    output r4 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
+    output r6 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
+    output r8 as wheres_alex_v019.aleo/renege_stake_all.future;
+
+finalize renege_stake_all:
+    input r0 as puzzle_multiparty_coin_v001.aleo/stake_transfer_out.future;
+    input r1 as puzzle_multiparty_coin_v001.aleo/stake_transfer_out.future;
+    await r0;
+    await r1;
+
 
 
 function accept_game:
@@ -146,15 +164,23 @@ function reveal_answer_game:
     output r6 as puzzle_multiparty_coin_v001.aleo/JointWinner.record;
 
 
+
 function finish_game:
     input r0 as Game.record;
     input r1 as puzzle_multiparty_coin_v001.aleo/JointWinner.record;
     input r2 as puzzle_multiparty_coin_v001.aleo/JointStake.record;
     input r3 as puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim.record;
-    call puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner r1 r2 r3 into r4;
-    cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger r0.opponent 5u8 into r5 as Game.record;
-    output r4 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
-    output r5 as Game.record;
+    call puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner r1 r2 r3 into r4 r5;
+    cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger r0.opponent 5u8 into r6 as Game.record;
+    async finish_game r5 into r7;
+    output r4 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
+    output r6 as Game.record;
+    output r7 as wheres_alex_v019.aleo/finish_game.future;
+
+finalize finish_game:
+    input r0 as puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner.future;
+    await r0;
+
 
 
 
@@ -163,14 +189,16 @@ function finish_game_by_timeout:
     input r1 as puzzle_multiparty_coin_v001.aleo/JointStake.record;
     input r2 as puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim.record;
     cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger r0.opponent 6u8 into r3 as Game.record;
-    call puzzle_multiparty_coin_v001.aleo/transfer_via_timeout r1 r2 into r4;
-    async finish_game_by_timeout r2.block_height into r5;
-    output r4 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
+    call puzzle_multiparty_coin_v001.aleo/transfer_via_timeout r1 r2 into r4 r5;
+    async finish_game_by_timeout r2.block_height r5 into r6;
+    output r4 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
     output r3 as Game.record;
-    output r5 as wheres_alex_v019.aleo/finish_game_by_timeout.future;
+    output r6 as wheres_alex_v019.aleo/finish_game_by_timeout.future;
 
 finalize finish_game_by_timeout:
     input r0 as u32.public;
-    gt r0 block.height into r1;
-    assert.eq r1 true;
+    input r1 as puzzle_multiparty_coin_v001.aleo/transfer_via_timeout.future;
+    gt r0 block.height into r2;
+    assert.eq r2 true;
+    await r1;
 

@@ -58,7 +58,7 @@ program wheres_alex_v019.aleo {
 
     // called by challenger
     transition propose_game (
-        wager: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        wager: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
         wager_amount: u64,
         challenger: address,
         opponent: address,
@@ -69,7 +69,7 @@ program wheres_alex_v019.aleo {
     ) -> (
         puzzle_multiparty_coin_v001.aleo/StakeClaim,
         puzzle_multiparty_coin_v001.aleo/Stake,
-        puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
         Answer,
         Key,
         Game,
@@ -98,7 +98,7 @@ program wheres_alex_v019.aleo {
         ): (
             puzzle_multiparty_coin_v001.aleo/StakeClaim,
             puzzle_multiparty_coin_v001.aleo/Stake,
-            puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+            puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
         ) = puzzle_multiparty_coin_v001.aleo/stake_transfer_in(
             wager,
             wager_amount,
@@ -153,13 +153,13 @@ program wheres_alex_v019.aleo {
 
     // called by opponent
     transition submit_wager (
-        wager: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        wager: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
         key: Key,
         proposal: Proposal
     ) -> (
         puzzle_multiparty_coin_v001.aleo/StakeClaim,
         puzzle_multiparty_coin_v001.aleo/Stake,
-        puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
     )
     {
         // assert that the wager record has enough to match the proposal
@@ -175,19 +175,23 @@ program wheres_alex_v019.aleo {
     }
 
     // any part can call this function with multisig key
-    transition renege_stake
+    async transition renege_stake
     (
       stake: puzzle_multiparty_coin_v001.aleo/Stake,
       claim: puzzle_multiparty_coin_v001.aleo/StakeClaim,
-    ) -> puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin {
-        return puzzle_multiparty_coin_v001.aleo/stake_transfer_out(
+    ) -> (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) {
+        let (coin, future): (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) = puzzle_multiparty_coin_v001.aleo/stake_transfer_out(
           stake,
           claim,
         );
+        return (coin, await_renege_stake(future));
+    }
+    async function await_renege_stake(f: Future) {
+      f.await();
     }
 
     // any party can call this function with multisig key
-    transition renege_stake_all
+    async transition renege_stake_all
     (
         stake_challenger: puzzle_multiparty_coin_v001.aleo/Stake,
         claim_challenger: puzzle_multiparty_coin_v001.aleo/StakeClaim,
@@ -195,21 +199,26 @@ program wheres_alex_v019.aleo {
         claim_opponent: puzzle_multiparty_coin_v001.aleo/StakeClaim,
     ) ->
     (
-        puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
-        puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
+        puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
+        Future
     )
     {
-        let (challenger_coin): puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_multiparty_coin_v001.aleo/stake_transfer_out(
+        let (challenger_coin, future1): (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) = puzzle_multiparty_coin_v001.aleo/stake_transfer_out(
           stake_challenger,
           claim_challenger,
         );
 
-        let (opponent_coin): puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_multiparty_coin_v001.aleo/stake_transfer_out(
+        let (opponent_coin, future2): (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) = puzzle_multiparty_coin_v001.aleo/stake_transfer_out(
           stake_opponent,
           claim_opponent,
         );
 
-        return (challenger_coin, opponent_coin);
+        return (challenger_coin, opponent_coin, await_renege_stake_all(future1, future2));
+    }
+    async function await_renege_stake_all(f1: Future, f2: Future) {
+      f1.await();
+      f2.await();
     }
 
     // called by opponent (via ms key) after wager is confirmed on network
@@ -311,18 +320,19 @@ program wheres_alex_v019.aleo {
     }
 
     // called by multisig key to finish the game and transfer winnings to winner
-    transition finish_game
+    async transition finish_game
     (
         game: Game,
         winner: puzzle_multiparty_coin_v001.aleo/JointWinner,
         stake: puzzle_multiparty_coin_v001.aleo/JointStake,
         timeout_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
     ) -> (
-        puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
         Game,
+        Future
     )
     {
-        let (winnings): puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner(
+        let (winnings, future): (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) = puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner(
             winner,
             stake,
             timeout_claim,
@@ -338,7 +348,10 @@ program wheres_alex_v019.aleo {
             game_state: 5u8,
         };
 
-        return (winnings, finished_game);
+        return (winnings, finished_game, await_finish_game(future));
+    }
+    async function await_finish_game(f: Future) {
+      f.await();
     }
 
     // called by multisig key via opponent to finish the game and get the total pot!
@@ -348,7 +361,7 @@ program wheres_alex_v019.aleo {
         timeout_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
     ) ->
     (
-        puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+        puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
         Game,
         Future
     )
@@ -363,7 +376,7 @@ program wheres_alex_v019.aleo {
             game_state: 6u8,
         };
 
-        let (winnings): puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_multiparty_coin_v001.aleo/transfer_via_timeout(
+        let (winnings, future): (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) = puzzle_multiparty_coin_v001.aleo/transfer_via_timeout(
           stake,
           timeout_claim
         );
@@ -371,10 +384,11 @@ program wheres_alex_v019.aleo {
         return (
           winnings,
           finished_game,
-          check_height(timeout_claim.block_height)
+          check_height(timeout_claim.block_height, future)
         );
     }
-    async function check_height(height: u32) {
+    async function check_height(height: u32, f: Future) {
       assert(height > block.height);
+      f.await();
     }
 }
