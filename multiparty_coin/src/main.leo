@@ -1,4 +1,5 @@
 import puzzle_arcade_coin_v002.aleo;
+import puzzle_arcade_ticket_v001.aleo;
 
 // transferring pieces into multisig for a 1v1 game between a challenger and an opponent
 // challenger and opponent both transfer pieces to the multisig and multisig gets two PieceStake
@@ -191,10 +192,10 @@ program puzzle_multiparty_coin_v001.aleo {
         winner: JointWinner, // burned
         stake: JointStake, // burned
         timeout_claim: JointTimeoutClaim, // burned
-    ) -> (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) {
-        let (winnings, future): (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) = puzzle_arcade_coin_v002.aleo/mint_program (
+    ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
+        let (winnings, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
             winner.winner,
-            stake.amount,
+            stake.amount * 5u64,
         );
         return (winnings, await_transfer_stake_to_winner(future));
     }
@@ -215,15 +216,15 @@ program puzzle_multiparty_coin_v001.aleo {
     async transition transfer_via_timeout (
         stake: JointStake, // burned
         timeout_claim: JointTimeoutClaim, // burned
-    ) -> (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future)
+    ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future)
     {
         // check that it's the same game
         assert_eq(stake.owner, timeout_claim.owner);
         assert_eq(stake.amount, timeout_claim.amount);
 
-        let (winnings, future): (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) = puzzle_arcade_coin_v002.aleo/mint_program (
+        let (winnings, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
             timeout_claim.opponent,
-            timeout_claim.amount,
+            timeout_claim.amount * 5u64,
         );
 
         return (winnings, await_transfer_via_timeout(future));

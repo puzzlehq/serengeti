@@ -1,6 +1,8 @@
 import puzzle_arcade_coin_v002.aleo;
+import puzzle_arcade_ticket_v001.aleo;
 import puzzle_multiparty_coin_v001.aleo;
 program wheres_alex_v001.aleo;
+
 
 
 
@@ -173,7 +175,7 @@ function finish_game:
     call puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner r1 r2 r3 into r4 r5;
     cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger r0.opponent 5u8 into r6 as Game.record;
     async finish_game r5 into r7;
-    output r4 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
+    output r4 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
     output r6 as Game.record;
     output r7 as wheres_alex_v001.aleo/finish_game.future;
 
@@ -191,7 +193,7 @@ function finish_game_by_timeout:
     cast r0.owner r0.challenger_commit r0.opponent_answer r0.total_pot r0.challenger r0.opponent 6u8 into r3 as Game.record;
     call puzzle_multiparty_coin_v001.aleo/transfer_via_timeout r1 r2 into r4 r5;
     async finish_game_by_timeout r2.block_height r5 into r6;
-    output r4 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
+    output r4 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
     output r3 as Game.record;
     output r6 as wheres_alex_v001.aleo/finish_game_by_timeout.future;
 

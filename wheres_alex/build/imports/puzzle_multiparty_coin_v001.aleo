@@ -1,5 +1,7 @@
 import puzzle_arcade_coin_v002.aleo;
+import puzzle_arcade_ticket_v001.aleo;
 program puzzle_multiparty_coin_v001.aleo;
+
 
 
 record Stake:
@@ -99,13 +101,14 @@ function transfer_stake_to_winner:
     input r0 as JointWinner.record;
     input r1 as JointStake.record;
     input r2 as JointTimeoutClaim.record;
-    call puzzle_arcade_coin_v002.aleo/mint_program r0.winner r1.amount into r3 r4;
-    async transfer_stake_to_winner r4 into r5;
-    output r3 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
-    output r5 as puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner.future;
+    mul r1.amount 5u64 into r3;
+    call puzzle_arcade_ticket_v001.aleo/mint r0.winner r3 into r4 r5;
+    async transfer_stake_to_winner r5 into r6;
+    output r4 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r6 as puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner.future;
 
 finalize transfer_stake_to_winner:
-    input r0 as puzzle_arcade_coin_v002.aleo/mint_program.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/mint.future;
     await r0;
 
 
@@ -116,12 +119,13 @@ function transfer_via_timeout:
     input r1 as JointTimeoutClaim.record;
     assert.eq r0.owner r1.owner;
     assert.eq r0.amount r1.amount;
-    call puzzle_arcade_coin_v002.aleo/mint_program r1.opponent r1.amount into r2 r3;
-    async transfer_via_timeout r3 into r4;
-    output r2 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
-    output r4 as puzzle_multiparty_coin_v001.aleo/transfer_via_timeout.future;
+    mul r1.amount 5u64 into r2;
+    call puzzle_arcade_ticket_v001.aleo/mint r1.opponent r2 into r3 r4;
+    async transfer_via_timeout r4 into r5;
+    output r3 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r5 as puzzle_multiparty_coin_v001.aleo/transfer_via_timeout.future;
 
 finalize transfer_via_timeout:
-    input r0 as puzzle_arcade_coin_v002.aleo/mint_program.future;
+    input r0 as puzzle_arcade_ticket_v001.aleo/mint.future;
     await r0;
 

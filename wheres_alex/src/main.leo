@@ -327,12 +327,12 @@ program wheres_alex_v001.aleo {
         stake: puzzle_multiparty_coin_v001.aleo/JointStake,
         timeout_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
     ) -> (
-        puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
+        puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
         Game,
         Future
     )
     {
-        let (winnings, future): (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) = puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner(
+        let (winnings, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner(
             winner,
             stake,
             timeout_claim,
@@ -361,7 +361,7 @@ program wheres_alex_v001.aleo {
         timeout_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
     ) ->
     (
-        puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
+        puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
         Game,
         Future
     )
@@ -376,7 +376,7 @@ program wheres_alex_v001.aleo {
             game_state: 6u8,
         };
 
-        let (winnings, future): (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, Future) = puzzle_multiparty_coin_v001.aleo/transfer_via_timeout(
+        let (winnings, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_multiparty_coin_v001.aleo/transfer_via_timeout(
           stake,
           timeout_claim
         );
