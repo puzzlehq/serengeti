@@ -8,7 +8,6 @@ program wheres_alex_v001.aleo {
         game_multisig: address,
         opponent: address,
         amount: u64,
-        nonce: field,
         answer: u8
     }
 
@@ -50,7 +49,7 @@ program wheres_alex_v001.aleo {
 
     // sent to challenger on accept_game
     // consumed in reveal_answer
-    record OpponentGuess {
+    record Guess {
         owner: address, // challenger
         guess: u8,
     }
@@ -62,7 +61,6 @@ program wheres_alex_v001.aleo {
         challenger: address,
         opponent: address,
         game_multisig: address,
-        nonce: field,
         answer: u8,
         game_multisig_seed: field,
     ) -> (
@@ -131,7 +129,6 @@ program wheres_alex_v001.aleo {
             game_multisig: game_multisig,
             opponent: opponent,
             amount: wager_amount,
-            nonce: nonce,
             answer: answer,
         };
 
@@ -230,7 +227,7 @@ program wheres_alex_v001.aleo {
         puzzle_multiparty_coin_v001.aleo/JointStake,
         puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
         puzzle_multiparty_coin_v001.aleo/JointState,
-        OpponentGuess,
+        Guess,
         Game,
     )
     {
@@ -254,7 +251,7 @@ program wheres_alex_v001.aleo {
         );
 
         // sent to challenger on accept_game
-        let guess: OpponentGuess = OpponentGuess {
+        let guess: Guess = Guess {
             owner: game.challenger,
             guess: opponent_answer,
         };
@@ -280,7 +277,7 @@ program wheres_alex_v001.aleo {
     // called by challenger to reveal answer to multisig
     transition reveal_answer_game
     (
-        opponent_guess: OpponentGuess,
+        opponent_guess: Guess,
         answer: Answer,
         joint_state: puzzle_multiparty_coin_v001.aleo/JointState,
     ) ->
@@ -299,7 +296,6 @@ program wheres_alex_v001.aleo {
             game_multisig: answer.game_multisig,
             opponent: answer.opponent,
             amount: answer.amount,
-            nonce: answer.nonce,
             answer: answer.answer
         };
 
