@@ -14,10 +14,8 @@ program puzzle_multiparty_coin_v001.aleo {
     // owned by multisig
     record Stake {
         owner: address,
-        amount: u64,
-        challenger: address,
-        opponent: address,
         staker: address,
+        amount: u64,
     }
 
     // owned by multisig
@@ -37,26 +35,9 @@ program puzzle_multiparty_coin_v001.aleo {
     }
 
     // owned by multisig
-    record JointStake {
-        owner: address,
-        amount: u64,
-        block_height: u32,
-    }
-
-    // owned by challenger only
-    record JointState {
-        owner: address,
-        amount: u64,
-        opponent: address,
-        game_multisig: address,
-    }
-
-    // owned by multisig
     record JointWinner {
         owner: address,
         amount: u64,
-        challenger: address,
-        opponent: address,
         winner: address,
     }
 
@@ -76,10 +57,8 @@ program puzzle_multiparty_coin_v001.aleo {
 
         let stake: Stake = Stake {
             owner: game_multisig,
-            amount: amount,
-            challenger: challenger,
-            opponent: opponent,
             staker: self.signer,
+            amount: amount,
         };
 
         let change: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin = puzzle_arcade_coin_v002.aleo/spend(
@@ -114,17 +93,11 @@ program puzzle_multiparty_coin_v001.aleo {
         stake_opponent: Stake, // burned
         claim_opponent: StakeClaim, // burned
         block_height: u32 // height at which the opponent can claim if answer is not revealed
-    ) -> (JointStake, JointTimeoutClaim, JointState) {
+    ) -> (JointTimeoutClaim) {
         let multisig: address = self.signer;
         let amount: u64 = stake_challenger.amount;
-        let challenger: address = stake_challenger.challenger;
-        let opponent: address = stake_challenger.opponent;
-
-        let joint_stake: JointStake = JointStake {
-            owner: multisig,
-            amount: amount + amount,
-            block_height: block_height,
-        };
+        let challenger: address = stake_challenger.staker;
+        let opponent: address = stake_opponent.staker;
 
          let timeout_claim: JointTimeoutClaim = JointTimeoutClaim {
             owner: multisig,
@@ -134,14 +107,7 @@ program puzzle_multiparty_coin_v001.aleo {
             block_height: block_height,
         };
 
-        let joint_state: JointState = JointState {
-            owner: challenger,
-            amount: amount + amount,
-            opponent: opponent,
-            game_multisig: multisig,
-        };
-
-        return (joint_stake, timeout_claim, joint_state);
+        return (timeout_claim);
     }
 
     // Challenger calls this function with the challenger key
@@ -150,9 +116,9 @@ program puzzle_multiparty_coin_v001.aleo {
     //
     // This call is nested inside Reveal Answer in where's alex game
     transition set_winner(
-        joint_state: JointState, // burned
+        game_multisig: address,
+        amount: u64,
         winner: address,
-        challenger: address
     ) -> (JointWinner) {
         // 2. Check the rest of the details of the game
         // assert_eq(joint_piece_state.amount, sig.amount + sig.amount);
@@ -176,10 +142,8 @@ program puzzle_multiparty_coin_v001.aleo {
         // }
 
         let joint_winner: JointWinner = JointWinner {
-            owner: joint_state.game_multisig,
-            amount: joint_state.amount,
-            challenger: challenger,
-            opponent: joint_state.opponent,
+            owner: game_multisig,
+            amount: amount,
             winner: winner,
         };
 
@@ -190,12 +154,11 @@ program puzzle_multiparty_coin_v001.aleo {
     // Any multisig member calls this function to end the game and transfer the pieces
     async transition transfer_stake_to_winner(
         winner: JointWinner, // burned
-        stake: JointStake, // burned
         timeout_claim: JointTimeoutClaim, // burned
     ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
         let (winnings, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
             winner.winner,
-            stake.amount * 5u64,
+            winner.amount * 5u64,
         );
         return (winnings, await_transfer_stake_to_winner(future));
     }
@@ -214,14 +177,9 @@ program puzzle_multiparty_coin_v001.aleo {
     //
     // called via finish_game_by_timeout
     async transition transfer_via_timeout (
-        stake: JointStake, // burned
         timeout_claim: JointTimeoutClaim, // burned
     ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future)
     {
-        // check that it's the same game
-        assert_eq(stake.owner, timeout_claim.owner);
-        assert_eq(stake.amount, timeout_claim.amount);
-
         let (winnings, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
             timeout_claim.opponent,
             timeout_claim.amount * 5u64,

@@ -150,11 +150,10 @@ run_output=$(leo run accept_game \
 echo "$run_output"
 
 accept_game_outputs=($(extract_outputs "$run_output"))
-joint_stake="${accept_game_outputs[0]}"
-joint_timeout_claim="${accept_game_outputs[1]}"
-joint_state="${accept_game_outputs[2]}"
-guess="${accept_game_outputs[3]}"
-game="${accept_game_outputs[4]}"
+joint_timeout_claim="${accept_game_outputs[0]}"
+joint_state="${accept_game_outputs[1]}"
+guess="${accept_game_outputs[2]}"
+game="${accept_game_outputs[3]}"
 
 echo "
 NETWORK=testnet
@@ -210,52 +209,9 @@ echo "
 run_output=$(leo run finish_game \
   "$game" \
   "$joint_winner" \
-  "$joint_stake" \
   "$joint_timeout_claim"
 )
 echo "$run_output"
 
-
-# #   # transition finish_game_by_timeout(
-# #   #       game_record: Game,
-# #   #       piece_joint_stake: JointPieceStake,
-# #   #       joint_piece_time_claim: JointPieceTimeClaim,
-# #   #       opponent_sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
-# #   #   )
-
-# # # leo run finish_game_by_timeout "{
-# # #     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-# # #     challenger_commit: 1632338669887332693450432112819554759682427161589172463360656597380489639523field.private,
-# # #     opponent_answer: 0u8.private,
-# # #     total_pot: 200u64.private,
-# # #     challenger_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-# # #     opponent_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-# # #     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-# # #     game_state: 2u8.private,
-# # #     _nonce: 6948608249986613510548613368363016201727215274114585598126958153407391794356group.public
-# # #   }" \
-# # #   "{
-# # #     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-# # #     amount: 200u64.private,
-# # #     time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-# # #     state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-# # #     block_ht: 100000u32.private,
-# # #     _nonce: 2240713899390860994917694134343841722032477963540160502162988371192957651151group.public
-# # #   }" \
-# # #   "{
-# # #     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-# # #     amount: 200u64.private,
-# # #     time_claimer_address: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-# # #     state_updater_address: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-# # #     message_1: 4299148155668445410404796665478412871867472362428312345599969289162437917169field.private,
-# # #     message_2: 251561861986387641133995513088278466362266230978294643355666629668300490271field.private,
-# # #     message_3: 1152742118437172617676919179607096353215168002720611159713055309066048881777field.private,
-# # #     message_4: 6965356107999508170054292104522311809055538516545196583411503498743541220125field.private,
-# # #     message_5: 478560413032field.private,
-# # #     game_multisig: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
-# # #     challenger: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-# # #     opponent: aleo1r4pc6ufjvw050jhzrew3vqm2lvacdxfd4a5ckulau0vjc72qvc8sr0jg2a.private,
-# # #     block_ht: 100000u32.private,
-# # #     _nonce: 274384839497127952384736973185974643077364641215250178954909534832130043014group.public
-# # #   }" \
-# # #   sign1j0hhruukxrlddx4tzzpe8gccgy3l430el69e0jpclrzk2x3kecpq7zteu9z5qqqttk4xltyplgwzt4famkfxar5wjncz5ttssdur2qslse2uz49ljzhxz82y28gy0un45z8w2jgwk7jhdgxqh58qgcvwqpcuf9estpjsv9n9jln3x08mzl2rc8z25j6s6r4uf8rq9r7ddkxqyaahcxh
+run_output=$(leo run finish_game_by_timeout "$game" "$joint_timeout_claim")
+echo "$run_output"

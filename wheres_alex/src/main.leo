@@ -6,7 +6,6 @@ program wheres_alex_v001.aleo {
     record Answer {
         owner: address,
         game_multisig: address,
-        opponent: address,
         amount: u64,
         answer: u8
     }
@@ -30,7 +29,6 @@ program wheres_alex_v001.aleo {
     //   0 -> Game reneged
     record Game {
         owner: address, // always multisig
-        opponent_answer: u8,
         total_pot: u64,
         challenger: address,
         opponent: address,
@@ -51,6 +49,7 @@ program wheres_alex_v001.aleo {
     // consumed in reveal_answer
     record Guess {
         owner: address, // challenger
+        opponent: address,
         guess: u8,
     }
 
@@ -72,12 +71,6 @@ program wheres_alex_v001.aleo {
         Game,
         Proposal,
     ) {
-        // assert contracts can't call this
-        assert_eq(self.caller, self.signer);
-
-        // random edge case, maybe unnecessary
-        assert_neq(game_multisig, opponent);
-
         // assert that the answer is valid
         assert(answer == 0u8 || answer == 1u8);
 
@@ -117,7 +110,6 @@ program wheres_alex_v001.aleo {
 
         let game: Game = Game {
             owner: game_multisig,
-            opponent_answer: 0u8, // placeholder until opponent answer in accept_game
             total_pot: wager_amount + wager_amount,
             challenger: challenger,
             opponent: opponent,
@@ -127,7 +119,6 @@ program wheres_alex_v001.aleo {
         let answer_: Answer = Answer {
             owner: challenger,
             game_multisig: game_multisig,
-            opponent: opponent,
             amount: wager_amount,
             answer: answer,
         };
@@ -217,32 +208,22 @@ program wheres_alex_v001.aleo {
     transition accept_game
     (
         game: Game,
-        opponent_answer: u8,
+        opponent_guess: u8,
         stake_challenger: puzzle_multiparty_coin_v001.aleo/Stake,
         claim_challenger: puzzle_multiparty_coin_v001.aleo/StakeClaim,
         stake_opponent: puzzle_multiparty_coin_v001.aleo/Stake,
         claim_opponent: puzzle_multiparty_coin_v001.aleo/StakeClaim,
         block_height: u32,
     ) -> (
-        puzzle_multiparty_coin_v001.aleo/JointStake,
         puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
-        puzzle_multiparty_coin_v001.aleo/JointState,
         Guess,
         Game,
     )
     {
-        // assert that opponent's answer is valid
-        assert(opponent_answer == 0u8 || opponent_answer == 1u8);
+        // assert that guess is valid
+        assert(opponent_guess == 0u8 || opponent_guess == 1u8);
 
-        let (
-            piece_joint_stake,
-            joint_piece_time_claim,
-            joint_piece_state,
-        ): (
-            puzzle_multiparty_coin_v001.aleo/JointStake,
-            puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
-            puzzle_multiparty_coin_v001.aleo/JointState,
-        ) = puzzle_multiparty_coin_v001.aleo/join_stakes(
+        let joint_timeout_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim = puzzle_multiparty_coin_v001.aleo/join_stakes(
             stake_challenger,
             claim_challenger,
             stake_opponent,
@@ -253,12 +234,12 @@ program wheres_alex_v001.aleo {
         // sent to challenger on accept_game
         let guess: Guess = Guess {
             owner: game.challenger,
-            guess: opponent_answer,
+            opponent: stake_opponent.staker,
+            guess: opponent_guess,
         };
 
         let updated_game: Game = Game {
             owner: game.owner,
-            opponent_answer: opponent_answer,
             total_pot: game.total_pot,
             challenger: game.challenger,
             opponent: game.opponent,
@@ -266,9 +247,7 @@ program wheres_alex_v001.aleo {
         };
 
         return (
-            piece_joint_stake,
-            joint_piece_time_claim,
-            joint_piece_state,
+            joint_timeout_claim,
             guess,
             updated_game,
         );
@@ -277,9 +256,8 @@ program wheres_alex_v001.aleo {
     // called by challenger to reveal answer to multisig
     transition reveal_answer_game
     (
-        opponent_guess: Guess,
-        answer: Answer,
-        joint_state: puzzle_multiparty_coin_v001.aleo/JointState,
+        guess: Guess,
+        answer: Answer
     ) ->
     (
         Answer,
@@ -288,22 +266,21 @@ program wheres_alex_v001.aleo {
     {
         // determine winner! (note: can't use self.signer in ternary)
         let challenger: address = self.signer;
-        let winner: address = opponent_guess.guess == answer.answer ? answer.opponent : challenger;
+        let winner: address = guess.guess == answer.answer ? guess.opponent : challenger;
 
         // reveal the answer to the multisig
         let revealed_answer: Answer = Answer {
             owner: answer.game_multisig,
             game_multisig: answer.game_multisig,
-            opponent: answer.opponent,
             amount: answer.amount,
             answer: answer.answer
         };
 
         // update joint_state with the winner
         let (joint_winner): puzzle_multiparty_coin_v001.aleo/JointWinner = puzzle_multiparty_coin_v001.aleo/set_winner(
-          joint_state,
-          winner,
-          self.signer
+          answer.game_multisig,
+          answer.amount,
+          winner
         );
 
         return (revealed_answer, joint_winner);
@@ -314,7 +291,6 @@ program wheres_alex_v001.aleo {
     (
         game: Game,
         winner: puzzle_multiparty_coin_v001.aleo/JointWinner,
-        stake: puzzle_multiparty_coin_v001.aleo/JointStake,
         timeout_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
     ) -> (
         puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
@@ -324,13 +300,11 @@ program wheres_alex_v001.aleo {
     {
         let (winnings, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_multiparty_coin_v001.aleo/transfer_stake_to_winner(
             winner,
-            stake,
             timeout_claim,
         );
 
         let finished_game: Game = Game {
             owner: game.owner,
-            opponent_answer: game.opponent_answer,
             total_pot: game.total_pot,
             challenger: game.challenger,
             opponent: game.opponent,
@@ -346,7 +320,6 @@ program wheres_alex_v001.aleo {
     // called by multisig key via opponent to finish the game and get the total pot!
     async transition finish_game_by_timeout(
         game: Game,
-        stake: puzzle_multiparty_coin_v001.aleo/JointStake,
         timeout_claim: puzzle_multiparty_coin_v001.aleo/JointTimeoutClaim,
     ) ->
     (
@@ -357,7 +330,6 @@ program wheres_alex_v001.aleo {
     {
         let finished_game: Game = Game {
             owner: game.owner,
-            opponent_answer: game.opponent_answer,
             total_pot: game.total_pot,
             challenger: game.challenger,
             opponent: game.opponent,
@@ -365,7 +337,6 @@ program wheres_alex_v001.aleo {
         };
 
         let (winnings, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_multiparty_coin_v001.aleo/transfer_via_timeout(
-          stake,
           timeout_claim
         );
 
