@@ -1,4 +1,5 @@
-program puzzle_arcade_ticket_v001.aleo {
+program puzzle_arcade_ticket_v002.aleo {
+  const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
 
   // game programs that can mint tickets
   mapping registry: address => bool;
@@ -10,7 +11,7 @@ program puzzle_arcade_ticket_v001.aleo {
 
   async transition add_program_to_registry(program_address: address) -> (Future) {
     assert_eq(self.caller, self.signer);
-    assert_eq(self.caller, aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw);
+    assert_eq(self.caller, OPERATOR);
     return register_program(program_address);
   }
 
