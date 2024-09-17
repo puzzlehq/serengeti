@@ -6,16 +6,17 @@ record PuzzleArcadeCoin:
 
 
 function mint:
-    input r0 as address.private;
+    input r0 as address.public;
+    input r1 as u64.public;
     assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pedhtu6akw9z68wedu8t3fgxfdh3ye2rypeqkx9cxjpr99chqvyqkjg7rw;
-    cast r0 1000000u64 into r1 as PuzzleArcadeCoin.record;
-    output r1 as PuzzleArcadeCoin.record;
+    assert.eq self.caller aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
+    cast r0 r1 into r2 as PuzzleArcadeCoin.record;
+    output r2 as PuzzleArcadeCoin.record;
 
 
 function spend:
     input r0 as PuzzleArcadeCoin.record;
-    input r1 as u64.private;
+    input r1 as u64.public;
     gte r0.amount r1 into r2;
     assert.eq r2 true;
     sub r0.amount r1 into r3;

@@ -1,13 +1,13 @@
 [[package]]
-name = "puzzle_arcade_coin_v001.aleo"
+name = "puzzle_arcade_coin_v002.aleo"
 location = "local"
 path = "/Users/lucas/code/puzzle/serengeti/arcade/spinner/../coin"
-checksum = "afbfa1cd9ebd09b325d3d2dea9178a9dfe91e9e1749f2526d731b54cca93b1ae"
+checksum = "7a26131e89343e5b01adb60cc07e7c8deb3689eed23792d0519565b685414cfa"
 dependencies = []
 
 [[package]]
-name = "puzzle_arcade_ticket_v001.aleo"
+name = "puzzle_arcade_ticket_v002.aleo"
 location = "local"
 path = "/Users/lucas/code/puzzle/serengeti/arcade/spinner/../ticket"
-checksum = "0de955d76ce91ce7846aadaefc207043264deb8caa79e0fd88c1c95b2ee44818"
+checksum = "0706f68248b772638cb4b8b6d05214ae4dd1c499159dde07aace7128957237c9"
 dependencies = []
