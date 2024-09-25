@@ -1,4 +1,4 @@
-# puzzle_raffle_091724.aleo
+# puzzle_raffle_092524_v2.aleo
 
 ## Build Guide
 
