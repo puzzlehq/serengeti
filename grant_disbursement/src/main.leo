@@ -204,7 +204,7 @@ program grant_disbursement_puzzle.aleo {
 
   async transition claim_withdrawal_public (
     amount: u64
-  ) {
+  ) -> Future {
     // todo: add admin assertions
     let f0: Future = credits.aleo/claim_unbond_public(self.address);
     let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_KEY, amount);
