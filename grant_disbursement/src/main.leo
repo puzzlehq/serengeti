@@ -4,12 +4,12 @@ import time_oracle.aleo;
 // The 'grant_disbursement' program.
 program grant_disbursement_puzzle.aleo {
   // todo: update grantee rewards key
-  const GRANTEE_REWARDS_KEY: address = aleo12shtwnmf49t5atmad2jnk3e58ahtp749d9trctt9z3wryxyzt5pspp0nd0;
+  const GRANTEE_REWARDS_ADDRESS: address = aleo12shtwnmf49t5atmad2jnk3e58ahtp749d9trctt9z3wryxyzt5pspp0nd0;
   // todo: update this address
-  const GRANTEE_PRINCIPAL_KEY: address = aleo1z9y9afh0h6dnyj3f0hvjc4mhayjy06fj42ppcq0rvpmmyky6fuzs449sjr;
+  const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1z9y9afh0h6dnyj3f0hvjc4mhayjy06fj42ppcq0rvpmmyky6fuzs449sjr;
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1q3gtqtd03fs7chhjdr8c4hf8vkwt96pf3vw28uytsdrnwt4hrs9sg7c62j;
   const MIN_BONDED_CREDITS: u64 = 10_000_000u64;
-  const CREDITS_AMOUNT: u64 = 1_000_000_000u64;
+  const CREDITS_AMOUNT: u64 = 500_000_000_000u64;
   const START_TIMESTAMP: u64 = 0u64;
   const CLIFF_TIMESTAMP: u64 = 1_000_000_000u64;
   const FULLY_VESTED_TIMESTAMP: u64 = 2_000_000_000u64;
@@ -38,8 +38,8 @@ program grant_disbursement_puzzle.aleo {
     // Create the initial grant
     let initial_grant: Grant = Grant {
       credits_amount: CREDITS_AMOUNT,
-      recipient_rewards_key: GRANTEE_REWARDS_KEY,
-      recipient_principal_key: GRANTEE_PRINCIPAL_KEY,
+      recipient_rewards_key: GRANTEE_REWARDS_ADDRESS,
+      recipient_principal_key: GRANTEE_PRINCIPAL_ADDRESS,
       start_timestamp: START_TIMESTAMP,
       cliff_timestamp: CLIFF_TIMESTAMP,
       fully_vested_timestamp: FULLY_VESTED_TIMESTAMP,
@@ -207,7 +207,7 @@ program grant_disbursement_puzzle.aleo {
   ) -> Future {
     // todo: add admin assertions
     let f0: Future = credits.aleo/claim_unbond_public(self.address);
-    let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_KEY, amount);
+    let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_ADDRESS, amount);
     return finalize_claim_withdrawal_public(f0, f1);
   }
 
