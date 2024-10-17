@@ -1,4 +1,5 @@
 import credits.aleo;
+import time_oracle.aleo;
 
 // The 'grant_disbursement' program.
 program grant_disbursement_puzzle.aleo {
@@ -6,6 +7,8 @@ program grant_disbursement_puzzle.aleo {
   const GRANTEE_REWARDS_KEY: address = aleo12shtwnmf49t5atmad2jnk3e58ahtp749d9trctt9z3wryxyzt5pspp0nd0;
   // todo: update this maybe
   const GRANTEE_PRINCIPAL_KEY: address = aleo1z9y9afh0h6dnyj3f0hvjc4mhayjy06fj42ppcq0rvpmmyky6fuzs449sjr;
+  const PUZZLE_VALIDATOR_ADDRESS: address = aleo1q3gtqtd03fs7chhjdr8c4hf8vkwt96pf3vw28uytsdrnwt4hrs9sg7c62j;
+  const MIN_BONDED_CREDITS: u64 = 10_000_000u64;
   const CREDITS_AMOUNT: u64 = 1_000_000_000u64;
   const START_TIMESTAMP: u64 = 0u64;
   const CLIFF_TIMESTAMP: u64 = 1_000_000_000u64;
@@ -50,12 +53,12 @@ program grant_disbursement_puzzle.aleo {
   async transition process_grant(
     grant_id: u8,
     credits_amount: u64,
-    paleo_amount: u128,
+    amount: u128,
   ) -> Future {
-    // Transfer the credits to signer temporarily to deposit into the pondo core protocol
-    let f0: Future = credits.aleo/transfer_public(self.signer, credits_amount);
-
-    // todo: add bond_public
+    // transfer credits to the protocol
+    let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
+    // bond the credits to the puzzle validator
+    let f2: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, microcredits);
 
     return finalize_process_grant(f0, grant_id, credits_amount, paleo_amount);
   }
@@ -68,11 +71,6 @@ program grant_disbursement_puzzle.aleo {
   ) {
     f0.await();
     f1.await();
-    f2.await();
-
-    /* START Verify deposit as sufficient */
-
-    /* END Verify deposit as sufficient */
 
     // Get the grant
     let grant: Grant = grants.get(grant_id);
@@ -82,7 +80,7 @@ program grant_disbursement_puzzle.aleo {
     // Assert that the grant has not been processed
     assert(!grant.is_processed);
 
-    // Update the grant, with the new paleo amount
+    // Update the grant
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
       recipient_rewards_key: grant.recipient_rewards_key,
@@ -97,19 +95,18 @@ program grant_disbursement_puzzle.aleo {
 
   async transition withdraw_rewards(
     id: u8,
-    amount: u128
+    reward_amount: u128,
   ) -> Future {
-    // Transfer the pAleo to the recipient_rewards_key
-    let f0: Future = credits.aleo/transfer_public(self.signer, amount);
+    let f0: Future = credits.aleo/unbond_public(self.address, reward_amount);
 
-    return finalize_withdraw_rewards(f0, id, paleo_amount, self.caller);
+    return finalize_withdraw_rewards(f0, id, reward_amount);
   }
 
   async function finalize_withdraw_rewards(
     f0: Future,
     id: u8,
-    paleo_amount: u128,
-    caller: address
+    reward_amount: u128,
+    signer: address
   ) {
     f0.await();
 
@@ -126,11 +123,13 @@ program grant_disbursement_puzzle.aleo {
     assert(current_timestamp < grant.cliff_timestamp);
 
     // Ensure the number of credits in the principal remains above the initial deposit
-    // Note: the paleo pool and the credits pool are always an underestimate (assuming no slashing) as it does not include rewards & owed commissions
-    // We use this underestimate because it as significantly reduces gas costs and should be close to the actual amount
-    // As it is an underestimate, the downside is it will slightly reduce the amount of paleo that can be withdrawn
+    // fetch the bonded state
+    let bonded_credits: u64 = credits.aleo/bonded.get(self.address);
+    // assert that the credits bonded are still > 10_000 credits after rewards withdrawal
+    assert(bonded_credits - reward_amount > MIN_BONDED_CREDITS);
 
     // Update the grant
+    // todo: don't think we need to update here
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
       recipient_rewards_key: grant.recipient_rewards_key,
@@ -147,16 +146,15 @@ program grant_disbursement_puzzle.aleo {
     id: u8,
     amount: u128
   ) -> Future {
-    // Transfer the pAleo to the recipient_rewards_key
-    let f0: Future = credits.aleo/transfer_public(self.signer, amount);
+    let f0: Future = credits.aleo/unbond_public(self.address, amount);
 
-    return finalize_withdraw_principal(f0, id, amount, self.caller);
+    return finalize_withdraw_principal(f0, id, amount);
   }
 
   async function finalize_withdraw_principal(
     f0: Future,
     id: u8,
-    paleo_amount: u128,
+    amount: u128,
     caller: address
   ) {
     f0.await();
@@ -173,11 +171,6 @@ program grant_disbursement_puzzle.aleo {
     // Assert that the current timestamp is after the cliff
     assert(current_timestamp >= grant.cliff_timestamp);
 
-    // Ensure the number of credits in the principal remains above the initial deposit
-    // Note: the paleo pool and the credits pool are always an underestimate (assuming no slashing) as it does not include rewards & owed commissions
-    // We use this underestimate because it as significantly reduces gas costs and should be close to the actual amount
-    // As it is an underestimate, the downside is it will slightly reduce the amount of paleo that can be withdrawn
-
     // Calculate the vested credits
     let timestamps_since_start: u64 = current_timestamp - grant.start_timestamp;
     let total_vesting_timestamps: u64 = grant.fully_vested_timestamp - grant.start_timestamp;
@@ -187,6 +180,7 @@ program grant_disbursement_puzzle.aleo {
     assert(grantee_credits_balance >= minimum_credits_balance as u128);
 
     // Update the grant
+    // todo: don't think we need to update here
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
       recipient_rewards_key: grant.recipient_rewards_key,
@@ -199,31 +193,19 @@ program grant_disbursement_puzzle.aleo {
     grants.set(id, updated_grant);
   }
 
-  // shadowed from token_registry.aleo
-  struct TokenMetadata {
-    token_id: field,
-    name: u128,
-    symbol: u128,
-    decimals: u8,
-    supply: u128,
-    max_supply: u128,
-    admin: address,
-    external_authorization_required: bool,
-    external_authorization_party: address
+
+  async transition claim_withdrawal_public (
+    amount: u64
+  ) {
+    // todo: add admin assertions
+    let f0: Future = credits.aleo/claim_unbond_public(self.address);
+    let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_KEY, amount);
+    return finalize_withdraw_principal(f0);
   }
 
-  // shadowed from token_registry.aleo
-  struct TokenOwner {
-    account: address,
-    token_id: field
-  }
-
-  // shadowed from token_registry.aleo
-  struct Balance {
-    token_id: field,
-    account: address,
-    balance: u128,
-    authorized_until: u32
+  async function finalize_claim_withdrawal_public () {
+    f0.await();
+    f1.await();
   }
 
   // copied from credits.aleo, as structs are not importable
