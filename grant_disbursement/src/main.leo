@@ -5,7 +5,7 @@ import time_oracle.aleo;
 program grant_disbursement_puzzle.aleo {
   // todo: update grantee rewards key
   const GRANTEE_REWARDS_KEY: address = aleo12shtwnmf49t5atmad2jnk3e58ahtp749d9trctt9z3wryxyzt5pspp0nd0;
-  // todo: update this maybe
+  // todo: update this address
   const GRANTEE_PRINCIPAL_KEY: address = aleo1z9y9afh0h6dnyj3f0hvjc4mhayjy06fj42ppcq0rvpmmyky6fuzs449sjr;
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1q3gtqtd03fs7chhjdr8c4hf8vkwt96pf3vw28uytsdrnwt4hrs9sg7c62j;
   const MIN_BONDED_CREDITS: u64 = 10_000_000u64;
@@ -53,21 +53,22 @@ program grant_disbursement_puzzle.aleo {
   async transition process_grant(
     grant_id: u8,
     credits_amount: u64,
-    amount: u128,
+    amount: u64,
   ) -> Future {
     // transfer credits to the protocol
-    let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
+    let f0: Future = credits.aleo/transfer_public_as_signer(self.address, credits_amount);
     // bond the credits to the puzzle validator
-    let f2: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, microcredits);
+    let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, credits_amount);
 
-    return finalize_process_grant(f0, grant_id, credits_amount, paleo_amount);
+    return finalize_process_grant(f0, f1, grant_id, credits_amount, amount);
   }
 
   async function finalize_process_grant(
     f0: Future,
+    f1: Future,
     grant_id: u8,
     credits_amount: u64,
-    paleo_amount: u128
+    amount: u64
   ) {
     f0.await();
     f1.await();
@@ -95,18 +96,19 @@ program grant_disbursement_puzzle.aleo {
 
   async transition withdraw_rewards(
     id: u8,
-    reward_amount: u128,
+    reward_amount: u64,
   ) -> Future {
+    // unbond an arbitrary number of credits from the program
     let f0: Future = credits.aleo/unbond_public(self.address, reward_amount);
 
-    return finalize_withdraw_rewards(f0, id, reward_amount);
+    return finalize_withdraw_rewards(f0, id, reward_amount, self.caller);
   }
 
   async function finalize_withdraw_rewards(
     f0: Future,
     id: u8,
-    reward_amount: u128,
-    signer: address
+    reward_amount: u64,
+    caller: address
   ) {
     f0.await();
 
@@ -123,8 +125,10 @@ program grant_disbursement_puzzle.aleo {
     assert(current_timestamp < grant.cliff_timestamp);
 
     // Ensure the number of credits in the principal remains above the initial deposit
-    // fetch the bonded state
-    let bonded_credits: u64 = credits.aleo/bonded.get(self.address);
+    // fetch the bonded state struct
+    let bonded_credits_struct: bond_state = credits.aleo/bonded.get(self.address);
+    let bonded_credits: u64 = bonded_credits_struct.microcredits;
+
     // assert that the credits bonded are still > 10_000 credits after rewards withdrawal
     assert(bonded_credits - reward_amount > MIN_BONDED_CREDITS);
 
@@ -144,17 +148,17 @@ program grant_disbursement_puzzle.aleo {
 
   async transition withdraw_principal(
     id: u8,
-    amount: u128
+    amount: u64
   ) -> Future {
     let f0: Future = credits.aleo/unbond_public(self.address, amount);
 
-    return finalize_withdraw_principal(f0, id, amount);
+    return finalize_withdraw_principal(f0, id, amount, self.caller);
   }
 
   async function finalize_withdraw_principal(
     f0: Future,
     id: u8,
-    amount: u128,
+    amount: u64,
     caller: address
   ) {
     f0.await();
@@ -171,6 +175,9 @@ program grant_disbursement_puzzle.aleo {
     // Assert that the current timestamp is after the cliff
     assert(current_timestamp >= grant.cliff_timestamp);
 
+    // todo: add mechanism to get grantee credits balance
+
+
     // Calculate the vested credits
     let timestamps_since_start: u64 = current_timestamp - grant.start_timestamp;
     let total_vesting_timestamps: u64 = grant.fully_vested_timestamp - grant.start_timestamp;
@@ -183,6 +190,7 @@ program grant_disbursement_puzzle.aleo {
     // todo: don't think we need to update here
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
+      // todo: do we need to add something here to track the credits unbonded?
       recipient_rewards_key: grant.recipient_rewards_key,
       recipient_principal_key: grant.recipient_principal_key,
       start_timestamp: grant.start_timestamp,
@@ -200,10 +208,15 @@ program grant_disbursement_puzzle.aleo {
     // todo: add admin assertions
     let f0: Future = credits.aleo/claim_unbond_public(self.address);
     let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_KEY, amount);
-    return finalize_withdraw_principal(f0);
+    return finalize_claim_withdrawal_public(f0, f1);
   }
 
-  async function finalize_claim_withdrawal_public () {
+  async function finalize_claim_withdrawal_public
+  (
+    f0: Future,
+    f1: Future
+  )
+  {
     f0.await();
     f1.await();
   }

@@ -3,5 +3,18 @@
   "version": "0.1.0",
   "description": "",
   "license": "MIT",
-  "dependencies": null
+  "dependencies": [
+    {
+      "name": "credits.aleo",
+      "location": "network",
+      "network": "testnet",
+      "path": null
+    },
+    {
+      "name": "time_oracle.aleo",
+      "location": "network",
+      "network": "testnet",
+      "path": null
+    }
+  ]
 }
