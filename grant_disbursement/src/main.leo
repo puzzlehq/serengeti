@@ -15,9 +15,8 @@ program grant_disbursement_puzzle.aleo {
 
   struct Grant {
     credits_amount: u64, // The amount of Aleo credits to be distributed
-    credits_bonded_amount: u128,
-    recipient_rewards_key: address, // The address that can withdraw the rewards
-    recipient_principal_key: address, // The address that can withdraw the principal
+    recipient_rewards_address: address, // The address that can withdraw the rewards
+    recipient_principal_address: address, // The address that can withdraw the principal
     start_height: u32, // The height at which the grant was created
     cliff_height: u32, // The height at which the recipient can start withdrawing principal
     fully_vested_height: u32, // The height at which the recipient can withdraw the full principal
@@ -40,9 +39,8 @@ program grant_disbursement_puzzle.aleo {
     // Create the initial grant
     let initial_grant: Grant = Grant {
       credits_amount: CREDITS_AMOUNT,
-      credits_bonded_amount: 0u128,
-      recipient_rewards_key: GRANTEE_REWARDS_ADDRESS,
-      recipient_principal_key: GRANTEE_PRINCIPAL_ADDRESS,
+      recipient_rewards_address: GRANTEE_REWARDS_ADDRESS,
+      recipient_principal_address: GRANTEE_PRINCIPAL_ADDRESS,
       start_height: current_height,
       cliff_height: CLIFF_HEIGHT,
       fully_vested_height: FULLY_VESTED_HEIGHT,
@@ -87,9 +85,8 @@ program grant_disbursement_puzzle.aleo {
     // Update the grant
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
-      credits_bonded_amount: grant.credits_bonded_amount,
-      recipient_rewards_key: grant.recipient_rewards_key,
-      recipient_principal_key: grant.recipient_principal_key,
+      recipient_rewards_address: grant.recipient_rewards_address,
+      recipient_principal_address: grant.recipient_principal_address,
       start_height: grant.start_height,
       cliff_height: grant.cliff_height,
       fully_vested_height: grant.fully_vested_height,
@@ -119,8 +116,8 @@ program grant_disbursement_puzzle.aleo {
     // Get the grant
     let grant: Grant = grants.get(id);
 
-    // Ensure the caller is the recipient_rewards_key
-    assert_eq(caller, grant.recipient_rewards_key);
+    // Ensure the caller is the recipient_rewards_address
+    assert_eq(caller, grant.recipient_rewards_address);
 
     // Get the current height
     let current_height: u32 = block.height;
@@ -140,9 +137,8 @@ program grant_disbursement_puzzle.aleo {
     // todo: don't think we need to update here
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
-      credits_bonded_amount: grant.credits_bonded_amount - reward_amount as u128,
-      recipient_rewards_key: grant.recipient_rewards_key,
-      recipient_principal_key: grant.recipient_principal_key,
+      recipient_rewards_address: grant.recipient_rewards_address,
+      recipient_principal_address: grant.recipient_principal_address,
       start_height: grant.start_height,
       cliff_height: grant.cliff_height,
       fully_vested_height: grant.fully_vested_height,
@@ -171,8 +167,8 @@ program grant_disbursement_puzzle.aleo {
     // Get the grant
     let grant: Grant = grants.get(id);
 
-    // Ensure the caller is the recipient_principal_key
-    assert_eq(caller, grant.recipient_principal_key);
+    // Ensure the caller is the recipient_principal_address
+    assert_eq(caller, grant.recipient_principal_address);
 
     // Get the current height
     let current_height: u32 = block.height;
@@ -180,25 +176,20 @@ program grant_disbursement_puzzle.aleo {
     // Assert that the current timestamp is after the cliff
     assert(current_height >= grant.cliff_height);
 
-    // todo: add mechanism to get grantee credits balance
-
     // Calculate the vested credits
     let heights_since_start: u32 = current_height - grant.start_height;
+    // q - shouldn't this be grant.fully_vested_height - grant.cliff_height ?
     let total_vesting_heights: u32 = grant.fully_vested_height - grant.start_height;
     let vested_credits: u128 = grant.credits_amount as u128 * heights_since_start as u128 / total_vesting_heights as u128;
-    let bounded_vested_credits: u128 = vested_credits < grant.credits_amount as u128 ? vested_credits : grant.credits_amount as u128;
-    let minimum_credits_balance: u128 = grant.credits_amount as u128 - bounded_vested_credits;
 
-    let grantee_credits_balance: u128 = grant.credits_bonded_amount;
-    assert(grantee_credits_balance >= minimum_credits_balance as u128);
+    // Assert we're not claiming more than we're allowed to
+    assert(amount <= vested_credits);
 
     // Update the grant
-    // todo: don't think we need to update here
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
-      credits_bonded_amount: grant.credits_bonded_amount,
-      recipient_rewards_key: grant.recipient_rewards_key,
-      recipient_principal_key: grant.recipient_principal_key,
+      recipient_rewards_address: grant.recipient_rewards_address,
+      recipient_principal_address: grant.recipient_principal_address,
       start_height: grant.start_height,
       cliff_height: grant.cliff_height,
       fully_vested_height: grant.fully_vested_height,
