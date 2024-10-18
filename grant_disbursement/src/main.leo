@@ -2,7 +2,7 @@ import credits.aleo;
 import time_oracle.aleo;
 
 // The 'grant_disbursement' program.
-program grant_disbursement_puzzle_v8.aleo {
+program grant_disbursement_puzzle_v9.aleo {
   // todo: do we even need grantee_rewards_address ?
   const GRANTEE_REWARDS_ADDRESS: address = aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj;
   const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
