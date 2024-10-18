@@ -29,7 +29,7 @@ finalize initialize:
     contains grants[0u8] into r0;
     not r0 into r1;
     assert.eq r1 true;
-    cast 500_000_000_000u64 aleo12shtwnmf49t5atmad2jnk3e58ahtp749d9trctt9z3wryxyzt5pspp0nd0 aleo1z9y9afh0h6dnyj3f0hvjc4mhayjy06fj42ppcq0rvpmmyky6fuzs449sjr block.height 1_000_000_000u32 2_000_000_000u32 false into r2 as Grant;
+    cast 500_000_000_000u64 aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng block.height 1_000_000_000u32 2_000_000_000u32 false into r2 as Grant;
     set r2 into grants[0u8];
 
 
@@ -40,7 +40,7 @@ function process_grant:
     input r1 as u64.private;
     input r2 as u64.private;
     call credits.aleo/transfer_public_as_signer grant_disbursement_puzzle.aleo r1 into r3;
-    call credits.aleo/bond_public aleo1q3gtqtd03fs7chhjdr8c4hf8vkwt96pf3vw28uytsdrnwt4hrs9sg7c62j grant_disbursement_puzzle.aleo r1 into r4;
+    call credits.aleo/bond_public aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f grant_disbursement_puzzle.aleo r1 into r4;
     async process_grant r3 r4 r0 r1 r2 into r5;
     output r5 as grant_disbursement_puzzle.aleo/process_grant.future;
 
@@ -125,7 +125,7 @@ finalize withdraw_principal:
 function claim_withdrawal_public:
     input r0 as u64.private;
     call credits.aleo/claim_unbond_public grant_disbursement_puzzle.aleo into r1;
-    call credits.aleo/transfer_public aleo1z9y9afh0h6dnyj3f0hvjc4mhayjy06fj42ppcq0rvpmmyky6fuzs449sjr r0 into r2;
+    call credits.aleo/transfer_public aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng r0 into r2;
     async claim_withdrawal_public r1 r2 into r3;
     output r3 as grant_disbursement_puzzle.aleo/claim_withdrawal_public.future;
 

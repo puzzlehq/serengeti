@@ -2,11 +2,10 @@ import credits.aleo;
 
 // The 'grant_disbursement' program.
 program grant_disbursement_puzzle.aleo {
-  // todo: update grantee rewards key
-  const GRANTEE_REWARDS_ADDRESS: address = aleo12shtwnmf49t5atmad2jnk3e58ahtp749d9trctt9z3wryxyzt5pspp0nd0;
-  // todo: update this address
-  const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1z9y9afh0h6dnyj3f0hvjc4mhayjy06fj42ppcq0rvpmmyky6fuzs449sjr;
-  const PUZZLE_VALIDATOR_ADDRESS: address = aleo1q3gtqtd03fs7chhjdr8c4hf8vkwt96pf3vw28uytsdrnwt4hrs9sg7c62j;
+  // todo: do we even need grantee_rewards_address ?
+  const GRANTEE_REWARDS_ADDRESS: address = aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj;
+  const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
+  const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const MIN_BONDED_CREDITS: u128 = 10_000_000u128;
   const CREDITS_AMOUNT: u64 = 500_000_000_000u64;
   const START_HEIGHT: u32 = 0u32;
