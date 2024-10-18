@@ -2,7 +2,7 @@ import credits.aleo;
 import time_oracle.aleo;
 
 // The 'grant_disbursement' program.
-program grant_disbursement_puzzle_v4.aleo {
+program grant_disbursement_puzzle_v5.aleo {
   // todo: do we even need grantee_rewards_address ?
   const GRANTEE_REWARDS_ADDRESS: address = aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj;
   const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
@@ -58,7 +58,7 @@ program grant_disbursement_puzzle_v4.aleo {
     // bond the credits to the puzzle validator
     let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, credits_amount);
 
-    return finalize_process_grant(f0, f1, grant_id, credits_amount, credits_amount);
+    return finalize_process_grant(f0, f1, grant_id, credits_amount);
   }
 
   async function finalize_process_grant(
@@ -66,7 +66,6 @@ program grant_disbursement_puzzle_v4.aleo {
     f1: Future,
     grant_id: u8,
     credits_amount: u64,
-    amount: u64
   ) {
     f0.await();
     f1.await();
@@ -146,11 +145,11 @@ program grant_disbursement_puzzle_v4.aleo {
 
   async transition withdraw_principal(
     id: u8,
-    amount: u64
+    credits_amount: u64
   ) -> Future {
-    let f0: Future = credits.aleo/unbond_public(self.address, amount);
+    let f0: Future = credits.aleo/unbond_public(self.address, credits_amount);
 
-    return finalize_withdraw_principal(f0, id, amount, self.caller);
+    return finalize_withdraw_principal(f0, id, credits_amount, self.caller);
   }
 
   async function finalize_withdraw_principal(
@@ -201,11 +200,11 @@ program grant_disbursement_puzzle_v4.aleo {
 
 
   async transition claim_withdrawal_public (
-    amount: u64
+    credits_amount: u64
   ) -> Future {
     // todo: add admin assertions
     let f0: Future = credits.aleo/claim_unbond_public(self.address);
-    let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_ADDRESS, amount);
+    let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_ADDRESS, credits_amount);
     return finalize_claim_withdrawal_public(f0, f1);
   }
 
