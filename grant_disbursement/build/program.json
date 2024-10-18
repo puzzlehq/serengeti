@@ -1,6 +1,14 @@
 {
-    "program": "grant_disbursement_puzzle_v2.aleo",
-    "version": "0.0.0",
-    "description": "",
-    "license": "MIT"
+  "program": "grant_disbursement_puzzle_v3.aleo",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "credits.aleo",
+      "location": "network",
+      "network": "testnet",
+      "path": null
+    }
+  ]
 }

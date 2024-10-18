@@ -1,5 +1,5 @@
 import credits.aleo;
-program grant_disbursement_puzzle_v2.aleo;
+program grant_disbursement_puzzle_v3.aleo;
 
 struct bond_state:
     validator as address;
@@ -23,7 +23,7 @@ mapping grants:
 
 function initialize:
     async initialize into r0;
-    output r0 as grant_disbursement_puzzle_v2.aleo/initialize.future;
+    output r0 as grant_disbursement_puzzle_v3.aleo/initialize.future;
 
 finalize initialize:
     contains grants[0u8] into r0;
@@ -39,10 +39,10 @@ function process_grant:
     input r0 as u8.private;
     input r1 as u64.private;
     input r2 as u64.private;
-    call credits.aleo/transfer_public_as_signer grant_disbursement_puzzle_v2.aleo r1 into r3;
-    call credits.aleo/bond_public aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f grant_disbursement_puzzle_v2.aleo r1 into r4;
+    call credits.aleo/transfer_public_as_signer grant_disbursement_puzzle_v3.aleo r1 into r3;
+    call credits.aleo/bond_public aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f grant_disbursement_puzzle_v3.aleo r1 into r4;
     async process_grant r3 r4 r0 r1 r2 into r5;
-    output r5 as grant_disbursement_puzzle_v2.aleo/process_grant.future;
+    output r5 as grant_disbursement_puzzle_v3.aleo/process_grant.future;
 
 finalize process_grant:
     input r0 as credits.aleo/transfer_public_as_signer.future;
@@ -65,9 +65,9 @@ finalize process_grant:
 function withdraw_rewards:
     input r0 as u8.private;
     input r1 as u64.private;
-    call credits.aleo/unbond_public grant_disbursement_puzzle_v2.aleo r1 into r2;
+    call credits.aleo/unbond_public grant_disbursement_puzzle_v3.aleo r1 into r2;
     async withdraw_rewards r2 r0 r1 self.caller into r3;
-    output r3 as grant_disbursement_puzzle_v2.aleo/withdraw_rewards.future;
+    output r3 as grant_disbursement_puzzle_v3.aleo/withdraw_rewards.future;
 
 finalize withdraw_rewards:
     input r0 as credits.aleo/unbond_public.future;
@@ -79,7 +79,7 @@ finalize withdraw_rewards:
     assert.eq r3 r4.recipient_rewards_address;
     lt block.height r4.cliff_height into r5;
     assert.eq r5 true;
-    get credits.aleo/bonded[grant_disbursement_puzzle_v2.aleo] into r6;
+    get credits.aleo/bonded[grant_disbursement_puzzle_v3.aleo] into r6;
     sub r6.microcredits r2 into r7;
     gt r7 10_000_000u64 into r8;
     assert.eq r8 true;
@@ -92,9 +92,9 @@ finalize withdraw_rewards:
 function withdraw_principal:
     input r0 as u8.private;
     input r1 as u64.private;
-    call credits.aleo/unbond_public grant_disbursement_puzzle_v2.aleo r1 into r2;
+    call credits.aleo/unbond_public grant_disbursement_puzzle_v3.aleo r1 into r2;
     async withdraw_principal r2 r0 r1 self.caller into r3;
-    output r3 as grant_disbursement_puzzle_v2.aleo/withdraw_principal.future;
+    output r3 as grant_disbursement_puzzle_v3.aleo/withdraw_principal.future;
 
 finalize withdraw_principal:
     input r0 as credits.aleo/unbond_public.future;
@@ -122,10 +122,10 @@ finalize withdraw_principal:
 
 function claim_withdrawal_public:
     input r0 as u64.private;
-    call credits.aleo/claim_unbond_public grant_disbursement_puzzle_v2.aleo into r1;
+    call credits.aleo/claim_unbond_public grant_disbursement_puzzle_v3.aleo into r1;
     call credits.aleo/transfer_public aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng r0 into r2;
     async claim_withdrawal_public r1 r2 into r3;
-    output r3 as grant_disbursement_puzzle_v2.aleo/claim_withdrawal_public.future;
+    output r3 as grant_disbursement_puzzle_v3.aleo/claim_withdrawal_public.future;
 
 finalize claim_withdrawal_public:
     input r0 as credits.aleo/claim_unbond_public.future;
