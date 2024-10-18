@@ -9,8 +9,8 @@ program grant_disbursement_puzzle_v8.aleo {
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const MIN_BONDED_CREDITS: u64 = 10_000_000_000u64;
   const CREDITS_AMOUNT: u64 = 10_000_000_000u64;
-  const START_TIMESTAMP: u64 = 2000000u64;
-  const CLIFF_TIMESTAMP: u64 = 3100000u64;
+  const START_TIMESTAMP: u64 = 1725479626u64;
+  const CLIFF_TIMESTAMP: u64 = 1757015626u64;
   //  3000000000u64;
   const FULLY_VESTED_TIMESTAMP: u64 = 1757015686u64;
 

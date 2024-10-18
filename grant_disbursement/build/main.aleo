@@ -35,7 +35,7 @@ finalize initialize:
     contains grants[0u8] into r0;
     not r0 into r1;
     assert.eq r1 true;
-    cast 10_000_000_000u64 aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng 2000000u64 3100000u64 1757015686u64 false into r2 as Grant;
+    cast 10_000_000_000u64 aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng 1725479626u64 1757015626u64 1757015686u64 false into r2 as Grant;
     set r2 into grants[0u8];
 
 
