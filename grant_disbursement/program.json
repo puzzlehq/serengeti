@@ -7,13 +7,7 @@
     {
       "name": "credits.aleo",
       "location": "network",
-      "network": "testnet",
-      "path": null
-    },
-    {
-      "name": "time_oracle.aleo",
-      "location": "network",
-      "network": "testnet",
+      "network": "mainnet",
       "path": null
     }
   ]
