@@ -180,7 +180,7 @@ program grant_disbursement_puzzle.aleo {
     let heights_since_start: u32 = current_height - grant.start_height;
     // q - shouldn't this be grant.fully_vested_height - grant.cliff_height ?
     let total_vesting_heights: u32 = grant.fully_vested_height - grant.start_height;
-    let vested_credits: u128 = grant.credits_amount as u128 * heights_since_start as u128 / total_vesting_heights as u128;
+    let vested_credits: u64 = grant.credits_amount * heights_since_start as u64 / total_vesting_heights as u64;
 
     // Assert we're not claiming more than we're allowed to
     assert(amount <= vested_credits);
