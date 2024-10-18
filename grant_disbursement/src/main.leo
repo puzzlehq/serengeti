@@ -10,6 +10,7 @@ program grant_disbursement_puzzle_v8.aleo {
   const MIN_BONDED_CREDITS: u64 = 10_000_000_000u64;
   const CREDITS_AMOUNT: u64 = 10_000_000_000u64;
   const START_TIMESTAMP: u64 = 2000000u64;
+  // set greater than time oracle timestamp on testnet to be able to test withdraw_rewards
   const CLIFF_TIMESTAMP: u64 = 3100000000u64;
   //  3000000000u64;
   const FULLY_VESTED_TIMESTAMP: u64 = 1757015686u64;
