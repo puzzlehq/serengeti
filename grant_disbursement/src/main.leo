@@ -2,15 +2,16 @@ import credits.aleo;
 import time_oracle.aleo;
 
 // The 'grant_disbursement' program.
-program grant_disbursement_puzzle_v7.aleo {
+program grant_disbursement_puzzle_v8.aleo {
   // todo: do we even need grantee_rewards_address ?
   const GRANTEE_REWARDS_ADDRESS: address = aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj;
   const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const MIN_BONDED_CREDITS: u64 = 10_000_000_000u64;
   const CREDITS_AMOUNT: u64 = 10_000_000_000u64;
-  const START_TIMESTAMP: u64 = 1725479626u64;
-  const CLIFF_TIMESTAMP: u64 = 1757015626u64;
+  const START_TIMESTAMP: u64 = 2000000u64;
+  const CLIFF_TIMESTAMP: u64 = 3100000u64;
+  //  3000000000u64;
   const FULLY_VESTED_TIMESTAMP: u64 = 1757015686u64;
 
   struct Grant {
@@ -200,22 +201,30 @@ program grant_disbursement_puzzle_v7.aleo {
 
 
   async transition claim_withdrawal_public (
-    credits_amount: u64
+    id: u8,
+    credits_amount: u64,
   ) -> Future {
     // todo: add admin assertions
     let f0: Future = credits.aleo/claim_unbond_public(self.address);
     let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_ADDRESS, credits_amount);
-    return finalize_claim_withdrawal_public(f0, f1);
+    return finalize_claim_withdrawal_public(f0, f1, id, self.caller);
   }
 
   async function finalize_claim_withdrawal_public
   (
     f0: Future,
-    f1: Future
+    f1: Future,
+    id: u8,
+    caller: address,
   )
   {
     f0.await();
     f1.await();
+    // Get the grant
+    let grant: Grant = grants.get(id);
+    // Ensure the caller is the recipient_rewards_address
+    assert_eq(caller, grant.recipient_rewards_address);
+
   }
 
   // copied from credits.aleo, as structs are not importable
