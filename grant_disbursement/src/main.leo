@@ -128,20 +128,8 @@ program grant_disbursement_puzzle_v9.aleo {
     let bonded_credits: u64 = bonded_credits_struct.microcredits;
 
     // assert that the credits bonded are still > 10_000 credits after rewards withdrawal
-    assert(bonded_credits - reward_amount > MIN_BONDED_CREDITS);
+    assert(bonded_credits - reward_amount > grant.credits_amount);
 
-    // Update the grant
-    // todo: don't think we need to update here
-    let updated_grant: Grant = Grant {
-      credits_amount: grant.credits_amount,
-      recipient_rewards_address: grant.recipient_rewards_address,
-      recipient_principal_address: grant.recipient_principal_address,
-      start_timestamp: grant.start_timestamp,
-      cliff_timestamp: grant.cliff_timestamp,
-      fully_vested_timestamp: grant.fully_vested_timestamp,
-      is_processed: grant.is_processed
-    };
-    grants.set(id, updated_grant);
   }
 
   async transition withdraw_principal(
@@ -179,24 +167,10 @@ program grant_disbursement_puzzle_v9.aleo {
     let timestamps_since_start: u64 = current_timestamp - grant.start_timestamp;
     let total_vesting_timestamps: u64 = grant.fully_vested_timestamp - grant.start_timestamp;
     let vested_credits: u128 = grant.credits_amount as u128 * timestamps_since_start as u128 / total_vesting_timestamps as u128;
-    let bounded_vested_credits: u128 = vested_credits < grant.credits_amount as u128 ? vested_credits : grant.credits_amount as u128;
-    let minimum_credits_balance: u128 = grant.credits_amount as u128 - bounded_vested_credits;
 
     // Assert we're not claiming more than we're allowed to
     assert(amount as u128 <= vested_credits);
 
-    // Update the grant
-    let updated_grant: Grant = Grant {
-      credits_amount: grant.credits_amount,
-      // todo: do we need to add something here to track the credits unbonded?
-      recipient_rewards_address: grant.recipient_rewards_address,
-      recipient_principal_address: grant.recipient_principal_address,
-      start_timestamp: grant.start_timestamp,
-      cliff_timestamp: grant.cliff_timestamp,
-      fully_vested_timestamp: grant.fully_vested_timestamp,
-      is_processed: grant.is_processed
-    };
-    grants.set(id, updated_grant);
   }
 
 

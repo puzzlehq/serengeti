@@ -86,10 +86,8 @@ finalize withdraw_rewards:
     assert.eq r6 true;
     get credits.aleo/bonded[grant_disbursement_puzzle_v9.aleo] into r7;
     sub r7.microcredits r2 into r8;
-    gt r8 10_000_000_000u64 into r9;
+    gt r8 r4.credits_amount into r9;
     assert.eq r9 true;
-    cast r4.credits_amount r4.recipient_rewards_address r4.recipient_principal_address r4.start_timestamp r4.cliff_timestamp r4.fully_vested_timestamp r4.is_processed into r10 as Grant;
-    set r10 into grants[r1];
 
 
 
@@ -119,17 +117,9 @@ finalize withdraw_principal:
     mul r9 r10 into r11;
     cast r8 into r12 as u128;
     div r11 r12 into r13;
-    cast r4.credits_amount into r14 as u128;
-    lt r13 r14 into r15;
-    cast r4.credits_amount into r16 as u128;
-    ternary r15 r13 r16 into r17;
-    cast r4.credits_amount into r18 as u128;
-    sub r18 r17 into r19;
-    cast r2 into r20 as u128;
-    lte r20 r13 into r21;
-    assert.eq r21 true;
-    cast r4.credits_amount r4.recipient_rewards_address r4.recipient_principal_address r4.start_timestamp r4.cliff_timestamp r4.fully_vested_timestamp r4.is_processed into r22 as Grant;
-    set r22 into grants[r1];
+    cast r2 into r14 as u128;
+    lte r14 r13 into r15;
+    assert.eq r15 true;
 
 
 
