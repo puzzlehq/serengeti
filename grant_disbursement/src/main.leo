@@ -1,4 +1,5 @@
 import credits.aleo;
+import time_oracle.aleo;
 
 // The 'grant_disbursement' program.
 program grant_disbursement_puzzle_v3.aleo {
@@ -8,17 +9,17 @@ program grant_disbursement_puzzle_v3.aleo {
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const MIN_BONDED_CREDITS: u64 = 10_000_000u64;
   const CREDITS_AMOUNT: u64 = 10_000_000u64;
-  const START_HEIGHT: u32 = 0u32;
-  const CLIFF_HEIGHT: u32 = 2014801u32;
-  const FULLY_VESTED_HEIGHT: u32 = 2018401u32;
+  const START_TIMESTAMP: u64 = 0u64;
+  const CLIFF_TIMESTAMP: u64 = 1_000_000_000u64;
+  const FULLY_VESTED_TIMESTAMP: u64 = 2_000_000_000u64;
 
   struct Grant {
     credits_amount: u64, // The amount of Aleo credits to be distributed
     recipient_rewards_address: address, // The address that can withdraw the rewards
     recipient_principal_address: address, // The address that can withdraw the principal
-    start_height: u32, // The height at which the grant was created
-    cliff_height: u32, // The height at which the recipient can start withdrawing principal
-    fully_vested_height: u32, // The height at which the recipient can withdraw the full principal
+    start_timestamp: u64, // The timestamp at which the grant was created
+    cliff_timestamp: u64, // The timestamp at which the recipient can start withdrawing principal
+    fully_vested_timestamp: u64,// The height at which the recipient can withdraw the full principal
     is_processed: bool // Whether the grant has been processed
   }
 
@@ -33,16 +34,14 @@ program grant_disbursement_puzzle_v3.aleo {
     let already_initialized: bool = grants.contains(0u8);
     assert(!already_initialized);
 
-    let current_height: u32 = block.height;
-
     // Create the initial grant
     let initial_grant: Grant = Grant {
       credits_amount: CREDITS_AMOUNT,
       recipient_rewards_address: GRANTEE_REWARDS_ADDRESS,
       recipient_principal_address: GRANTEE_PRINCIPAL_ADDRESS,
-      start_height: current_height,
-      cliff_height: CLIFF_HEIGHT,
-      fully_vested_height: FULLY_VESTED_HEIGHT,
+      start_timestamp: START_TIMESTAMP,
+      cliff_timestamp: START_TIMESTAMP,
+      fully_vested_timestamp: FULLY_VESTED_TIMESTAMP,
       is_processed: false
     };
 
@@ -86,9 +85,9 @@ program grant_disbursement_puzzle_v3.aleo {
       credits_amount: grant.credits_amount,
       recipient_rewards_address: grant.recipient_rewards_address,
       recipient_principal_address: grant.recipient_principal_address,
-      start_height: grant.start_height,
-      cliff_height: grant.cliff_height,
-      fully_vested_height: grant.fully_vested_height,
+      start_timestamp: grant.start_timestamp,
+      cliff_timestamp: grant.cliff_timestamp,
+      fully_vested_timestamp: grant.fully_vested_timestamp,
       is_processed: true
     };
     grants.set(grant_id, updated_grant);
@@ -118,11 +117,11 @@ program grant_disbursement_puzzle_v3.aleo {
     // Ensure the caller is the recipient_rewards_address
     assert_eq(caller, grant.recipient_rewards_address);
 
-    // Get the current height
-    let current_height: u32 = block.height;
+    // Get the current timestamp
+    let current_timestamp: u64 = time_oracle.aleo/timestamp.get(0u8);
 
-    // Assert that the current height is before the cliff
-    assert(current_height < grant.cliff_height);
+    // Assert that the current timestamp is before the cliff
+    assert(current_timestamp < grant.cliff_timestamp);
 
     // Ensure the number of credits in the principal remains above the initial deposit
     // fetch the bonded state struct
@@ -138,9 +137,9 @@ program grant_disbursement_puzzle_v3.aleo {
       credits_amount: grant.credits_amount,
       recipient_rewards_address: grant.recipient_rewards_address,
       recipient_principal_address: grant.recipient_principal_address,
-      start_height: grant.start_height,
-      cliff_height: grant.cliff_height,
-      fully_vested_height: grant.fully_vested_height,
+      start_timestamp: grant.start_timestamp,
+      cliff_timestamp: grant.cliff_timestamp,
+      fully_vested_timestamp: grant.fully_vested_timestamp,
       is_processed: grant.is_processed
     };
     grants.set(id, updated_grant);
@@ -169,29 +168,33 @@ program grant_disbursement_puzzle_v3.aleo {
     // Ensure the caller is the recipient_principal_address
     assert_eq(caller, grant.recipient_principal_address);
 
-    // Get the current height
-    let current_height: u32 = block.height;
+    // Get the current timestamp
+    let current_timestamp: u64 = time_oracle.aleo/timestamp.get(0u8);
 
     // Assert that the current timestamp is after the cliff
-    assert(current_height >= grant.cliff_height);
+    assert(current_timestamp >= grant.cliff_timestamp);
+
+    // todo: add mechanism to get grantee credits balance
 
     // Calculate the vested credits
-    let heights_since_start: u32 = current_height - grant.start_height;
-    // q - shouldn't this be grant.fully_vested_height - grant.cliff_height ?
-    let total_vesting_heights: u32 = grant.fully_vested_height - grant.start_height;
-    let vested_credits: u64 = grant.credits_amount * heights_since_start as u64 / total_vesting_heights as u64;
+    let timestamps_since_start: u64 = current_timestamp - grant.start_timestamp;
+    let total_vesting_timestamps: u64 = grant.fully_vested_timestamp - grant.start_timestamp;
+    let vested_credits: u128 = grant.credits_amount as u128 * timestamps_since_start as u128 / total_vesting_timestamps as u128;
+    let bounded_vested_credits: u128 = vested_credits < grant.credits_amount as u128 ? vested_credits : grant.credits_amount as u128;
+    let minimum_credits_balance: u128 = grant.credits_amount as u128 - bounded_vested_credits;
 
     // Assert we're not claiming more than we're allowed to
-    assert(amount <= vested_credits);
+    assert(amount as u128 <= vested_credits);
 
     // Update the grant
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
+      // todo: do we need to add something here to track the credits unbonded?
       recipient_rewards_address: grant.recipient_rewards_address,
       recipient_principal_address: grant.recipient_principal_address,
-      start_height: grant.start_height,
-      cliff_height: grant.cliff_height,
-      fully_vested_height: grant.fully_vested_height,
+      start_timestamp: grant.start_timestamp,
+      cliff_timestamp: grant.cliff_timestamp,
+      fully_vested_timestamp: grant.fully_vested_timestamp,
       is_processed: grant.is_processed
     };
     grants.set(id, updated_grant);
