@@ -1,16 +1,16 @@
 import credits.aleo;
 
 // The 'grant_disbursement' program.
-program grant_disbursement_puzzle.aleo {
+program grant_disbursement_puzzle_v3.aleo {
   // todo: do we even need grantee_rewards_address ?
   const GRANTEE_REWARDS_ADDRESS: address = aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj;
   const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
-  const MIN_BONDED_CREDITS: u128 = 10_000_000u128;
-  const CREDITS_AMOUNT: u64 = 500_000_000_000u64;
+  const MIN_BONDED_CREDITS: u64 = 10_000_000u64;
+  const CREDITS_AMOUNT: u64 = 10_000_000u64;
   const START_HEIGHT: u32 = 0u32;
-  const CLIFF_HEIGHT: u32 = 1_000_000_000u32;
-  const FULLY_VESTED_HEIGHT: u32 = 2_000_000_000u32;
+  const CLIFF_HEIGHT: u32 = 2014801u32;
+  const FULLY_VESTED_HEIGHT: u32 = 2018401u32;
 
   struct Grant {
     credits_amount: u64, // The amount of Aleo credits to be distributed
@@ -130,7 +130,7 @@ program grant_disbursement_puzzle.aleo {
     let bonded_credits: u64 = bonded_credits_struct.microcredits;
 
     // assert that the credits bonded are still > 10_000 credits after rewards withdrawal
-    assert(bonded_credits as u128 - reward_amount as u128 > MIN_BONDED_CREDITS);
+    assert(bonded_credits - reward_amount > MIN_BONDED_CREDITS);
 
     // Update the grant
     // todo: don't think we need to update here
