@@ -9,9 +9,9 @@ program grant_disbursement_puzzle_v5.aleo {
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const MIN_BONDED_CREDITS: u64 = 10_000_000u64;
   const CREDITS_AMOUNT: u64 = 10_000_000u64;
-  const START_TIMESTAMP: u64 = 0u64;
-  const CLIFF_TIMESTAMP: u64 = 2_018_904u64;
-  const FULLY_VESTED_TIMESTAMP: u64 = 2_021_504u64;
+  const START_TIMESTAMP: u64 = 1725479626u64;
+  const CLIFF_TIMESTAMP: u64 = 1757015626u64;
+  const FULLY_VESTED_TIMESTAMP: u64 = 1757015686u64;
 
   struct Grant {
     credits_amount: u64, // The amount of Aleo credits to be distributed
@@ -40,7 +40,7 @@ program grant_disbursement_puzzle_v5.aleo {
       recipient_rewards_address: GRANTEE_REWARDS_ADDRESS,
       recipient_principal_address: GRANTEE_PRINCIPAL_ADDRESS,
       start_timestamp: START_TIMESTAMP,
-      cliff_timestamp: START_TIMESTAMP,
+      cliff_timestamp: CLIFF_TIMESTAMP,
       fully_vested_timestamp: FULLY_VESTED_TIMESTAMP,
       is_processed: false
     };
