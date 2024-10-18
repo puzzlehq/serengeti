@@ -52,14 +52,13 @@ program grant_disbursement_puzzle_v4.aleo {
   async transition process_grant(
     grant_id: u8,
     credits_amount: u64,
-    amount: u64,
   ) -> Future {
     // transfer credits to the protocol
     let f0: Future = credits.aleo/transfer_public_as_signer(self.address, credits_amount);
     // bond the credits to the puzzle validator
     let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, credits_amount);
 
-    return finalize_process_grant(f0, f1, grant_id, credits_amount, amount);
+    return finalize_process_grant(f0, f1, grant_id, credits_amount, credits_amount);
   }
 
   async function finalize_process_grant(
