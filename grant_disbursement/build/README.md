@@ -1,4 +1,4 @@
-# grant_disbursement_puzzle_v5.aleo
+# grant_disbursement_puzzle_v6.aleo
 
 ## Build Guide
 

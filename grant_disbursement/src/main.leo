@@ -2,13 +2,13 @@ import credits.aleo;
 import time_oracle.aleo;
 
 // The 'grant_disbursement' program.
-program grant_disbursement_puzzle_v5.aleo {
+program grant_disbursement_puzzle_v7.aleo {
   // todo: do we even need grantee_rewards_address ?
   const GRANTEE_REWARDS_ADDRESS: address = aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj;
   const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
-  const MIN_BONDED_CREDITS: u64 = 10_000_000u64;
-  const CREDITS_AMOUNT: u64 = 10_000_000u64;
+  const MIN_BONDED_CREDITS: u64 = 10_000_000_000u64;
+  const CREDITS_AMOUNT: u64 = 10_000_000_000u64;
   const START_TIMESTAMP: u64 = 1725479626u64;
   const CLIFF_TIMESTAMP: u64 = 1757015626u64;
   const FULLY_VESTED_TIMESTAMP: u64 = 1757015686u64;
