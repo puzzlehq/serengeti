@@ -7,7 +7,7 @@ program grant_disbursement_puzzle.aleo {
   // todo: update this address
   const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1z9y9afh0h6dnyj3f0hvjc4mhayjy06fj42ppcq0rvpmmyky6fuzs449sjr;
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1q3gtqtd03fs7chhjdr8c4hf8vkwt96pf3vw28uytsdrnwt4hrs9sg7c62j;
-  const MIN_BONDED_CREDITS: u64 = 10_000_000u64;
+  const MIN_BONDED_CREDITS: u128 = 10_000_000u128;
   const CREDITS_AMOUNT: u64 = 500_000_000_000u64;
   const START_HEIGHT: u32 = 0u32;
   const CLIFF_HEIGHT: u32 = 1_000_000_000u32;
@@ -15,6 +15,7 @@ program grant_disbursement_puzzle.aleo {
 
   struct Grant {
     credits_amount: u64, // The amount of Aleo credits to be distributed
+    credits_bonded_amount: u128,
     recipient_rewards_key: address, // The address that can withdraw the rewards
     recipient_principal_key: address, // The address that can withdraw the principal
     start_height: u32, // The height at which the grant was created
@@ -39,6 +40,7 @@ program grant_disbursement_puzzle.aleo {
     // Create the initial grant
     let initial_grant: Grant = Grant {
       credits_amount: CREDITS_AMOUNT,
+      credits_bonded_amount: 0u128,
       recipient_rewards_key: GRANTEE_REWARDS_ADDRESS,
       recipient_principal_key: GRANTEE_PRINCIPAL_ADDRESS,
       start_height: current_height,
@@ -85,6 +87,7 @@ program grant_disbursement_puzzle.aleo {
     // Update the grant
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
+      credits_bonded_amount: grant.credits_bonded_amount,
       recipient_rewards_key: grant.recipient_rewards_key,
       recipient_principal_key: grant.recipient_principal_key,
       start_height: grant.start_height,
@@ -131,12 +134,13 @@ program grant_disbursement_puzzle.aleo {
     let bonded_credits: u64 = bonded_credits_struct.microcredits;
 
     // assert that the credits bonded are still > 10_000 credits after rewards withdrawal
-    assert(bonded_credits - reward_amount > MIN_BONDED_CREDITS);
+    assert(bonded_credits as u128 - reward_amount as u128 > MIN_BONDED_CREDITS);
 
     // Update the grant
     // todo: don't think we need to update here
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
+      credits_bonded_amount: grant.credits_bonded_amount - reward_amount as u128,
       recipient_rewards_key: grant.recipient_rewards_key,
       recipient_principal_key: grant.recipient_principal_key,
       start_height: grant.start_height,
@@ -184,13 +188,15 @@ program grant_disbursement_puzzle.aleo {
     let vested_credits: u128 = grant.credits_amount as u128 * heights_since_start as u128 / total_vesting_heights as u128;
     let bounded_vested_credits: u128 = vested_credits < grant.credits_amount as u128 ? vested_credits : grant.credits_amount as u128;
     let minimum_credits_balance: u128 = grant.credits_amount as u128 - bounded_vested_credits;
+
+    let grantee_credits_balance: u128 = grant.credits_bonded_amount;
     assert(grantee_credits_balance >= minimum_credits_balance as u128);
 
     // Update the grant
     // todo: don't think we need to update here
     let updated_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
-      // todo: do we need to add something here to track the credits unbonded?
+      credits_bonded_amount: grant.credits_bonded_amount,
       recipient_rewards_key: grant.recipient_rewards_key,
       recipient_principal_key: grant.recipient_principal_key,
       start_height: grant.start_height,
