@@ -201,30 +201,22 @@ program grant_disbursement_puzzle_v8.aleo {
 
 
   async transition claim_withdrawal_public (
-    id: u8,
     credits_amount: u64,
   ) -> Future {
     // todo: add admin assertions
     let f0: Future = credits.aleo/claim_unbond_public(self.address);
     let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_ADDRESS, credits_amount);
-    return finalize_claim_withdrawal_public(f0, f1, id, self.caller);
+    return finalize_claim_withdrawal_public(f0, f1);
   }
 
   async function finalize_claim_withdrawal_public
   (
     f0: Future,
     f1: Future,
-    id: u8,
-    caller: address,
   )
   {
     f0.await();
     f1.await();
-    // Get the grant
-    let grant: Grant = grants.get(id);
-    // Ensure the caller is the recipient_rewards_address
-    assert_eq(caller, grant.recipient_rewards_address);
-
   }
 
   // copied from credits.aleo, as structs are not importable

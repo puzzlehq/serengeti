@@ -135,20 +135,15 @@ finalize withdraw_principal:
 
 
 function claim_withdrawal_public:
-    input r0 as u8.private;
-    input r1 as u64.private;
-    call credits.aleo/claim_unbond_public grant_disbursement_puzzle_v8.aleo into r2;
-    call credits.aleo/transfer_public aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng r1 into r3;
-    async claim_withdrawal_public r2 r3 r0 self.caller into r4;
-    output r4 as grant_disbursement_puzzle_v8.aleo/claim_withdrawal_public.future;
+    input r0 as u64.private;
+    call credits.aleo/claim_unbond_public grant_disbursement_puzzle_v8.aleo into r1;
+    call credits.aleo/transfer_public aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng r0 into r2;
+    async claim_withdrawal_public r1 r2 into r3;
+    output r3 as grant_disbursement_puzzle_v8.aleo/claim_withdrawal_public.future;
 
 finalize claim_withdrawal_public:
     input r0 as credits.aleo/claim_unbond_public.future;
     input r1 as credits.aleo/transfer_public.future;
-    input r2 as u8.public;
-    input r3 as address.public;
     await r0;
     await r1;
-    get grants[r2] into r4;
-    assert.eq r3 r4.recipient_rewards_address;
 
