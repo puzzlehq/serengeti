@@ -1,0 +1,13 @@
+[[package]]
+name = "credits.aleo"
+network = "testnet"
+location = "network"
+checksum = "e185a49fba7f5e477c3fedf8968be9912ae7d8db34531c246041e899175e4d33"
+dependencies = []
+
+[[package]]
+name = "validator_oracle.aleo"
+location = "local"
+path = "/Users/lucas/code/puzzle/serengeti/pondo_reference_delegator/../validator_oracle"
+checksum = "bb87c141d0e62c973a766d77a129b612874c0749eb95712383454d11408bd99a"
+dependencies = ["credits.aleo"]
