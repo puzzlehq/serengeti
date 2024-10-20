@@ -2,9 +2,9 @@ import credits.aleo;
 import time_oracle.aleo;
 
 // The 'grant_disbursement' program.
-program grant_disbursement_puzzle_v9.aleo {
-  const GRANTEE_REWARDS_ADDRESS: address = aleo1qfvzv4y0eh39cwszelmu8r8ysvp70ljvj2t3vxjv26uc337ppufqjahahj;
-  const GRANTEE_PRINCIPAL_ADDRESS: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
+program grant_disbursement_puzzle_v10.aleo {
+  const GRANTEE_REWARDS_ADDRESS: address = aleo12mg4yjxtaejwm3aaxk8gugr5p4nddhdn8g5xr2hlfcasxf532qqq7yaga0;
+  const GRANTEE_PRINCIPAL_ADDRESS: address = aleo12mg4yjxtaejwm3aaxk8gugr5p4nddhdn8g5xr2hlfcasxf532qqq7yaga0;
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const MIN_BONDED_CREDITS: u64 = 10_000_000_000u64;
   const CREDITS_AMOUNT: u64 = 10_000_000_000u64;
@@ -94,23 +94,22 @@ program grant_disbursement_puzzle_v9.aleo {
     id: u8,
     reward_amount: u64,
   ) -> Future {
+    assert_eq(self.caller, GRANTEE_REWARDS_ADDRESS);
+
     // unbond an arbitrary number of credits from the program
     let f0: Future = credits.aleo/unbond_public(self.address, reward_amount);
 
-    return finalize_withdraw_rewards(f0, id, reward_amount, self.caller);
+    return finalize_withdraw_rewards(f0, id, reward_amount);
   }
 
   async function finalize_withdraw_rewards(
     f0: Future,
     id: u8,
-    reward_amount: u64,
-    caller: address
+    reward_amount: u64
   ) {
     f0.await();
 
     let grant: Grant = grants.get(id);
-
-    assert_eq(caller, grant.recipient_rewards_address);
 
     // Assert that the current timestamp is before the cliff
     let current_timestamp: u64 = time_oracle.aleo/timestamp.get(0u8);
@@ -126,22 +125,21 @@ program grant_disbursement_puzzle_v9.aleo {
     id: u8,
     credits_amount: u64
   ) -> Future {
+    assert_eq(self.caller, GRANTEE_PRINCIPAL_ADDRESS);
+
     let f0: Future = credits.aleo/unbond_public(self.address, credits_amount);
 
-    return finalize_withdraw_principal(f0, id, credits_amount, self.caller);
+    return finalize_withdraw_principal(f0, id, credits_amount);
   }
 
   async function finalize_withdraw_principal(
     f0: Future,
     id: u8,
-    amount: u64,
-    caller: address
+    amount: u64
   ) {
     f0.await();
 
     let grant: Grant = grants.get(id);
-
-    assert_eq(caller, grant.recipient_principal_address);
 
     // Assert that the current timestamp is after the cliff
     let current_timestamp: u64 = time_oracle.aleo/timestamp.get(0u8);
