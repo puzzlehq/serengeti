@@ -3,10 +3,9 @@ import time_oracle.aleo;
 
 // The 'grant_disbursement' program.
 program grant_disbursement_puzzle_v10.aleo {
-  const GRANTEE_REWARDS_ADDRESS: address = aleo12mg4yjxtaejwm3aaxk8gugr5p4nddhdn8g5xr2hlfcasxf532qqq7yaga0;
-  const GRANTEE_PRINCIPAL_ADDRESS: address = aleo12mg4yjxtaejwm3aaxk8gugr5p4nddhdn8g5xr2hlfcasxf532qqq7yaga0;
+  const WITHDRAWAL_ADDRESS: address = aleo12mg4yjxtaejwm3aaxk8gugr5p4nddhdn8g5xr2hlfcasxf532qqq7yaga0;
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
-  const MIN_BONDED_CREDITS: u64 = 10_000_000_000u64;
+
   const CREDITS_AMOUNT: u64 = 500_000_000_000u64;
   const START_TIMESTAMP: u64 = 1725479626u64;
   const CLIFF_TIMESTAMP: u64 = 1757015626u64;
@@ -14,8 +13,7 @@ program grant_disbursement_puzzle_v10.aleo {
 
   struct Grant {
     credits_amount: u64, // The amount of Aleo credits to be distributed
-    recipient_rewards_address: address, // The address that can withdraw the rewards
-    recipient_principal_address: address, // The address that can withdraw the principal
+    withdrawal_address: address, // The address that will receive rewards and principal
     start_timestamp: u64, // The timestamp at which the grant was created
     cliff_timestamp: u64, // The timestamp at which the recipient can start withdrawing principal
     fully_vested_timestamp: u64,// The height at which the recipient can withdraw the full principal
@@ -36,8 +34,7 @@ program grant_disbursement_puzzle_v10.aleo {
     // Create the initial grant
     let initial_grant: Grant = Grant {
       credits_amount: CREDITS_AMOUNT,
-      recipient_rewards_address: GRANTEE_REWARDS_ADDRESS,
-      recipient_principal_address: GRANTEE_PRINCIPAL_ADDRESS,
+      withdrawal_address: WITHDRAWAL_ADDRESS,
       start_timestamp: START_TIMESTAMP,
       cliff_timestamp: CLIFF_TIMESTAMP,
       fully_vested_timestamp: FULLY_VESTED_TIMESTAMP,
@@ -76,8 +73,7 @@ program grant_disbursement_puzzle_v10.aleo {
     // Update the grant to be "processed"
     let processed_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
-      recipient_rewards_address: grant.recipient_rewards_address,
-      recipient_principal_address: grant.recipient_principal_address,
+      withdrawal_address: grant.withdrawal_address,
       start_timestamp: grant.start_timestamp,
       cliff_timestamp: grant.cliff_timestamp,
       fully_vested_timestamp: grant.fully_vested_timestamp,
@@ -90,7 +86,7 @@ program grant_disbursement_puzzle_v10.aleo {
     id: u8,
     reward_amount: u64,
   ) -> Future {
-    assert_eq(self.caller, GRANTEE_REWARDS_ADDRESS);
+    assert_eq(self.caller, WITHDRAWAL_ADDRESS);
 
     let f0: Future = credits.aleo/unbond_public(self.address, reward_amount);
 
@@ -107,6 +103,7 @@ program grant_disbursement_puzzle_v10.aleo {
     let grant: Grant = grants.get(id);
 
     // Assert that the current timestamp is before the cliff
+    // todo -- verify current timestamp is always at index 0
     let current_timestamp: u64 = time_oracle.aleo/timestamp.get(0u8);
     assert(current_timestamp < grant.cliff_timestamp);
 
@@ -120,7 +117,7 @@ program grant_disbursement_puzzle_v10.aleo {
     id: u8,
     credits_amount: u64
   ) -> Future {
-    assert_eq(self.caller, GRANTEE_PRINCIPAL_ADDRESS);
+    assert_eq(self.caller, WITHDRAWAL_ADDRESS);
 
     let f0: Future = credits.aleo/unbond_public(self.address, credits_amount);
 
@@ -149,22 +146,32 @@ program grant_disbursement_puzzle_v10.aleo {
     assert(amount <= vested_credits);
   }
 
-  async transition claim_withdrawal_public (
-    credits_amount: u64,
-  ) -> Future {
+  async transition claim_unbond_public () -> Future {
     let f0: Future = credits.aleo/claim_unbond_public(self.address);
-    let f1: Future = credits.aleo/transfer_public(GRANTEE_PRINCIPAL_ADDRESS, credits_amount);
-    return finalize_claim_withdrawal_public(f0, f1);
+    return finalize_claim_unbond_public(f0);
   }
 
-  async function finalize_claim_withdrawal_public
+  async function finalize_claim_unbond_public
   (
     f0: Future,
-    f1: Future,
   )
   {
     f0.await();
-    f1.await();
+  }
+
+  async transition withdraw (
+    amount: u64,
+  ) -> Future {
+    let f0: Future = credits.aleo/transfer_public(WITHDRAWAL_ADDRESS, amount);
+    return finalize_withdraw(f0);
+  }
+
+  async function finalize_withdraw
+  (
+    f0: Future,
+  )
+  {
+    f0.await();
   }
 
   // copied from credits.aleo, as structs are not importable
