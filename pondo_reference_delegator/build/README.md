@@ -1,4 +1,4 @@
-# pondo_reference_delegator.aleo
+# reference_delegatorabcdef.aleo
 
 ## Build Guide
 

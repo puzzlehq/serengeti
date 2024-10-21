@@ -1,5 +1,5 @@
 {
-  "program": "pondo_reference_delegator.aleo",
+  "program": "reference_delegatorabcdef.aleo",
   "version": "0.1.0",
   "description": "",
   "license": "MIT",
@@ -12,6 +12,7 @@
     {
         "name": "pondo_oraclev1.aleo",
         "location": "network",
+        "network": "testnet",
         "path": "pondo_oraclev1.aleo"
     }
   ]

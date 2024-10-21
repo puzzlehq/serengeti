@@ -1,11 +1,11 @@
 import credits.aleo;
 import pondo_oraclev1.aleo;
 
-program pondo_reference_delegator.aleo {
+program reference_delegatorabcdef.aleo {
   // The address of the person who controls this program
-  const ADMIN: address = aleo1veausahccxaqmz4yse4r298f8evs4umyk36685l46ts7c99llvpq4lkcnf;
+  const ADMIN: address = aleo12mg4yjxtaejwm3aaxk8gugr5p4nddhdn8g5xr2hlfcasxf532qqq7yaga0;
   // The address of the validator who will be delegated to
-  const VALIDATOR: address = aleo1j0zju7f0fpgv98gulyywtkxk6jca99l6425uqhnd5kccu4jc2grstjx0mt;
+  const VALIDATOR: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   // The minimum delegation set by the credits.aleo program
   const MIN_DELEGATION: u64 = 10_000_000_000u64;
 
