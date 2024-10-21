@@ -179,10 +179,4 @@ program grant_disbursement_puzzle_v10.aleo {
     validator: address,
     microcredits: u64
   }
-
-  // copied from credits.aleo, as structs are not importable
-  struct unbond_state {
-    microcredits: u64,
-    height: u32
-  }
 }
