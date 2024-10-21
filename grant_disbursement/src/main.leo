@@ -3,10 +3,14 @@ import time_oracle.aleo;
 
 // The 'grant_disbursement' program.
 program grant_disbursement_puzzle_v10.aleo {
+  // todo - verify this before deploying on mainnet
   const WITHDRAWAL_ADDRESS: address = aleo12mg4yjxtaejwm3aaxk8gugr5p4nddhdn8g5xr2hlfcasxf532qqq7yaga0;
+  // todo - update this to mainnet validator before deploying on mainnet
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
 
   const CREDITS_AMOUNT: u64 = 500_000_000_000u64;
+
+  // todo - update and verify before deploying on mainnet
   const START_TIMESTAMP: u64 = 1725479626u64;
   const CLIFF_TIMESTAMP: u64 = 1757015626u64;
   const FULLY_VESTED_TIMESTAMP: u64 = 1757015686u64;
