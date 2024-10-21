@@ -7,7 +7,7 @@ program grant_disbursement_puzzle_v10.aleo {
   const GRANTEE_PRINCIPAL_ADDRESS: address = aleo12mg4yjxtaejwm3aaxk8gugr5p4nddhdn8g5xr2hlfcasxf532qqq7yaga0;
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const MIN_BONDED_CREDITS: u64 = 10_000_000_000u64;
-  const CREDITS_AMOUNT: u64 = 10_000_000_000u64;
+  const CREDITS_AMOUNT: u64 = 500_000_000_000u64;
   const START_TIMESTAMP: u64 = 1725479626u64;
   const CLIFF_TIMESTAMP: u64 = 1757015626u64;
   const FULLY_VESTED_TIMESTAMP: u64 = 1757015686u64;
@@ -49,22 +49,20 @@ program grant_disbursement_puzzle_v10.aleo {
   }
 
   async transition process_grant(
-    grant_id: u8,
-    credits_amount: u64,
+    grant_id: u8
   ) -> Future {
     // transfer credits to the protocol
-    let f0: Future = credits.aleo/transfer_public_as_signer(self.address, credits_amount);
+    let f0: Future = credits.aleo/transfer_public_as_signer(self.address, CREDITS_AMOUNT);
     // bond the credits to the puzzle validator
-    let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, credits_amount);
+    let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, CREDITS_AMOUNT);
 
-    return finalize_process_grant(f0, f1, grant_id, credits_amount);
+    return finalize_process_grant(f0, f1, grant_id);
   }
 
   async function finalize_process_grant(
     f0: Future,
     f1: Future,
     grant_id: u8,
-    credits_amount: u64,
   ) {
     f0.await();
     f1.await();
@@ -72,13 +70,11 @@ program grant_disbursement_puzzle_v10.aleo {
     // Get the grant
     let grant: Grant = grants.get(grant_id);
 
-    // Assert the credits amount is the same
-    assert_eq(credits_amount, grant.credits_amount);
     // Assert that the grant has not been processed
     assert(!grant.is_processed);
 
-    // Update the grant
-    let updated_grant: Grant = Grant {
+    // Update the grant to be "processed"
+    let processed_grant: Grant = Grant {
       credits_amount: grant.credits_amount,
       recipient_rewards_address: grant.recipient_rewards_address,
       recipient_principal_address: grant.recipient_principal_address,
@@ -87,7 +83,7 @@ program grant_disbursement_puzzle_v10.aleo {
       fully_vested_timestamp: grant.fully_vested_timestamp,
       is_processed: true
     };
-    grants.set(grant_id, updated_grant);
+    grants.set(grant_id, processed_grant);
   }
 
   async transition withdraw_rewards(
@@ -96,7 +92,6 @@ program grant_disbursement_puzzle_v10.aleo {
   ) -> Future {
     assert_eq(self.caller, GRANTEE_REWARDS_ADDRESS);
 
-    // unbond an arbitrary number of credits from the program
     let f0: Future = credits.aleo/unbond_public(self.address, reward_amount);
 
     return finalize_withdraw_rewards(f0, id, reward_amount);
@@ -116,8 +111,8 @@ program grant_disbursement_puzzle_v10.aleo {
     assert(current_timestamp < grant.cliff_timestamp);
 
     // Ensure the number of credits in the staked amount remains above the principal
-    let bonded_credits_struct: bond_state = credits.aleo/bonded.get(self.address);
-    let bonded_credits: u64 = bonded_credits_struct.microcredits;
+    let bonded_state: bond_state = credits.aleo/bonded.get(self.address);
+    let bonded_credits: u64 = bonded_state.microcredits;
     assert(bonded_credits - reward_amount > grant.credits_amount);
   }
 
@@ -148,10 +143,10 @@ program grant_disbursement_puzzle_v10.aleo {
     // Calculate the vested credits
     let timestamps_since_start: u64 = current_timestamp - grant.start_timestamp;
     let total_vesting_timestamps: u64 = grant.fully_vested_timestamp - grant.start_timestamp;
-    let vested_credits: u128 = grant.credits_amount as u128 * timestamps_since_start as u128 / total_vesting_timestamps as u128;
+    let vested_credits: u64 = grant.credits_amount * timestamps_since_start / total_vesting_timestamps;
 
     // Assert the withdrawal claim does not exceed the vested amount
-    assert(amount as u128 <= vested_credits);
+    assert(amount <= vested_credits);
   }
 
   async transition claim_withdrawal_public (
