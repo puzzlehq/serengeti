@@ -1,13 +1,13 @@
 [[package]]
 name = "credits.aleo"
-network = "testnet"
+network = "mainnet"
 location = "network"
 checksum = "e185a49fba7f5e477c3fedf8968be9912ae7d8db34531c246041e899175e4d33"
 dependencies = []
 
 [[package]]
 name = "time_oracle.aleo"
-network = "testnet"
+network = "mainnet"
 location = "network"
-checksum = "bc73c6e744a70064bae6f9e27fc5b1320e7ba8c81f040058d08cc485602e7674"
+checksum = "a9dc6cd76354d3a6f2fd514ac96216ffe7987342c75170719f476bbc4efaeef1"
 dependencies = []

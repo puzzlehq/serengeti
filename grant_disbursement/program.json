@@ -1,5 +1,5 @@
 {
-  "program": "grant_disbursement_puzzle_v10.aleo",
+  "program": "grant_disbursement_puzzle.aleo",
   "version": "0.1.0",
   "description": "",
   "license": "MIT",
@@ -7,13 +7,13 @@
     {
       "name": "credits.aleo",
       "location": "network",
-      "network": "testnet",
+      "network": "mainnet",
       "path": null
     },
     {
       "name": "time_oracle.aleo",
       "location": "network",
-      "network": "testnet",
+      "network": "mainnet",
       "path": null
     }
   ]

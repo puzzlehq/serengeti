@@ -26,11 +26,11 @@ finalize initialize:
     not r0 into r1;
     assert.eq r1 true ;
     set 0u64 into timestamp[0u8];
-    set true into admins[aleo1rn4tzjyvmgzkvpmllyac3hwfer3er6f9yukp5qcvwpspsl3j35fq06wt0m];
-    set true into admins[aleo1e7twguxde5dxp0fmh0uqchwnngwrzytrmuvylpaymafzq2zyxg9s3hst0m];
-    set true into admins[aleo13p8y9mc4s4m5cxc9fgpfqg6gw699pdhe5zgck32ppgd65hcsavxqlmvt0m];
-    set true into admins[aleo1a8y3nqktfs52yr0erv67vhzv5kdr9jv56nxs4up90mfk97zcqgyqkj2t0m];
-    set true into admins[aleo1pwsn742dptplvh74ha2gefxwq8xal3axm8qzlz2u2qgnmcqpkvrqq7gt0m];
+    set true into admins[aleo1sprkd9z89jtmeypk7nyx58xcgglmwe7vg2fg0dej2pwt7r8y25zs6zrr8a];
+    set true into admins[aleo18vajmtlafl0w2ld4kfy5qrs6aslkekpfkxq4yqu6yhz3d20sms8q86d9gr];
+    set true into admins[aleo12vw97eftd2ygretjpsydf4e8udyklteqfjn8cem5wkyqhhar5crq8cxs63];
+    set true into admins[aleo1ynldlugjktpezvespj87jxt072m80f9tcgatmz47kg0qxyypdqxs463fg7];
+    set true into admins[aleo1mjql67fre85nu92mjyf6024ua2zwg60l7udwtn27qdnlsx2qxvzq08vdmx];
 
 function update_timestamp:
     input r0 as u64.public;

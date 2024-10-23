@@ -1,16 +1,13 @@
 import credits.aleo;
 import time_oracle.aleo;
 
-// The 'grant_disbursement' program.
-program grant_disbursement_puzzle_v10.aleo {
-  // todo - verify this before deploying on mainnet
-  const WITHDRAWAL_ADDRESS: address = aleo12mg4yjxtaejwm3aaxk8gugr5p4nddhdn8g5xr2hlfcasxf532qqq7yaga0;
-  // todo - update this to mainnet validator before deploying on mainnet
-  const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
+// The 'grant_disbursement_puzzle' program.
+program grant_disbursement_puzzle.aleo {
+  const WITHDRAWAL_ADDRESS: address = aleo1pld4a6wdl9psu882ce4cz97uf3n9kk8dl2sm74dmu62sakw6qcrqfwc3h9;
+  const PUZZLE_VALIDATOR_ADDRESS: address = aleo1q3gtqtd03fs7chhjdr8c4hf8vkwt96pf3vw28uytsdrnwt4hrs9sg7c62j;
 
   const CREDITS_AMOUNT: u64 = 500_000_000_000u64;
 
-  // todo - update and verify before deploying on mainnet
   const START_TIMESTAMP: u64 = 1725479626u64;
   const CLIFF_TIMESTAMP: u64 = 1757015626u64;
   const FULLY_VESTED_TIMESTAMP: u64 = 1757015686u64;
@@ -107,7 +104,6 @@ program grant_disbursement_puzzle_v10.aleo {
     let grant: Grant = grants.get(id);
 
     // Assert that the current timestamp is before the cliff
-    // todo -- verify current timestamp is always at index 0
     let current_timestamp: u64 = time_oracle.aleo/timestamp.get(0u8);
     assert(current_timestamp < grant.cliff_timestamp);
 
