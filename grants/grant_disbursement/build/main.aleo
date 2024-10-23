@@ -1,6 +1,6 @@
 import credits.aleo;
-import time_oracle_puzz_test.aleo;
-program grant_disbursement_puzzle_v12.aleo;
+import time_oracle.aleo;
+program grant_disbursement_puzzle.aleo;
 
 struct bond_state:
     validator as address;
@@ -27,9 +27,9 @@ mapping grants:
 
 
 function claim_unbond_public:
-    call credits.aleo/claim_unbond_public grant_disbursement_puzzle_v12.aleo into r0;
+    call credits.aleo/claim_unbond_public grant_disbursement_puzzle.aleo into r0;
     async claim_unbond_public r0 into r1;
-    output r1 as grant_disbursement_puzzle_v12.aleo/claim_unbond_public.future;
+    output r1 as grant_disbursement_puzzle.aleo/claim_unbond_public.future;
 
 finalize claim_unbond_public:
     input r0 as credits.aleo/claim_unbond_public.future;
@@ -40,13 +40,13 @@ finalize claim_unbond_public:
 
 function initialize:
     async initialize into r0;
-    output r0 as grant_disbursement_puzzle_v12.aleo/initialize.future;
+    output r0 as grant_disbursement_puzzle.aleo/initialize.future;
 
 finalize initialize:
     contains grants[0u8] into r0;
     not r0 into r1;
     assert.eq r1 true;
-    cast 10_000_000_000u64 aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng 1725479626u64 1757015626u64 1757015686u64 false into r2 as Grant;
+    cast 500_000_000_000u64 aleo1pld4a6wdl9psu882ce4cz97uf3n9kk8dl2sm74dmu62sakw6qcrqfwc3h9 1725479626u64 1757015626u64 1757015686u64 false into r2 as Grant;
     set r2 into grants[0u8];
 
 
@@ -54,10 +54,10 @@ finalize initialize:
 
 function process_grant:
     input r0 as u8.private;
-    call credits.aleo/transfer_public_as_signer grant_disbursement_puzzle_v12.aleo 10_000_000_000u64 into r1;
-    call credits.aleo/bond_public aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f grant_disbursement_puzzle_v12.aleo 10_000_000_000u64 into r2;
+    call credits.aleo/transfer_public_as_signer grant_disbursement_puzzle.aleo 500_000_000_000u64 into r1;
+    call credits.aleo/bond_public aleo1q3gtqtd03fs7chhjdr8c4hf8vkwt96pf3vw28uytsdrnwt4hrs9sg7c62j grant_disbursement_puzzle.aleo 500_000_000_000u64 into r2;
     async process_grant r1 r2 r0 into r3;
-    output r3 as grant_disbursement_puzzle_v12.aleo/process_grant.future;
+    output r3 as grant_disbursement_puzzle.aleo/process_grant.future;
 
 finalize process_grant:
     input r0 as credits.aleo/transfer_public_as_signer.future;
@@ -77,10 +77,10 @@ finalize process_grant:
 function withdraw_rewards:
     input r0 as u8.private;
     input r1 as u64.private;
-    assert.eq self.caller aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
-    call credits.aleo/unbond_public grant_disbursement_puzzle_v12.aleo r1 into r2;
+    assert.eq self.caller aleo1pld4a6wdl9psu882ce4cz97uf3n9kk8dl2sm74dmu62sakw6qcrqfwc3h9;
+    call credits.aleo/unbond_public grant_disbursement_puzzle.aleo r1 into r2;
     async withdraw_rewards r2 r0 r1 into r3;
-    output r3 as grant_disbursement_puzzle_v12.aleo/withdraw_rewards.future;
+    output r3 as grant_disbursement_puzzle.aleo/withdraw_rewards.future;
 
 finalize withdraw_rewards:
     input r0 as credits.aleo/unbond_public.future;
@@ -88,10 +88,10 @@ finalize withdraw_rewards:
     input r2 as u64.public;
     await r0;
     get grants[r1] into r3;
-    get time_oracle_puzz_test.aleo/timestamp[0u8] into r4;
+    get time_oracle.aleo/timestamp[0u8] into r4;
     lt r4 r3.cliff_timestamp into r5;
     assert.eq r5 true;
-    get credits.aleo/bonded[grant_disbursement_puzzle_v12.aleo] into r6;
+    get credits.aleo/bonded[grant_disbursement_puzzle.aleo] into r6;
     sub r6.microcredits r2 into r7;
     gt r7 r3.credits_amount into r8;
     assert.eq r8 true;
@@ -102,10 +102,10 @@ finalize withdraw_rewards:
 function withdraw_principal:
     input r0 as u8.private;
     input r1 as u64.private;
-    assert.eq self.caller aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
-    call credits.aleo/unbond_public grant_disbursement_puzzle_v12.aleo r1 into r2;
+    assert.eq self.caller aleo1pld4a6wdl9psu882ce4cz97uf3n9kk8dl2sm74dmu62sakw6qcrqfwc3h9;
+    call credits.aleo/unbond_public grant_disbursement_puzzle.aleo r1 into r2;
     async withdraw_principal r2 r0 r1 into r3;
-    output r3 as grant_disbursement_puzzle_v12.aleo/withdraw_principal.future;
+    output r3 as grant_disbursement_puzzle.aleo/withdraw_principal.future;
 
 finalize withdraw_principal:
     input r0 as credits.aleo/unbond_public.future;
@@ -113,7 +113,7 @@ finalize withdraw_principal:
     input r2 as u64.public;
     await r0;
     get grants[r1] into r3;
-    get time_oracle_puzz_test.aleo/timestamp[0u8] into r4;
+    get time_oracle.aleo/timestamp[0u8] into r4;
     gte r4 r3.cliff_timestamp into r5;
     assert.eq r5 true;
     sub r4 r3.start_timestamp into r6;
@@ -128,9 +128,9 @@ finalize withdraw_principal:
 
 function withdraw:
     input r0 as u64.private;
-    call credits.aleo/transfer_public aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng r0 into r1;
+    call credits.aleo/transfer_public aleo1pld4a6wdl9psu882ce4cz97uf3n9kk8dl2sm74dmu62sakw6qcrqfwc3h9 r0 into r1;
     async withdraw r1 into r2;
-    output r2 as grant_disbursement_puzzle_v12.aleo/withdraw.future;
+    output r2 as grant_disbursement_puzzle.aleo/withdraw.future;
 
 finalize withdraw:
     input r0 as credits.aleo/transfer_public.future;
