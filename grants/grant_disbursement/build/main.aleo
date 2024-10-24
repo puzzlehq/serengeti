@@ -93,7 +93,7 @@ finalize withdraw_rewards:
     assert.eq r5 true;
     get credits.aleo/bonded[grant_disbursement_puzzle.aleo] into r6;
     sub r6.microcredits r2 into r7;
-    gt r7 r3.credits_amount into r8;
+    gte r7 r3.credits_amount into r8;
     assert.eq r8 true;
 
 

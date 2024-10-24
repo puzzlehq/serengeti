@@ -85,7 +85,7 @@ program grant_disbursement_puzzle.aleo {
 
   async transition withdraw_rewards(
     id: u8,
-    reward_amount: u64,
+    reward_amount: u64
   ) -> Future {
     assert_eq(self.caller, WITHDRAWAL_ADDRESS);
 
@@ -110,7 +110,7 @@ program grant_disbursement_puzzle.aleo {
     // Ensure the number of credits in the staked amount remains above the principal
     let bonded_state: bond_state = credits.aleo/bonded.get(self.address);
     let bonded_credits: u64 = bonded_state.microcredits;
-    assert(bonded_credits - reward_amount > grant.credits_amount);
+    assert(bonded_credits - reward_amount >= grant.credits_amount);
   }
 
   async transition withdraw_principal(
@@ -150,12 +150,7 @@ program grant_disbursement_puzzle.aleo {
     let f0: Future = credits.aleo/claim_unbond_public(self.address);
     return finalize_claim_unbond_public(f0);
   }
-
-  async function finalize_claim_unbond_public
-  (
-    f0: Future,
-  )
-  {
+  async function finalize_claim_unbond_public(f0: Future) {
     f0.await();
   }
 
@@ -165,12 +160,7 @@ program grant_disbursement_puzzle.aleo {
     let f0: Future = credits.aleo/transfer_public(WITHDRAWAL_ADDRESS, amount);
     return finalize_withdraw(f0);
   }
-
-  async function finalize_withdraw
-  (
-    f0: Future,
-  )
-  {
+  async function finalize_withdraw(f0: Future) {
     f0.await();
   }
 
