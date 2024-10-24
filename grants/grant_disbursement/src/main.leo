@@ -155,13 +155,33 @@ program grant_disbursement_puzzle.aleo {
   }
 
   async transition withdraw (
+    id: u8,
     amount: u64,
   ) -> Future {
     let f0: Future = credits.aleo/transfer_public(WITHDRAWAL_ADDRESS, amount);
-    return finalize_withdraw(f0);
+    return finalize_withdraw(f0, id, amount);
   }
-  async function finalize_withdraw(f0: Future) {
+  async function finalize_withdraw(f0: Future, id: u8, amount: u64) {
     f0.await();
+
+    let grant: Grant = grants.get(id);
+    let program_balance: u64 = credits.aleo/account.get(self.address);
+
+    // If for some reason the program was forcefully unbonded from the validator,
+    //   we need to ensure we're withdrawing appropriate amounts
+    let current_timestamp: u64 = time_oracle.aleo/timestamp.get(0u8);
+    if (current_timestamp < grant.cliff_timestamp) {
+      // Assert the withdrawal claim does not dip into principal
+      assert(program_balance - amount >= grant.credits_amount);
+    } else {
+      // Calculate the vested credits
+      let timestamps_since_start: u64 = current_timestamp - grant.start_timestamp;
+      let total_vesting_timestamps: u64 = grant.fully_vested_timestamp - grant.start_timestamp;
+      let vested_credits: u64 = grant.credits_amount * timestamps_since_start / total_vesting_timestamps;
+
+      // Assert the withdrawal claim does not exceed the vested amount
+      assert(amount <= vested_credits);
+    }
   }
 
   // copied from credits.aleo, as structs are not importable

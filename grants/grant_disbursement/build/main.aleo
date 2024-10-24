@@ -127,12 +127,32 @@ finalize withdraw_principal:
 
 
 function withdraw:
-    input r0 as u64.private;
-    call credits.aleo/transfer_public aleo1pld4a6wdl9psu882ce4cz97uf3n9kk8dl2sm74dmu62sakw6qcrqfwc3h9 r0 into r1;
-    async withdraw r1 into r2;
-    output r2 as grant_disbursement_puzzle.aleo/withdraw.future;
+    input r0 as u8.private;
+    input r1 as u64.private;
+    call credits.aleo/transfer_public aleo1pld4a6wdl9psu882ce4cz97uf3n9kk8dl2sm74dmu62sakw6qcrqfwc3h9 r1 into r2;
+    async withdraw r2 r0 r1 into r3;
+    output r3 as grant_disbursement_puzzle.aleo/withdraw.future;
 
 finalize withdraw:
     input r0 as credits.aleo/transfer_public.future;
+    input r1 as u8.public;
+    input r2 as u64.public;
     await r0;
+    get grants[r1] into r3;
+    get credits.aleo/account[grant_disbursement_puzzle.aleo] into r4;
+    get time_oracle.aleo/timestamp[0u8] into r5;
+    lt r5 r3.cliff_timestamp into r6;
+    branch.eq r6 false to end_then_0_0;
+    sub r4 r2 into r7;
+    gte r7 r3.credits_amount into r8;
+    assert.eq r8 true;
+    branch.eq true true to end_otherwise_0_1;
+    position end_then_0_0;
+    sub r5 r3.start_timestamp into r9;
+    sub r3.fully_vested_timestamp r3.start_timestamp into r10;
+    mul r3.credits_amount r9 into r11;
+    div r11 r10 into r12;
+    lte r2 r12 into r13;
+    assert.eq r13 true;
+    position end_otherwise_0_1;
 
