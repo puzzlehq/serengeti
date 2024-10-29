@@ -1,0 +1,14 @@
+{
+  "program": "squash_game.aleo",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "squash_time_oracle.aleo",
+      "location": "local",
+      "network": null,
+      "path": "../squash_time_oracle"
+    }
+  ]
+}
