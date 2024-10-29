@@ -173,7 +173,7 @@ program grant_disbursement_puzzle.aleo {
       // Assert the withdrawal claim does not dip into the principal
       let program_balance: u64 = credits.aleo/account.get(self.address);
       assert(program_balance - amount >= grant.credits_amount);
-    } else {
+    } else if (current_timestamp < grant.fully_vested_timestamp) {
       // Assert the withdrawal claim does not exceed the vested amount
       let timestamps_since_start: u64 = current_timestamp - grant.start_timestamp;
       let total_vesting_timestamps: u64 = grant.fully_vested_timestamp - grant.start_timestamp;

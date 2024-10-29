@@ -148,11 +148,16 @@ finalize withdraw:
     assert.eq r8 true;
     branch.eq true true to end_otherwise_0_1;
     position end_then_0_0;
-    sub r4 r3.start_timestamp into r9;
-    sub r3.fully_vested_timestamp r3.start_timestamp into r10;
-    mul r3.credits_amount r9 into r11;
-    div r11 r10 into r12;
-    lte r2 r12 into r13;
-    assert.eq r13 true;
+    lt r4 r3.fully_vested_timestamp into r9;
+    branch.eq r9 false to end_then_1_2;
+    sub r4 r3.start_timestamp into r10;
+    sub r3.fully_vested_timestamp r3.start_timestamp into r11;
+    mul r3.credits_amount r10 into r12;
+    div r12 r11 into r13;
+    lte r2 r13 into r14;
+    assert.eq r14 true;
+    branch.eq true true to end_otherwise_1_3;
+    position end_then_1_2;
+    position end_otherwise_1_3;
     position end_otherwise_0_1;
 
