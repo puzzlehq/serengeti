@@ -72,6 +72,11 @@ program puzzle_staking_v001.aleo {
   // address -> pending withdrawal for the delegator with this address
   mapping withdrawals: address => withdrawal_state;
 
+
+  //
+  // ###### Initialization Functions
+  //
+
   async transition initialize(public commission_rate: u128, public validator_address: address) -> Future {
     assert_eq(self.caller, ADMIN);
     assert(commission_rate < PRECISION_UNSIGNED);
@@ -90,7 +95,7 @@ program puzzle_staking_v001.aleo {
     validator.set(0u8, validator_address);
     total_shares.set(0u8, 0u64);
     total_balance.set(0u8, 0u64);
-    pending_deposits.set(0u8, 0u64);
+    // pending_deposits.set(0u8, 0u64);
     pending_withdrawal.set(0u8, 0u64);
     pending_withdrawal.set(1u8, 0u64);
     current_batch_height.set(0u8, 0u32);
@@ -135,139 +140,153 @@ program puzzle_staking_v001.aleo {
     delegator_shares.set(ADMIN, shares);
   }
 
+  //
+  // ###### Deposit Functions
+  //
+
   async transition deposit_public(
     public microcredits: u64
-  ) -> Future {
-    // credits.aleo/transfer_public_as_signer(self.address, microcredits);
+) -> Future {
+    // Transfer credits from the user to the contract
     let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
-    // bond credits immediately so we can start earning on newly deposited credits
+    // Bond the credits immediately to the validator
     let f2: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, microcredits);
 
     return finalize_deposit_public(f1, f2, self.caller, microcredits);
-  }
+}
 
-  async function finalize_deposit_public(
+async function finalize_deposit_public(
     f1: Future,
     f2: Future,
     caller: address,
     microcredits: u64
-  ) {
+) {
     f1.await();
     f2.await();
-    // Distribute shares for new commission
+
     let base: bond_state = bond_state {
-      validator: self.address,
-      microcredits: 0u64
+        validator: self.address,
+        microcredits: 0u64
     };
 
-    // todo: update assumptions and logic here as we are bonding users' credits immediately
-
-    // get the bonded amount for the protocol
     let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
-    // get current balance
-    let current_balance: u64 = total_balance.get(0u8);
-    // get current shares
-    let current_shares: u64 = total_shares.get(0u8);
-    // get current rewards based on bonded - "current_balance" if bonded > current_balance
-    let rewards: i64 = bonded > current_balance ? bonded as i64 - current_balance as i64 : 0i64;
-    // get commission rate
+
+    // Retrieve current balance and shares before the deposit
+    let current_balance: u64 = total_balance.get_or_use(0u8, 0u64);
+    let current_shares: u64 = total_shares.get_or_use(0u8, 0u64);
+    let admin_shares: u64 = delegator_shares.get_or_use(ADMIN, 0u64);
+
+    // Calculate rewards as bonded - (current_balance + microcredits) -> total in pool - current "set bal" + newly deposited
+    let rewards: i64 = bonded as i64 - (current_balance as i64 + microcredits as i64);
+    let rewards_to_distribute: u64 = rewards > 0i64 ? rewards as u64 : 0u64;
+
+    // Calculate commission and new commission shares
     let commission_rate: u128 = commission_percent.get(0u8);
-    // get new commissionr rate
-    let new_commission: u64 = get_commission(rewards as u128, commission_rate);
-    // get current balance - the commission that is earned
-    current_balance += rewards as u64 - new_commission;
+    let new_commission: u64 = rewards_to_distribute > 0u64
+        ? get_commission(rewards_to_distribute as u128, commission_rate)
+        : 0u64;
 
-    // get pending deposit pool
-    let pending_deposit_pool: u64 = pending_deposits.get(0u8);
-    // calculate new commission shares
-    let new_commission_shares: u64 = calculate_new_shares(current_balance as u128, pending_deposit_pool as u128, new_commission as u128, current_shares as u128);
-    // get current commission of admin
-    let current_commission: u64 = delegator_shares.get_or_use(ADMIN, 0u64);
-    // set new shares for admin
-    delegator_shares.set(ADMIN, current_commission + new_commission_shares);
+    let net_rewards: u64 = rewards_to_distribute - new_commission;
 
-    // uodate shares and balance
-    current_shares += new_commission_shares;
-    current_balance += new_commission;
-    // Update total balance
-    total_balance.set(0u8, current_balance);
+    let pre_commission_balance: u128 = (current_balance as u128) + (net_rewards as u128);
 
-    // Calculate mint for deposit
-    let new_shares: u64 = calculate_new_shares(current_balance as u128, pending_deposit_pool as u128, microcredits as u128, current_shares as u128);
+    let new_commission_shares: u64 = rewards_to_distribute > 0u64
+        ? calculate_new_shares_new(
+            pre_commission_balance,
+            new_commission as u128,
+            current_shares as u128
+        )
+        : 0u64;
 
-    // Ensure mint amount is valid
+    let updated_admin_shares: u64 = admin_shares + new_commission_shares;
+    delegator_shares.set(ADMIN, updated_admin_shares);
+
+    let updated_shares: u64 = current_shares + new_commission_shares;
+
+    let updated_balance: u64 = (pre_commission_balance as u64) + new_commission;
+
+    let new_shares: u64 = calculate_new_shares_new(
+        updated_balance as u128,
+        microcredits as u128,
+        updated_shares as u128
+    );
+
+    // Ensure at least one share is minted
     assert(new_shares >= 1u64);
 
-    // Update delegator_shares mapping with
-    let shares: u64 = delegator_shares.get_or_use(caller, 0u64);
-    delegator_shares.set(caller, shares + new_shares);
+    let user_shares: u64 = delegator_shares.get_or_use(caller, 0u64);
+    let updated_user_shares: u64 = user_shares + new_shares;
+    delegator_shares.set(caller, updated_user_shares);
 
-    // Update total shares
-    total_shares.set(0u8, current_shares + new_shares);
+    let final_total_shares: u64 = updated_shares + new_shares;
+    total_shares.set(0u8, final_total_shares);
 
-    // Update pending_deposits
-    pending_deposits.set(0u8, pending_deposit_pool + microcredits);
-  }
+    let final_total_balance: u64 = updated_balance + microcredits;
+    total_balance.set(0u8, final_total_balance);
+}
 
-  async transition bond_all(public validator_address: address, public amount: u64) -> Future {
-    // Call will fail if there is any balance still bonded to another validator
-    let f1: Future = credits.aleo/bond_public(validator_address, self.address, amount);
+  // async transition bond_all(public validator_address: address, public amount: u64) -> Future {
+  //   // Call will fail if there is any balance still bonded to another validator
+  //   let f1: Future = credits.aleo/bond_public(validator_address, self.address, amount);
 
-    return finalize_bond_all(f1, validator_address);
-  }
+  //   return finalize_bond_all(f1, validator_address);
+  // }
 
-  async function finalize_bond_all(f1: Future, validator_address: address) {
-    f1.await();
+  // async function finalize_bond_all(f1: Future, validator_address: address) {
+  //   f1.await();
 
-    let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
-    let pending_withdrawals: u64 = pending_withdrawal.get(1u8);
-    assert(account_balance >= pending_withdrawals);
+  //   let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
+  //   let pending_withdrawals: u64 = pending_withdrawal.get(1u8);
+  //   assert(account_balance >= pending_withdrawals);
 
-    let base: bond_state = bond_state {
-      validator: self.address,
-      microcredits: 0u64
-    };
-    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
-    let current_balance: u64 = total_balance.get(0u8);
-    let pending_deposit_balance: u64 = pending_deposits.get(0u8);
+  //   let base: bond_state = bond_state {
+  //     validator: self.address,
+  //     microcredits: 0u64
+  //   };
+  //   let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
+  //   let current_balance: u64 = total_balance.get(0u8);
+  //   let pending_deposit_balance: u64 = pending_deposits.get(0u8);
 
-    pending_deposit_balance = account_balance - pending_withdrawals;
-    pending_deposits.set(0u8, pending_deposit_balance);
-    total_balance.set(0u8, bonded);
+  //   pending_deposit_balance = account_balance - pending_withdrawals;
+  //   pending_deposits.set(0u8, pending_deposit_balance);
+  //   total_balance.set(0u8, bonded);
 
-    // Set validator
-    // remove next validator setting
-    // let next_validator: address = validator.get(1u8);
-    // assert_eq(validator_address, next_validator);
+  //   // Set validator
+  //   // remove next validator setting
+  //   // let next_validator: address = validator.get(1u8);
+  //   // assert_eq(validator_address, next_validator);
 
-    // validator.set(0u8, next_validator);
-    // validator.remove(1u8);
-  }
+  //   // validator.set(0u8, next_validator);
+  //   // validator.remove(1u8);
+  // }
 
-  async transition bond_deposits(public validator_address: address, public amount: u64) -> Future {
-    // Call will fail if there is any balance still bonded to another validator
-    let f1: Future = credits.aleo/bond_public(validator_address, self.address, amount);
+  // async transition bond_deposits(public validator_address: address, public amount: u64) -> Future {
+  //   // Call will fail if there is any balance still bonded to another validator
+  //   let f1: Future = credits.aleo/bond_public(validator_address, self.address, amount);
 
-    return finalize_bond_deposits(f1, amount, validator_address);
-  }
+  //   return finalize_bond_deposits(f1, amount, validator_address);
+  // }
 
-  async function finalize_bond_deposits(f1: Future, amount: u64, validator_address: address) {
-    f1.await();
+  // async function finalize_bond_deposits(f1: Future, amount: u64, validator_address: address) {
+  //   f1.await();
 
-    let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
-    let pending_withdrawals: u64 = pending_withdrawal.get(1u8);
-    assert(account_balance >= pending_withdrawals);
+  //   let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
+  //   let pending_withdrawals: u64 = pending_withdrawal.get(1u8);
+  //   assert(account_balance >= pending_withdrawals);
 
-    let current_balance: u64 = total_balance.get(0u8);
-    let pending_deposit_balance: u64 = account_balance - pending_withdrawals;
-    pending_deposits.set(0u8, pending_deposit_balance);
-    total_balance.set(0u8, current_balance + amount);
+  //   let current_balance: u64 = total_balance.get(0u8);
+  //   let pending_deposit_balance: u64 = account_balance - pending_withdrawals;
+  //   pending_deposits.set(0u8, pending_deposit_balance);
+  //   total_balance.set(0u8, current_balance + amount);
 
-    // let has_next_validator: bool = validator.contains(1u8);
-    // assert_eq(has_next_validator, false);
-    // assert_eq(validator.get(0u8), validator_address);
-  }
+  //   // let has_next_validator: bool = validator.contains(1u8);
+  //   // assert_eq(has_next_validator, false);
+  //   // assert_eq(validator.get(0u8), validator_address);
+  // }
 
+  //
+  // ###### Withdraw Functions
+  //
 
   async transition withdraw_public(public withdrawal_shares: u64, public total_withdrawal: u64) -> Future {
     let f1: Future = credits.aleo/unbond_public(self.address, total_withdrawal);
@@ -444,6 +463,11 @@ program puzzle_staking_v001.aleo {
     pending_withdrawal.set(1u8, currently_pending - amount);
   }
 
+
+  //
+  // ###### Utility Functions
+  //
+
   inline get_commission(
     rewards: u128,
     commission_rate: u128,
@@ -467,6 +491,16 @@ program puzzle_staking_v001.aleo {
     let shares_to_mint: u64 = diff as u64;
     return shares_to_mint;
   }
+
+  inline calculate_new_shares_new(total_bal: u128, deposits: u128, shares: u128) -> u64 {
+    // If total_shares is zero (first deposit), mint shares equal to deposit amount
+    if shares == 0u128 {
+        return deposits as u64;
+    }
+    let new_shares: u128 = (deposits * shares) / total_bal;
+    return new_shares as u64;
+}
+
 
   // utiility function to calculate the new shares based on the pending deposit pool
   transition calculate_new_shares_test(bonded_balance: u128, pending_deposit_pool: u128, deposit: u128, shares: u128) -> u64 {
