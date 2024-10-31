@@ -5,10 +5,6 @@ struct bond_state:
     validator as address;
     microcredits as u64;
 
-struct unbond_state:
-    microcredits as u64;
-    height as u32;
-
 
 struct withdrawal_state:
     microcredits as u64;
@@ -201,10 +197,6 @@ finalize deposit_public:
 
 
 
-
-
-
-
 function withdraw_public:
     input r0 as u64.public;
     input r1 as u64.public;
@@ -218,182 +210,87 @@ finalize withdraw_public:
     input r2 as u64.public;
     input r3 as address.public;
     await r0;
-    contains withdrawals[r3] into r4;
-    assert.eq r4 false;
-    get.or_use current_batch_height[0u8] 0u32 into r5;
-    add block.height 360u32 into r6;
-    is.eq r5 0u32 into r7;
-    gte r5 r6 into r8;
-    or r7 r8 into r9;
-    assert.eq r9 true;
-    get delegator_shares[r3] into r10;
-    gte r10 r1 into r11;
-    assert.eq r11 true;
-    cast 0u64 0u32 into r12 as unbond_state;
-    get.or_use credits.aleo/unbonding[puzzle_staking_v001.aleo] r12 into r13;
-    get pending_withdrawal[0u8] into r14;
-    sub r13.microcredits r14 into r15;
-    get pending_deposits[0u8] into r16;
-    sub r15 r2 into r17;
-    add r17 r16 into r18;
-    gte r18 10_000_000_000u64 into r19;
-    cast puzzle_staking_v001.aleo 0u64 into r20 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_staking_v001.aleo] r20 into r21;
-    gte r21.microcredits 10_000_000_000u64 into r22;
-    not r19 into r23;
-    or r22 r23 into r24;
-    assert.eq r24 true;
-    add r21.microcredits r15 into r25;
-    get total_balance[0u8] into r26;
-    get total_shares[0u8] into r27;
-    gt r25 r26 into r28;
-    cast r25 into r29 as i64;
-    cast r26 into r30 as i64;
-    sub r29 r30 into r31;
-    ternary r28 r31 0i64 into r32;
-    get commission_percent[0u8] into r33;
-    cast r32 into r34 as u128;
-    mul r34 r33 into r35;
-    div r35 1_000u128 into r36;
-    cast r36 into r37 as u64;
-    cast r32 into r38 as u64;
-    sub r38 r37 into r39;
-    add r26 r39 into r40;
-    cast r40 into r41 as u128;
-    cast r16 into r42 as u128;
-    cast r37 into r43 as u128;
-    cast r27 into r44 as u128;
-    add r41 r42 into r45;
-    add r45 r43 into r46;
-    mul r44 r46 into r47;
-    div r47 r45 into r48;
-    sub r48 r44 into r49;
-    cast r49 into r50 as u64;
-    get.or_use delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs] 0u64 into r51;
-    add r51 r50 into r52;
-    set r52 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
-    add r27 r50 into r53;
-    add r40 r37 into r54;
-    cast r54 into r55 as u128;
-    cast r16 into r56 as u128;
-    add r55 r56 into r57;
-    cast r1 into r58 as u128;
-    cast r57 into r59 as u128;
-    mul r58 r59 into r60;
-    cast r53 into r61 as u128;
-    div r60 r61 into r62;
-    cast r2 into r63 as u128;
-    gte r62 r63 into r64;
-    assert.eq r64 true;
-    add block.height 1_000u32 into r65;
-    ternary r7 r65 r5 into r66;
-    set r66 into current_batch_height[0u8];
-    cast r2 r66 into r67 as withdrawal_state;
-    set r67 into withdrawals[r3];
-    add r14 r2 into r68;
-    set r68 into pending_withdrawal[0u8];
-    sub r54 r2 into r69;
-    set r69 into total_balance[0u8];
-    sub r53 r1 into r70;
-    set r70 into total_shares[0u8];
-    get delegator_shares[r3] into r71;
-    sub r71 r1 into r72;
-    set r72 into delegator_shares[r3];
-
-
-
-
-function unbond_all:
-    input r0 as u64.public;
-    call credits.aleo/unbond_public puzzle_staking_v001.aleo r0 into r1;
-    async unbond_all r1 into r2;
-    output r2 as puzzle_staking_v001.aleo/unbond_all.future;
-
-finalize unbond_all:
-    input r0 as credits.aleo/unbond_public.future;
-    await r0;
-    cast puzzle_staking_v001.aleo 0u64 into r1 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_staking_v001.aleo] r1 into r2;
-    assert.eq r2.microcredits 0u64;
-    cast 0u64 0u32 into r3 as unbond_state;
-    get.or_use credits.aleo/unbonding[puzzle_staking_v001.aleo] r3 into r4;
-    get pending_withdrawal[0u8] into r5;
-    sub r4.microcredits r5 into r6;
-    get total_balance[0u8] into r7;
-    get total_shares[0u8] into r8;
-    gt r6 r7 into r9;
-    cast r6 into r10 as i64;
-    cast r7 into r11 as i64;
-    sub r10 r11 into r12;
-    ternary r9 r12 0i64 into r13;
-    get commission_percent[0u8] into r14;
-    cast r13 into r15 as u128;
-    mul r15 r14 into r16;
-    div r16 1_000u128 into r17;
-    cast r17 into r18 as u64;
-    cast r13 into r19 as u64;
-    sub r19 r18 into r20;
-    add r7 r20 into r21;
-    get pending_deposits[0u8] into r22;
-    cast r21 into r23 as u128;
+    get.or_use total_balance[0u8] 0u64 into r4;
+    get.or_use total_shares[0u8] 0u64 into r5;
+    get.or_use delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs] 0u64 into r6;
+    cast puzzle_staking_v001.aleo 0u64 into r7 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_staking_v001.aleo] r7 into r8;
+    cast r8.microcredits into r9 as i64;
+    cast r4 into r10 as i64;
+    sub r9 r10 into r11;
+    gt r11 0i64 into r12;
+    cast r11 into r13 as u64;
+    ternary r12 r13 0u64 into r14;
+    get commission_percent[0u8] into r15;
+    gt r14 0u64 into r16;
+    cast r14 into r17 as u128;
+    mul r17 r15 into r18;
+    div r18 1_000u128 into r19;
+    cast r19 into r20 as u64;
+    ternary r16 r20 0u64 into r21;
+    sub r14 r21 into r22;
+    cast r4 into r23 as u128;
     cast r22 into r24 as u128;
-    cast r18 into r25 as u128;
-    cast r8 into r26 as u128;
-    add r23 r24 into r27;
-    add r27 r25 into r28;
-    mul r26 r28 into r29;
-    div r29 r27 into r30;
-    sub r30 r26 into r31;
-    cast r31 into r32 as u64;
-    get.or_use delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs] 0u64 into r33;
-    add r33 r32 into r34;
-    set r34 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
-    add r8 r32 into r35;
-    set r35 into total_shares[0u8];
-    add r21 r18 into r36;
-    set r36 into total_balance[0u8];
-
-
-
-
-function claim_unbond:
-    call credits.aleo/claim_unbond_public puzzle_staking_v001.aleo into r0;
-    async claim_unbond r0 into r1;
-    output r1 as puzzle_staking_v001.aleo/claim_unbond.future;
-
-finalize claim_unbond:
-    input r0 as credits.aleo/claim_unbond_public.future;
-    await r0;
-    remove current_batch_height[0u8];
-    get pending_withdrawal[0u8] into r1;
-    get pending_withdrawal[1u8] into r2;
-    add r2 r1 into r3;
-    set 0u64 into pending_withdrawal[0u8];
-    set r3 into pending_withdrawal[1u8];
+    add r23 r24 into r25;
+    gt r14 0u64 into r26;
+    cast r21 into r27 as u128;
+    cast r5 into r28 as u128;
+    is.eq r28 0u128 into r29;
+    cast r27 into r30 as u64;
+    mul r27 r28 into r31;
+    div r31 r25 into r32;
+    cast r32 into r33 as u64;
+    ternary r29 r30 r33 into r34;
+    ternary r26 r34 0u64 into r35;
+    add r6 r35 into r36;
+    set r36 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
+    add r5 r35 into r37;
+    cast r25 into r38 as u64;
+    add r38 r21 into r39;
+    get.or_use delegator_shares[r3] 0u64 into r40;
+    gte r40 r1 into r41;
+    assert.eq r41 true;
+    cast r1 into r42 as u128;
+    cast r39 into r43 as u128;
+    mul r42 r43 into r44;
+    cast r37 into r45 as u128;
+    div r44 r45 into r46;
+    cast r46 into r47 as u64;
+    sub r40 r1 into r48;
+    set r48 into delegator_shares[r3];
+    sub r37 r1 into r49;
+    sub r39 r47 into r50;
+    set r49 into total_shares[0u8];
+    set r50 into total_balance[0u8];
+    add block.height 360u32 into r51;
+    cast r47 r51 into r52 as withdrawal_state;
+    set r52 into withdrawals[r3];
 
 
 
 
 function claim_withdrawal_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    call credits.aleo/transfer_public r0 r1 into r2;
-    async claim_withdrawal_public r2 r0 r1 into r3;
+    input r0 as u64.public;
+    call credits.aleo/claim_unbond_public puzzle_staking_v001.aleo into r1;
+    call credits.aleo/transfer_public self.caller r0 into r2;
+    async claim_withdrawal_public r1 r2 self.caller r0 into r3;
     output r3 as puzzle_staking_v001.aleo/claim_withdrawal_public.future;
 
 finalize claim_withdrawal_public:
-    input r0 as credits.aleo/transfer_public.future;
-    input r1 as address.public;
-    input r2 as u64.public;
+    input r0 as credits.aleo/claim_unbond_public.future;
+    input r1 as credits.aleo/transfer_public.future;
+    input r2 as address.public;
+    input r3 as u64.public;
     await r0;
-    get withdrawals[r1] into r3;
-    gte block.height r3.claim_block into r4;
-    assert.eq r4 true;
-    assert.eq r3.microcredits r2;
-    remove withdrawals[r1];
-    get pending_withdrawal[1u8] into r5;
-    sub r5 r2 into r6;
-    set r6 into pending_withdrawal[1u8];
+    await r1;
+    get withdrawals[r2] into r4;
+    gte block.height r4.claim_block into r5;
+    assert.eq r5 true;
+    assert.eq r4.microcredits r3;
+    remove withdrawals[r2];
+    get.or_use pending_withdrawal[1u8] 0u64 into r6;
+    sub r6 r3 into r7;
+    set r7 into pending_withdrawal[1u8];
 
 
 
@@ -404,6 +301,8 @@ function get_commission_test:
     div r2 1_000u128 into r3;
     cast r3 into r4 as u64;
     output r4 as u64.private;
+
+
 
 
 function calculate_new_shares_test:
@@ -433,40 +332,40 @@ function set_commission_percent:
 
 finalize set_commission_percent:
     input r0 as u128.public;
-    cast puzzle_staking_v001.aleo 0u64 into r1 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_staking_v001.aleo] r1 into r2;
-    get total_balance[0u8] into r3;
-    get total_shares[0u8] into r4;
-    gt r2.microcredits r3 into r5;
-    cast r2.microcredits into r6 as i64;
-    cast r3 into r7 as i64;
+    get.or_use total_balance[0u8] 0u64 into r1;
+    get.or_use total_shares[0u8] 0u64 into r2;
+    get.or_use delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs] 0u64 into r3;
+    cast puzzle_staking_v001.aleo 0u64 into r4 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_staking_v001.aleo] r4 into r5;
+    cast r5.microcredits into r6 as i64;
+    cast r1 into r7 as i64;
     sub r6 r7 into r8;
-    ternary r5 r8 0i64 into r9;
-    get commission_percent[0u8] into r10;
-    cast r9 into r11 as u128;
-    mul r11 r10 into r12;
-    div r12 1_000u128 into r13;
-    cast r13 into r14 as u64;
-    cast r9 into r15 as u64;
-    sub r15 r14 into r16;
-    add r3 r16 into r17;
-    get pending_deposits[0u8] into r18;
+    gt r8 0i64 into r9;
+    cast r8 into r10 as u64;
+    ternary r9 r10 0u64 into r11;
+    get commission_percent[0u8] into r12;
+    cast r11 into r13 as u128;
+    mul r13 r12 into r14;
+    div r14 1_000u128 into r15;
+    cast r15 into r16 as u64;
+    sub r11 r16 into r17;
+    cast r1 into r18 as u128;
     cast r17 into r19 as u128;
-    cast r18 into r20 as u128;
-    cast r14 into r21 as u128;
-    cast r4 into r22 as u128;
-    add r19 r20 into r23;
-    add r23 r21 into r24;
-    mul r22 r24 into r25;
-    div r25 r23 into r26;
-    sub r26 r22 into r27;
-    cast r27 into r28 as u64;
-    get.or_use delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs] 0u64 into r29;
-    add r29 r28 into r30;
-    set r30 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
-    add r4 r28 into r31;
-    set r31 into total_shares[0u8];
-    add r17 r14 into r32;
+    add r18 r19 into r20;
+    cast r16 into r21 as u128;
+    cast r2 into r22 as u128;
+    is.eq r22 0u128 into r23;
+    cast r21 into r24 as u64;
+    mul r21 r22 into r25;
+    div r25 r20 into r26;
+    cast r26 into r27 as u64;
+    ternary r23 r24 r27 into r28;
+    add r3 r28 into r29;
+    set r29 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
+    add r2 r28 into r30;
+    set r30 into total_shares[0u8];
+    cast r20 into r31 as u64;
+    add r31 r16 into r32;
     set r32 into total_balance[0u8];
     set r0 into commission_percent[0u8];
 
@@ -493,41 +392,43 @@ function claim_commission:
     output r0 as puzzle_staking_v001.aleo/claim_commission.future;
 
 finalize claim_commission:
-    cast puzzle_staking_v001.aleo 0u64 into r0 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_staking_v001.aleo] r0 into r1;
-    get total_balance[0u8] into r2;
-    get total_shares[0u8] into r3;
-    gt r1.microcredits r2 into r4;
-    cast r1.microcredits into r5 as i64;
-    cast r2 into r6 as i64;
+    get.or_use total_balance[0u8] 0u64 into r0;
+    get.or_use total_shares[0u8] 0u64 into r1;
+    get.or_use delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs] 0u64 into r2;
+    cast puzzle_staking_v001.aleo 0u64 into r3 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_staking_v001.aleo] r3 into r4;
+    cast r4.microcredits into r5 as i64;
+    cast r0 into r6 as i64;
     sub r5 r6 into r7;
-    ternary r4 r7 0i64 into r8;
-    get commission_percent[0u8] into r9;
-    cast r8 into r10 as u128;
-    mul r10 r9 into r11;
-    div r11 1_000u128 into r12;
-    cast r12 into r13 as u64;
-    cast r8 into r14 as u64;
-    sub r14 r13 into r15;
-    add r2 r15 into r16;
-    get pending_deposits[0u8] into r17;
+    gt r7 0i64 into r8;
+    cast r7 into r9 as u64;
+    ternary r8 r9 0u64 into r10;
+    get commission_percent[0u8] into r11;
+    cast r10 into r12 as u128;
+    mul r12 r11 into r13;
+    div r13 1_000u128 into r14;
+    cast r14 into r15 as u64;
+    sub r10 r15 into r16;
+    cast r0 into r17 as u128;
     cast r16 into r18 as u128;
-    cast r17 into r19 as u128;
-    cast r13 into r20 as u128;
-    cast r3 into r21 as u128;
-    add r18 r19 into r22;
-    add r22 r20 into r23;
-    mul r21 r23 into r24;
-    div r24 r22 into r25;
-    sub r25 r21 into r26;
-    cast r26 into r27 as u64;
-    get.or_use delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs] 0u64 into r28;
-    add r28 r27 into r29;
-    set r29 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
-    add r3 r27 into r30;
-    set r30 into total_shares[0u8];
-    add r16 r13 into r31;
+    add r17 r18 into r19;
+    cast r15 into r20 as u128;
+    cast r1 into r21 as u128;
+    is.eq r21 0u128 into r22;
+    cast r20 into r23 as u64;
+    mul r20 r21 into r24;
+    div r24 r19 into r25;
+    cast r25 into r26 as u64;
+    ternary r22 r23 r26 into r27;
+    add r2 r27 into r28;
+    set r28 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
+    add r1 r27 into r29;
+    set r29 into total_shares[0u8];
+    cast r19 into r30 as u64;
+    add r30 r15 into r31;
     set r31 into total_balance[0u8];
+
+
 
 
 
@@ -548,45 +449,60 @@ finalize create_withdraw_claim:
     input r1 as address.public;
     contains withdrawals[r1] into r2;
     assert.eq r2 false;
-    cast puzzle_staking_v001.aleo 0u64 into r3 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_staking_v001.aleo] r3 into r4;
-    assert.eq r4.microcredits 0u64;
-    cast 0u64 0u32 into r5 as unbond_state;
-    get.or_use credits.aleo/unbonding[puzzle_staking_v001.aleo] r5 into r6;
-    assert.eq r6.microcredits 0u64;
-    get delegator_shares[r1] into r7;
-    gte r7 r0 into r8;
-    assert.eq r8 true;
-    get total_balance[0u8] into r9;
-    get pending_deposits[0u8] into r10;
-    cast r9 into r11 as u128;
-    cast r10 into r12 as u128;
-    add r11 r12 into r13;
-    get total_shares[0u8] into r14;
-    cast r0 into r15 as u128;
-    mul r15 r13 into r16;
-    cast r14 into r17 as u128;
-    div r16 r17 into r18;
+    get.or_use total_balance[0u8] 0u64 into r3;
+    get.or_use total_shares[0u8] 0u64 into r4;
+    get.or_use delegator_shares[r1] 0u64 into r5;
+    gte r5 r0 into r6;
+    assert.eq r6 true;
+    cast puzzle_staking_v001.aleo 0u64 into r7 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_staking_v001.aleo] r7 into r8;
+    cast r8.microcredits into r9 as i64;
+    cast r3 into r10 as i64;
+    sub r9 r10 into r11;
+    gt r11 0i64 into r12;
+    cast r11 into r13 as u64;
+    ternary r12 r13 0u64 into r14;
+    get commission_percent[0u8] into r15;
+    cast r14 into r16 as u128;
+    mul r16 r15 into r17;
+    div r17 1_000u128 into r18;
     cast r18 into r19 as u64;
-    add block.height 1u32 into r20;
-    cast r19 r20 into r21 as withdrawal_state;
-    set r21 into withdrawals[r1];
-    get pending_withdrawal[1u8] into r22;
-    add r22 r19 into r23;
-    set r23 into pending_withdrawal[1u8];
-    cast r10 into r24 as i64;
-    cast r19 into r25 as i64;
-    sub r24 r25 into r26;
-    gte r26 0i64 into r27;
-    abs r26 into r28;
-    cast r28 into r29 as u64;
-    ternary r27 r29 0u64 into r30;
-    ternary r27 0u64 r29 into r31;
-    set r30 into pending_deposits[0u8];
-    sub r9 r31 into r32;
-    set r32 into total_balance[0u8];
-    sub r14 r0 into r33;
-    set r33 into total_shares[0u8];
-    sub r7 r0 into r34;
-    set r34 into delegator_shares[r1];
+    sub r14 r19 into r20;
+    cast r3 into r21 as u128;
+    cast r20 into r22 as u128;
+    add r21 r22 into r23;
+    gt r14 0u64 into r24;
+    cast r19 into r25 as u128;
+    cast r4 into r26 as u128;
+    is.eq r26 0u128 into r27;
+    cast r25 into r28 as u64;
+    mul r25 r26 into r29;
+    div r29 r23 into r30;
+    cast r30 into r31 as u64;
+    ternary r27 r28 r31 into r32;
+    ternary r24 r32 0u64 into r33;
+    get.or_use delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs] 0u64 into r34;
+    add r34 r33 into r35;
+    set r35 into delegator_shares[aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs];
+    add r4 r33 into r36;
+    cast r23 into r37 as u64;
+    add r37 r19 into r38;
+    cast r0 into r39 as u128;
+    cast r38 into r40 as u128;
+    mul r39 r40 into r41;
+    cast r36 into r42 as u128;
+    div r41 r42 into r43;
+    cast r43 into r44 as u64;
+    sub r5 r0 into r45;
+    set r45 into delegator_shares[r1];
+    sub r36 r0 into r46;
+    set r46 into total_shares[0u8];
+    sub r38 r44 into r47;
+    set r47 into total_balance[0u8];
+    add block.height 360u32 into r48;
+    cast r44 r48 into r49 as withdrawal_state;
+    set r49 into withdrawals[r1];
+    get.or_use pending_withdrawal[1u8] 0u64 into r50;
+    add r50 r44 into r51;
+    set r51 into pending_withdrawal[1u8];
 
