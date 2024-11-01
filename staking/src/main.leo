@@ -2,7 +2,7 @@ import credits.aleo;
 
 program puzzle_staking_v001.aleo {
   // Owner of the program
-  const ADMIN: address = aleo1as9067txqeya80e720ge68pt9faj6ymy20drfr5a7stfntyk95rqmv9afs;
+  const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   // todo - update this to be our validator
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const SHARES_TO_MICROCREDITS: u64 = 1_000u64;
@@ -459,12 +459,10 @@ program puzzle_staking_v001.aleo {
 
     assert_eq(withdrawal.microcredits, amount);
 
+    // Remove the user's withdrawal record
     withdrawals.remove(owner);
-
-    let currently_pending: u64 = pending_withdrawal.get_or_use(1u8, 0u64);
-    let updated_pending: u64 = currently_pending - amount;
-    pending_withdrawal.set(1u8, updated_pending);
   }
+
 
 
 
