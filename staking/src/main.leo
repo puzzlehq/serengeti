@@ -1,6 +1,6 @@
 import credits.aleo;
 
-program puzzle_staking_v001.aleo {
+program puzzle_staking_v02.aleo {
   // Owner of the program
   const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   // todo - update this to be our validator
@@ -47,7 +47,6 @@ program puzzle_staking_v001.aleo {
 
   // 0u8 -> balance of deposits that have not been bonded, updated when calling "bond_all"
   mapping pending_deposits: u8 => u64;
-
   // 0u8 -> total pool of delegator shares
   mapping total_shares: u8 => u64;
 
@@ -103,11 +102,10 @@ program puzzle_staking_v001.aleo {
 
   async transition initial_deposit(
     public microcredits: u64,
-  ) -> (Future) {
+  ) -> Future {
     assert_eq(self.caller, ADMIN);
-    // transfer initial > 10k credits into the protocol
+    assert(microcredits >= MINIMUM_BOND_AMOUNT);
     let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
-    // program bonds the 10k credits to the puzzle validator
     let f2: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, microcredits);
 
     return finalize_initial_deposit(f1, f2, microcredits);
@@ -121,22 +119,14 @@ program puzzle_staking_v001.aleo {
     f1.await();
     f2.await();
 
-    // assert that the contract is initialized
     assert(is_initialized.get(0u8));
-    // validate that the initial balance is set to 0
     let balance: u64 = total_balance.get_or_use(0u8, 0u64);
-    // validate that the initial shares are set to 0
     let shares: u64 = total_shares.get_or_use(0u8, 0u64);
-    // assert that the balance is 0
     assert_eq(balance, 0u64);
-    // assert that the shares are eq to
     assert_eq(shares, 0u64);
-    // set the total balance to the microcredits passed in
     total_balance.set(0u8, microcredits);
-    // set the shares to the microcredits * the number of shares
     shares = microcredits * SHARES_TO_MICROCREDITS;
     total_shares.set(0u8, shares);
-    // set the number of shares held by the admin in the delegator shares mapping
     delegator_shares.set(ADMIN, shares);
   }
 
@@ -147,9 +137,9 @@ program puzzle_staking_v001.aleo {
   async transition deposit_public(
     public microcredits: u64
   ) -> Future {
-    // Transfer credits from the user to the contract
+    // Validate deposit amount
+    assert(microcredits > 0u64);
     let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
-    // Bond the credits immediately to the validator
     let f2: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, microcredits);
 
     return finalize_deposit_public(f1, f2, self.caller, microcredits);
@@ -170,59 +160,29 @@ program puzzle_staking_v001.aleo {
     };
 
     let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
-
-    // Retrieve current balance and shares before the deposit
     let current_balance: u64 = total_balance.get_or_use(0u8, 0u64);
     let current_shares: u64 = total_shares.get_or_use(0u8, 0u64);
-    let admin_shares: u64 = delegator_shares.get_or_use(ADMIN, 0u64);
 
-    // Calculate rewards as bonded - (current_balance + microcredits) -> total in pool - current "set bal" + newly deposited
     let rewards: i64 = bonded as i64 - (current_balance as i64 + microcredits as i64);
     let rewards_to_distribute: u64 = rewards > 0i64 ? rewards as u64 : 0u64;
-
-    // Calculate commission and new commission shares
     let commission_rate: u128 = commission_percent.get(0u8);
     let new_commission: u64 = rewards_to_distribute > 0u64
         ? get_commission(rewards_to_distribute as u128, commission_rate)
         : 0u64;
-
     let net_rewards: u64 = rewards_to_distribute - new_commission;
+    let updated_balance: u64 = current_balance + net_rewards + new_commission;
 
-    let pre_commission_balance: u128 = (current_balance as u128) + (net_rewards as u128);
+    const PRECISION_FACTOR: u128 = 1_000_000u128;
+    let deposit_calculation: u128 = (microcredits as u128 * current_shares as u128 * PRECISION_FACTOR) / updated_balance as u128;
+    let new_shares: u64 = (deposit_calculation / PRECISION_FACTOR) as u64;
 
-    let new_commission_shares: u64 = rewards_to_distribute > 0u64
-        ? calculate_new_shares_new(
-            pre_commission_balance,
-            new_commission as u128,
-            current_shares as u128
-        )
-        : 0u64;
-
-    let updated_admin_shares: u64 = admin_shares + new_commission_shares;
-    delegator_shares.set(ADMIN, updated_admin_shares);
-
-    let updated_shares: u64 = current_shares + new_commission_shares;
-
-    let updated_balance: u64 = (pre_commission_balance as u64) + new_commission;
-
-    let new_shares: u64 = calculate_new_shares_new(
-        updated_balance as u128,
-        microcredits as u128,
-        updated_shares as u128
-    );
-
-    // Ensure at least one share is minted
-    assert(new_shares >= 1u64);
+    assert(new_shares > 0u64 || microcredits == 0u64);
+    new_shares = new_shares == 0u64 && microcredits > 0u64 ? 1u64 : new_shares;
 
     let user_shares: u64 = delegator_shares.get_or_use(caller, 0u64);
-    let updated_user_shares: u64 = user_shares + new_shares;
-    delegator_shares.set(caller, updated_user_shares);
-
-    let final_total_shares: u64 = updated_shares + new_shares;
-    total_shares.set(0u8, final_total_shares);
-
-    let final_total_balance: u64 = updated_balance + microcredits;
-    total_balance.set(0u8, final_total_balance);
+    delegator_shares.set(caller, user_shares + new_shares);
+    total_shares.set(0u8, current_shares + new_shares);
+    total_balance.set(0u8, updated_balance + microcredits);
   }
 
   // async transition bond_all(public validator_address: address, public amount: u64) -> Future {
@@ -289,88 +249,63 @@ program puzzle_staking_v001.aleo {
   //
 
   async transition withdraw_public(public withdrawal_shares: u64, public total_withdrawal: u64) -> Future {
-    let f1: Future = credits.aleo/unbond_public(self.address, total_withdrawal);
+    assert(withdrawal_shares > 0u64);
+    assert(total_withdrawal > 0u64);
 
+    let f1: Future = credits.aleo/unbond_public(self.address, total_withdrawal);
     return finalize_withdraw_public(f1, withdrawal_shares, total_withdrawal, self.caller);
   }
 
   async function finalize_withdraw_public(f1: Future, withdrawal_shares: u64, total_withdrawal: u64, owner: address) {
     f1.await();
 
-    // Retrieve current balance and shares
+    let currently_withdrawing: bool = withdrawals.contains(owner);
+    assert_eq(currently_withdrawing, false);
+
     let current_balance: u64 = total_balance.get_or_use(0u8, 0u64);
     let current_shares: u64 = total_shares.get_or_use(0u8, 0u64);
-    let admin_shares: u64 = delegator_shares.get_or_use(ADMIN, 0u64);
+    let user_shares: u64 = delegator_shares.get_or_use(owner, 0u64);
+    assert(user_shares >= withdrawal_shares);
+    assert(current_shares >= withdrawal_shares);
 
-    // Initialize updated values
-    let updated_balance: u64 = current_balance;
-    let updated_shares: u64 = current_shares;
-    let updated_admin_shares: u64 = admin_shares;
-
-    // Begin reward updating logic
-    // Get the bonded amount
     let base: bond_state = bond_state {
         validator: self.address,
         microcredits: 0u64
     };
     let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
 
-    // Calculate rewards as bonded - current_balance
     let rewards: i64 = bonded as i64 - current_balance as i64;
     let rewards_to_distribute: u64 = rewards > 0i64 ? rewards as u64 : 0u64;
-
-    // Calculate commission and new commission shares
     let commission_rate: u128 = commission_percent.get(0u8);
     let new_commission: u64 = rewards_to_distribute > 0u64
         ? get_commission(rewards_to_distribute as u128, commission_rate)
         : 0u64;
-
     let net_rewards: u64 = rewards_to_distribute - new_commission;
+    let updated_balance: u64 = current_balance + net_rewards + new_commission;
 
-    let pre_commission_balance: u128 = (updated_balance as u128) + (net_rewards as u128);
+    // Add precision factor for withdrawal calculation
+    const PRECISION_FACTOR: u128 = 1_000_000u128;
+    let withdrawal_calculation: u128 = (withdrawal_shares as u128 * updated_balance as u128 * PRECISION_FACTOR) / current_shares as u128;
+    withdrawal_calculation = withdrawal_calculation / PRECISION_FACTOR;
 
-    let new_commission_shares: u64 = rewards_to_distribute > 0u64
-        ? calculate_new_shares_new(
-            pre_commission_balance,
-            new_commission as u128,
-            updated_shares as u128
-        )
-        : 0u64;
+    // Calculate minimum withdrawal amount for these shares
+    let min_withdrawal: u128 = (withdrawal_shares as u128 * updated_balance as u128) / (current_shares as u128 * SHARES_TO_MICROCREDITS as u128);
+    min_withdrawal = min_withdrawal > 0u128 ? min_withdrawal : 1u128;
 
-    // Update admin's shares
-    updated_admin_shares = updated_admin_shares + new_commission_shares;
-    delegator_shares.set(ADMIN, updated_admin_shares);
+    assert(withdrawal_calculation >= total_withdrawal as u128);
+    assert(total_withdrawal as u128 >= min_withdrawal);
 
-    // Update total shares
-    updated_shares = updated_shares + new_commission_shares;
+    delegator_shares.set(owner, user_shares - withdrawal_shares);
+    total_shares.set(0u8, current_shares - withdrawal_shares);
+    total_balance.set(0u8, updated_balance - total_withdrawal);
 
-    // Update total balance with net rewards and commission
-    updated_balance = (pre_commission_balance as u64) + new_commission;
-
-    // Assert that they have enough shares to withdraw
-    let user_shares: u64 = delegator_shares.get_or_use(owner, 0u64);
-    assert(user_shares >= withdrawal_shares);
-
-    // Calculate withdrawal amount
-    let withdrawal_amount: u64 = (withdrawal_shares as u128 * updated_balance as u128 / updated_shares as u128) as u64;
-
-    // Update user's shares
-    let updated_user_shares: u64 = user_shares - withdrawal_shares;
-    delegator_shares.set(owner, updated_user_shares);
-
-    // Update total shares and balance
-    updated_shares = updated_shares - withdrawal_shares;
-    updated_balance = updated_balance - withdrawal_amount;
-
-    total_shares.set(0u8, updated_shares);
-    total_balance.set(0u8, updated_balance);
-
-    // Record withdrawal
     let withdrawal: withdrawal_state = withdrawal_state {
-        microcredits: withdrawal_amount,
+        microcredits: total_withdrawal,
         claim_block: block.height + UNBONDING_PERIOD
     };
     withdrawals.set(owner, withdrawal);
+    let current_pending: u64 = pending_withdrawal.get_or_use(0u8, 0u64);
+    pending_withdrawal.set(0u8, current_pending + total_withdrawal);
   }
 
 
@@ -438,12 +373,9 @@ program puzzle_staking_v001.aleo {
 
 
   async transition claim_withdrawal_public(public amount: u64) -> Future {
+    assert(amount > 0u64);
     let owner: address = self.caller;
-
-    // Attempt to claim unbonded funds
     let f1: Future = credits.aleo/claim_unbond_public(self.address);
-
-    // Transfer funds to the user
     let f2: Future = credits.aleo/transfer_public(owner, amount);
 
     return finalize_claim_withdrawal_public(f1, f2, owner, amount);
@@ -453,13 +385,15 @@ program puzzle_staking_v001.aleo {
     f1.await();
     f2.await();
 
+    assert(withdrawals.contains(owner));
     let withdrawal: withdrawal_state = withdrawals.get(owner);
 
     assert(block.height >= withdrawal.claim_block);
-
     assert_eq(withdrawal.microcredits, amount);
+    let current_pending: u64 = pending_withdrawal.get_or_use(0u8, 0u64);
+    assert(current_pending >= amount);
+    pending_withdrawal.set(0u8, current_pending - amount);
 
-    // Remove the user's withdrawal record
     withdrawals.remove(owner);
   }
 
@@ -495,15 +429,12 @@ program puzzle_staking_v001.aleo {
   }
 
   inline calculate_new_shares_new(total_bal: u128, deposits: u128, shares: u128) -> u64 {
-    // If total_shares is zero (first deposit), mint shares equal to deposit amount
-    if shares == 0u128 {
-        return deposits as u64;
-    }
-    let new_shares: u128 = (deposits * shares) / total_bal;
-    return new_shares as u64;
+    let new_shares: u128 = shares == 0u128 ?
+        (deposits * SHARES_TO_MICROCREDITS as u128) :
+        (deposits * shares) / total_bal;
+
+    return new_shares == 0u128 && deposits > 0u128 ? 1u64 : new_shares as u64;
   }
-
-
   // utiility function to calculate the new shares based on the pending deposit pool
   transition calculate_new_shares_test(bonded_balance: u128, pending_deposit_pool: u128, deposit: u128, shares: u128) -> u64 {
     return calculate_new_shares(bonded_balance, pending_deposit_pool, deposit, shares);
