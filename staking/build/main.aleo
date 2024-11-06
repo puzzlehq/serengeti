@@ -326,8 +326,6 @@ function calculate_new_shares_test:
 
 
 
-
-
 function set_commission_percent:
     input r0 as u128.public;
     assert.eq self.caller aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
@@ -357,29 +355,25 @@ finalize set_commission_percent:
     div r14 1_000u128 into r15;
     cast r15 into r16 as u64;
     sub r11 r16 into r17;
-    cast r1 into r18 as u128;
-    cast r17 into r19 as u128;
-    add r18 r19 into r20;
-    cast r16 into r21 as u128;
-    cast r2 into r22 as u128;
-    is.eq r22 0u128 into r23;
-    cast 1_000u64 into r24 as u128;
-    mul r21 r24 into r25;
-    mul r21 r22 into r26;
-    div r26 r20 into r27;
-    ternary r23 r25 r27 into r28;
-    is.eq r28 0u128 into r29;
-    gt r21 0u128 into r30;
-    and r29 r30 into r31;
-    cast r28 into r32 as u64;
-    ternary r31 1u64 r32 into r33;
-    add r3 r33 into r34;
-    set r34 into delegator_shares[aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng];
-    add r2 r33 into r35;
-    set r35 into total_shares[0u8];
-    cast r20 into r36 as u64;
-    add r36 r16 into r37;
-    set r37 into total_balance[0u8];
+    add r1 r17 into r18;
+    cast r16 into r19 as u128;
+    cast r2 into r20 as u128;
+    mul r19 r20 into r21;
+    mul r21 1_000_000u128 into r22;
+    cast r18 into r23 as u128;
+    div r22 r23 into r24;
+    div r24 1_000_000u128 into r25;
+    cast r25 into r26 as u64;
+    is.eq r26 0u64 into r27;
+    gt r16 0u64 into r28;
+    and r27 r28 into r29;
+    ternary r29 1u64 r26 into r30;
+    add r3 r30 into r31;
+    set r31 into delegator_shares[aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng];
+    add r2 r30 into r32;
+    set r32 into total_shares[0u8];
+    add r18 r16 into r33;
+    set r33 into total_balance[0u8];
     set r0 into commission_percent[0u8];
 
 
@@ -422,29 +416,25 @@ finalize claim_commission:
     div r13 1_000u128 into r14;
     cast r14 into r15 as u64;
     sub r10 r15 into r16;
-    cast r0 into r17 as u128;
-    cast r16 into r18 as u128;
-    add r17 r18 into r19;
-    cast r15 into r20 as u128;
-    cast r1 into r21 as u128;
-    is.eq r21 0u128 into r22;
-    cast 1_000u64 into r23 as u128;
-    mul r20 r23 into r24;
-    mul r20 r21 into r25;
-    div r25 r19 into r26;
-    ternary r22 r24 r26 into r27;
-    is.eq r27 0u128 into r28;
-    gt r20 0u128 into r29;
-    and r28 r29 into r30;
-    cast r27 into r31 as u64;
-    ternary r30 1u64 r31 into r32;
-    add r2 r32 into r33;
-    set r33 into delegator_shares[aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng];
-    add r1 r32 into r34;
-    set r34 into total_shares[0u8];
-    cast r19 into r35 as u64;
-    add r35 r15 into r36;
-    set r36 into total_balance[0u8];
+    add r0 r16 into r17;
+    cast r15 into r18 as u128;
+    cast r1 into r19 as u128;
+    mul r18 r19 into r20;
+    mul r20 1_000_000u128 into r21;
+    cast r17 into r22 as u128;
+    div r21 r22 into r23;
+    div r23 1_000_000u128 into r24;
+    cast r24 into r25 as u64;
+    is.eq r25 0u64 into r26;
+    gt r15 0u64 into r27;
+    and r26 r27 into r28;
+    ternary r28 1u64 r25 into r29;
+    add r2 r29 into r30;
+    set r30 into delegator_shares[aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng];
+    add r1 r29 into r31;
+    set r31 into total_shares[0u8];
+    add r17 r15 into r32;
+    set r32 into total_balance[0u8];
 
 
 
@@ -486,46 +476,28 @@ finalize create_withdraw_claim:
     div r17 1_000u128 into r18;
     cast r18 into r19 as u64;
     sub r14 r19 into r20;
-    cast r3 into r21 as u128;
-    cast r20 into r22 as u128;
-    add r21 r22 into r23;
-    gt r14 0u64 into r24;
-    cast r19 into r25 as u128;
-    cast r4 into r26 as u128;
-    is.eq r26 0u128 into r27;
-    cast 1_000u64 into r28 as u128;
-    mul r25 r28 into r29;
-    mul r25 r26 into r30;
-    div r30 r23 into r31;
-    ternary r27 r29 r31 into r32;
-    is.eq r32 0u128 into r33;
-    gt r25 0u128 into r34;
-    and r33 r34 into r35;
-    cast r32 into r36 as u64;
-    ternary r35 1u64 r36 into r37;
-    ternary r24 r37 0u64 into r38;
-    get.or_use delegator_shares[aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng] 0u64 into r39;
-    add r39 r38 into r40;
-    set r40 into delegator_shares[aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng];
-    add r4 r38 into r41;
-    cast r23 into r42 as u64;
-    add r42 r19 into r43;
-    cast r0 into r44 as u128;
-    cast r43 into r45 as u128;
-    mul r44 r45 into r46;
-    cast r41 into r47 as u128;
-    div r46 r47 into r48;
-    cast r48 into r49 as u64;
-    sub r5 r0 into r50;
-    set r50 into delegator_shares[r1];
-    sub r41 r0 into r51;
-    set r51 into total_shares[0u8];
-    sub r43 r49 into r52;
-    set r52 into total_balance[0u8];
-    add block.height 360u32 into r53;
-    cast r49 r53 into r54 as withdrawal_state;
-    set r54 into withdrawals[r1];
-    get.or_use pending_withdrawal[1u8] 0u64 into r55;
-    add r55 r49 into r56;
-    set r56 into pending_withdrawal[1u8];
+    add r3 r20 into r21;
+    add r21 r19 into r22;
+    cast r0 into r23 as u128;
+    cast r22 into r24 as u128;
+    mul r23 r24 into r25;
+    mul r25 1_000_000u128 into r26;
+    cast r4 into r27 as u128;
+    div r26 r27 into r28;
+    div r28 1_000_000u128 into r29;
+    cast r29 into r30 as u64;
+    sub r5 r0 into r31;
+    set r31 into delegator_shares[r1];
+    sub r4 r0 into r32;
+    set r32 into total_shares[0u8];
+    sub r22 r30 into r33;
+    set r33 into total_balance[0u8];
+    add block.height 360u32 into r34;
+    cast r30 r34 into r35 as withdrawal_state;
+    set r35 into withdrawals[r1];
+    get.or_use pending_withdrawal[1u8] 0u64 into r36;
+    add r36 r30 into r37;
+    set r37 into pending_withdrawal[1u8];
+
+
 
