@@ -215,8 +215,7 @@ program puzzle_staking_v02.aleo {
     };
     let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
 
-    let rewards: i64 = bonded as i64 - current_balance as i64;
-    let rewards_to_distribute: u64 = rewards > 0i64 ? rewards as u64 : 0u64;
+    let rewards_to_distribute: u64 = bonded > current_balance ? bonded - current_balance : 0u64;
     let commission_rate: u128 = commission_percent.get(0u8);
     let new_commission: u64 = rewards_to_distribute > 0u64
         ? get_commission(rewards_to_distribute as u128, commission_rate)
