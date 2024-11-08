@@ -1,6 +1,6 @@
 import credits.aleo;
 
-program puzzle_staking_w0.aleo {
+program puzzle_staking_w2.aleo {
   // Owner of the program
   const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   // todo - update this to be our validator
@@ -223,8 +223,13 @@ program puzzle_staking_w0.aleo {
   //
 
   // force unbond case (for testing)
-  transition emergency_withdraw(amt: u64) {
+  async transition emergency_withdraw(amt: u64) -> Future {
     let f1: Future = credits.aleo/transfer_public(ADMIN, amt);
+    return finalize_emergency_withdraw(f1);
+  }
+
+  async function finalize_emergency_withdraw(f1: Future){
+    f1.await();
   }
 
   async transition withdraw_public(
@@ -263,13 +268,13 @@ program puzzle_staking_w0.aleo {
 
     // Proper type handling for rewards calculation
     let rewards: i64 = bonded as i64 - current_balance as i64;
-    let rewards_to_distribute: u64 = rewards > 0i64 ? rewards as u64 : 0u64;
+    let rewards_to_distribute: i64 = rewards > 0i64 ? rewards : 0i64;
 
     let commission_rate: u128 = commission_percent.get(0u8);
-    let new_commission: u64 = rewards_to_distribute > 0u64
+    let new_commission: u64 = rewards_to_distribute as u64 > 0u64
         ? get_commission(rewards_to_distribute as u128, commission_rate)
         : 0u64;
-    let net_rewards: u64 = rewards_to_distribute - new_commission;
+    let net_rewards: u64 = rewards_to_distribute as u64 - new_commission;
     let updated_balance: u64 = current_balance + net_rewards + new_commission;
 
     const PRECISION_FACTOR: u128 = 1_000_000u128;
