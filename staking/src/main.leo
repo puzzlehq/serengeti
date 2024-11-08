@@ -1,6 +1,6 @@
 import credits.aleo;
 
-program puzzle_staking_v02.aleo {
+program puzzle_staking_v03.aleo {
   // Owner of the program
   const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   // todo - update this to be our validator
@@ -94,7 +94,7 @@ program puzzle_staking_v02.aleo {
     validator.set(0u8, validator_address);
     total_shares.set(0u8, 0u64);
     total_balance.set(0u8, 0u64);
-    // pending_deposits.set(0u8, 0u64);
+    pending_deposits.set(0u8, 0u64);
     pending_withdrawal.set(0u8, 0u64);
     pending_withdrawal.set(1u8, 0u64);
     current_batch_height.set(0u8, 0u32);
@@ -137,56 +137,94 @@ program puzzle_staking_v02.aleo {
   async transition deposit_public(
     public microcredits: u64
   ) -> Future {
-    // Validate deposit amount
-    assert(microcredits > 0u64);
-    let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
-    let f2: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, microcredits);
-
-    return finalize_deposit_public(f1, f2, self.caller, microcredits);
+    let f1: Future = credits.aleo/transfer_public(self.address, microcredits);
+    return finalize_deposit_public(f1, self.caller, microcredits);
   }
 
   async function finalize_deposit_public(
     f1: Future,
-    f2: Future,
     caller: address,
     microcredits: u64
   ) {
     f1.await();
-    f2.await();
 
     let base: bond_state = bond_state {
-        validator: self.address,
-        microcredits: 0u64
+      validator: self.address,
+      microcredits: 0u64
     };
 
     let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     let current_balance: u64 = total_balance.get_or_use(0u8, 0u64);
     let current_shares: u64 = total_shares.get_or_use(0u8, 0u64);
+    let pending_deposit_pool: u64 = pending_deposits.get_or_use(0u8, 0u64);
 
-    let rewards: i64 = bonded as i64 - (current_balance as i64 + microcredits as i64);
-    let rewards_to_distribute: u64 = rewards > 0i64 ? rewards as u64 : 0u64;
-    let commission_rate: u128 = commission_percent.get(0u8);
-    let new_commission: u64 = rewards_to_distribute > 0u64
-        ? get_commission(rewards_to_distribute as u128, commission_rate)
-        : 0u64;
-    let net_rewards: u64 = rewards_to_distribute - new_commission;
-    let updated_balance: u64 = current_balance + net_rewards + new_commission;
-
-    const PRECISION_FACTOR: u128 = 1_000_000u128;
-    let deposit_calculation: u128 = (microcredits as u128 * current_shares as u128 * PRECISION_FACTOR) / updated_balance as u128;
-    let new_shares: u64 = (deposit_calculation / PRECISION_FACTOR) as u64;
+    let full_pool: u128 = current_balance as u128 + pending_deposit_pool as u128;
+    let new_shares: u64 = calculate_new_shares_new(full_pool, microcredits as u128, current_shares as u128);
 
     assert(new_shares > 0u64 || microcredits == 0u64);
     new_shares = new_shares == 0u64 && microcredits > 0u64 ? 1u64 : new_shares;
 
     let user_shares: u64 = delegator_shares.get_or_use(caller, 0u64);
     delegator_shares.set(caller, user_shares + new_shares);
+
     total_shares.set(0u8, current_shares + new_shares);
-    total_balance.set(0u8, updated_balance + microcredits);
+
+    pending_deposits.set(0u8, pending_deposit_pool + microcredits);
   }
 
+
   //
-  // ###### Withdraw Functions
+  // ###### Bonding Functions
+  //
+
+  async transition bond_deposits(public amount: u64) -> Future {
+    let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, amount);
+    return finalize_bond_deposits(f1, amount);
+  }
+
+  async function finalize_bond_deposits(f1: Future, amount: u64) {
+    f1.await();
+
+    let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
+    let pending_withdrawals: u64 = pending_withdrawal.get(0u8);
+    let total_pending_deposits: u64 = pending_deposits.get(0u8);
+
+    assert(account_balance >= pending_withdrawals);
+    assert(total_pending_deposits >= amount);
+
+    let available_balance: u64 = account_balance - pending_withdrawals;
+    assert(available_balance >= amount);
+
+    let current_balance: u64 = total_balance.get(0u8);
+    total_balance.set(0u8, current_balance + amount);
+    pending_deposits.set(0u8, total_pending_deposits - amount);
+  }
+
+  async transition bond_all(amount: u64) -> Future {
+    let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, amount);
+    return finalize_bond_all(f1);
+  }
+
+  async function finalize_bond_all(f1: Future) {
+    f1.await();
+
+    let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
+    let pending_withdrawals: u64 = pending_withdrawal.get(0u8);
+    let total_pending_deposits: u64 = pending_deposits.get(0u8);
+
+    assert(account_balance >= pending_withdrawals);
+
+    let available_balance: u64 = account_balance - pending_withdrawals;
+    assert(available_balance >= total_pending_deposits);
+
+    let current_balance: u64 = total_balance.get(0u8);
+    total_balance.set(0u8, current_balance + total_pending_deposits);
+    pending_deposits.set(0u8, 0u64);
+  }
+
+
+  //
+  // ###### Initiate Withdraw Functions
   //
 
   async transition withdraw_public(public withdrawal_shares: u64, public total_withdrawal: u64) -> Future {
@@ -223,12 +261,10 @@ program puzzle_staking_v02.aleo {
     let net_rewards: u64 = rewards_to_distribute - new_commission;
     let updated_balance: u64 = current_balance + net_rewards + new_commission;
 
-    // Add precision factor for withdrawal calculation
     const PRECISION_FACTOR: u128 = 1_000_000u128;
     let withdrawal_calculation: u128 = (withdrawal_shares as u128 * updated_balance as u128 * PRECISION_FACTOR) / current_shares as u128;
     withdrawal_calculation = withdrawal_calculation / PRECISION_FACTOR;
 
-    // Calculate minimum withdrawal amount for these shares
     let min_withdrawal: u128 = (withdrawal_shares as u128 * updated_balance as u128) / (current_shares as u128 * SHARES_TO_MICROCREDITS as u128);
     min_withdrawal = min_withdrawal > 0u128 ? min_withdrawal : 1u128;
 
