@@ -1,6 +1,6 @@
 import credits.aleo;
 
-program puzzle_staking_v04.aleo {
+program puzzle_staking_w0.aleo {
   // Owner of the program
   const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   // todo - update this to be our validator
@@ -194,36 +194,27 @@ program puzzle_staking_v04.aleo {
     let total_pending_deposits: u64 = pending_deposits.get(0u8);
 
     assert(account_balance >= pending_withdrawals);
-    assert(total_pending_deposits >= amount);
-
-    let available_balance: u64 = account_balance - pending_withdrawals;
-    assert(available_balance >= amount);
+    assert(total_pending_deposits > 0u64);
 
     let current_balance: u64 = total_balance.get(0u8);
     total_balance.set(0u8, current_balance + amount);
     pending_deposits.set(0u8, total_pending_deposits - amount);
   }
 
-  async transition bond_all(amount: u64) -> Future {
+  async transition bond_all(public amount: u64) -> Future {
     let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, amount);
-    return finalize_bond_all(f1);
+    return finalize_bond_all(f1, amount);
   }
 
-  async function finalize_bond_all(f1: Future) {
+  async function finalize_bond_all(f1: Future, amount: u64) {
     f1.await();
 
-    let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
-    let pending_withdrawals: u64 = pending_withdrawal.get(0u8);
     let total_pending_deposits: u64 = pending_deposits.get(0u8);
-
-    assert(account_balance >= pending_withdrawals);
-
-    let available_balance: u64 = account_balance - pending_withdrawals;
-    assert(available_balance >= total_pending_deposits);
+    assert(total_pending_deposits > 0u64);
 
     let current_balance: u64 = total_balance.get(0u8);
     total_balance.set(0u8, current_balance + total_pending_deposits);
-    pending_deposits.set(0u8, 0u64);
+    pending_deposits.set(0u8, total_pending_deposits - amount);
   }
 
 
