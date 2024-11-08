@@ -1,6 +1,6 @@
 import credits.aleo;
 
-program puzzle_staking_v03.aleo {
+program puzzle_staking_v04.aleo {
   // Owner of the program
   const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   // todo - update this to be our validator
@@ -141,7 +141,7 @@ program puzzle_staking_v03.aleo {
   async transition deposit_public(
     public microcredits: u64
   ) -> Future {
-    let f1: Future = credits.aleo/transfer_public(self.address, microcredits);
+    let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
     return finalize_deposit_public(f1, self.caller, microcredits);
   }
 
