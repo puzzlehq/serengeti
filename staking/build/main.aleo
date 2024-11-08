@@ -61,6 +61,11 @@ mapping withdrawals:
 	value as withdrawal_state.public;
 
 
+mapping batch_totals:
+	key as u32.public;
+	value as u64.public;
+
+
 function initialize:
     input r0 as u128.public;
     input r1 as address.public;
@@ -293,50 +298,70 @@ finalize withdraw_public:
     cast r2 into r43 as u128;
     gte r43 r40 into r44;
     assert.eq r44 true;
-    sub r7 r1 into r45;
-    set r45 into delegator_shares[r3];
-    sub r6 r1 into r46;
-    set r46 into total_shares[0u8];
-    sub r24 r2 into r47;
-    set r47 into total_balance[0u8];
-    add block.height 360u32 into r48;
-    cast r2 r48 into r49 as withdrawal_state;
-    set r49 into withdrawals[r3];
-    get.or_use pending_withdrawal[0u8] 0u64 into r50;
-    add r50 r2 into r51;
-    set r51 into pending_withdrawal[0u8];
+    div block.height 5u32 into r45;
+    add r45 1u32 into r46;
+    mul r46 5u32 into r47;
+    sub r7 r1 into r48;
+    set r48 into delegator_shares[r3];
+    sub r6 r1 into r49;
+    set r49 into total_shares[0u8];
+    sub r24 r2 into r50;
+    set r50 into total_balance[0u8];
+    cast r2 r47 into r51 as withdrawal_state;
+    set r51 into withdrawals[r3];
+    get.or_use batch_totals[r46] 0u64 into r52;
+    add r52 r2 into r53;
+    set r53 into batch_totals[r46];
+    get.or_use pending_withdrawal[0u8] 0u64 into r54;
+    add r54 r2 into r55;
+    set r55 into pending_withdrawal[0u8];
 
 
 
 
-function claim_withdrawal_public:
+function claim_unbond:
+    call credits.aleo/claim_unbond_public puzzle_staking_v03.aleo into r0;
+    async claim_unbond r0 into r1;
+    output r1 as puzzle_staking_v03.aleo/claim_unbond.future;
+
+finalize claim_unbond:
+    input r0 as credits.aleo/claim_unbond_public.future;
+    await r0;
+    get pending_withdrawal[0u8] into r1;
+    get pending_withdrawal[1u8] into r2;
+    set 0u64 into pending_withdrawal[0u8];
+    add r2 r1 into r3;
+    set r3 into pending_withdrawal[1u8];
+
+
+
+
+function claim_withdrawal:
     input r0 as u64.public;
     gt r0 0u64 into r1;
     assert.eq r1 true;
-    call credits.aleo/claim_unbond_public puzzle_staking_v03.aleo into r2;
-    call credits.aleo/transfer_public self.caller r0 into r3;
-    async claim_withdrawal_public r2 r3 self.caller r0 into r4;
-    output r4 as puzzle_staking_v03.aleo/claim_withdrawal_public.future;
+    call credits.aleo/transfer_public self.caller r0 into r2;
+    async claim_withdrawal r2 self.caller r0 into r3;
+    output r3 as puzzle_staking_v03.aleo/claim_withdrawal.future;
 
-finalize claim_withdrawal_public:
-    input r0 as credits.aleo/claim_unbond_public.future;
-    input r1 as credits.aleo/transfer_public.future;
-    input r2 as address.public;
-    input r3 as u64.public;
+finalize claim_withdrawal:
+    input r0 as credits.aleo/transfer_public.future;
+    input r1 as address.public;
+    input r2 as u64.public;
     await r0;
-    await r1;
-    contains withdrawals[r2] into r4;
-    assert.eq r4 true;
-    get withdrawals[r2] into r5;
-    gte block.height r5.claim_block into r6;
+    contains withdrawals[r1] into r3;
+    assert.eq r3 true;
+    get withdrawals[r1] into r4;
+    div block.height 5u32 into r5;
+    gte block.height r4.claim_block into r6;
     assert.eq r6 true;
-    assert.eq r5.microcredits r3;
-    get.or_use pending_withdrawal[0u8] 0u64 into r7;
-    gte r7 r3 into r8;
+    assert.eq r4.microcredits r2;
+    get pending_withdrawal[1u8] into r7;
+    gte r7 r2 into r8;
     assert.eq r8 true;
-    sub r7 r3 into r9;
-    set r9 into pending_withdrawal[0u8];
-    remove withdrawals[r2];
+    sub r7 r2 into r9;
+    set r9 into pending_withdrawal[1u8];
+    remove withdrawals[r1];
 
 
 
@@ -538,4 +563,6 @@ finalize create_withdraw_claim:
     get.or_use pending_withdrawal[1u8] 0u64 into r36;
     add r36 r30 into r37;
     set r37 into pending_withdrawal[1u8];
+
+
 

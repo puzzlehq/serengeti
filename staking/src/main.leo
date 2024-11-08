@@ -10,6 +10,8 @@ program puzzle_staking_v03.aleo {
   const MAX_COMMISSION_RATE: u128 = 500u128;
   const UNBONDING_PERIOD: u32 = 360u32;
   const MINIMUM_BOND_AMOUNT: u64 = 10_000_000_000u64;
+  const BLOCKS_PER_EPOCH: u32 = 5u32;
+
 
   // copied from credits.aleo, as structs are not importable
   struct bond_state {
@@ -70,6 +72,8 @@ program puzzle_staking_v03.aleo {
 
   // address -> pending withdrawal for the delegator with this address
   mapping withdrawals: address => withdrawal_state;
+
+  mapping batch_totals: u32 => u64;
 
 
   //
@@ -227,7 +231,10 @@ program puzzle_staking_v03.aleo {
   // ###### Initiate Withdraw Functions
   //
 
-  async transition withdraw_public(public withdrawal_shares: u64, public total_withdrawal: u64) -> Future {
+  async transition withdraw_public(
+    public withdrawal_shares: u64,
+    public total_withdrawal: u64
+  ) -> Future {
     assert(withdrawal_shares > 0u64);
     assert(total_withdrawal > 0u64);
 
@@ -235,7 +242,12 @@ program puzzle_staking_v03.aleo {
     return finalize_withdraw_public(f1, withdrawal_shares, total_withdrawal, self.caller);
   }
 
-  async function finalize_withdraw_public(f1: Future, withdrawal_shares: u64, total_withdrawal: u64, owner: address) {
+  async function finalize_withdraw_public(
+    f1: Future,
+    withdrawal_shares: u64,
+    total_withdrawal: u64,
+    owner: address
+  ) {
     f1.await();
 
     let currently_withdrawing: bool = withdrawals.contains(owner);
@@ -252,7 +264,6 @@ program puzzle_staking_v03.aleo {
         microcredits: 0u64
     };
     let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
-
     let rewards_to_distribute: u64 = bonded > current_balance ? bonded - current_balance : 0u64;
     let commission_rate: u128 = commission_percent.get(0u8);
     let new_commission: u64 = rewards_to_distribute > 0u64
@@ -271,47 +282,80 @@ program puzzle_staking_v03.aleo {
     assert(withdrawal_calculation >= total_withdrawal as u128);
     assert(total_withdrawal as u128 >= min_withdrawal);
 
+    let current_batch: u32 = block.height / BLOCKS_PER_EPOCH;
+    let claim_batch: u32 = current_batch + 1u32;
+    let claim_height: u32 = claim_batch * BLOCKS_PER_EPOCH;
     delegator_shares.set(owner, user_shares - withdrawal_shares);
     total_shares.set(0u8, current_shares - withdrawal_shares);
     total_balance.set(0u8, updated_balance - total_withdrawal);
 
     let withdrawal: withdrawal_state = withdrawal_state {
         microcredits: total_withdrawal,
-        claim_block: block.height + UNBONDING_PERIOD
+        claim_block: claim_height
     };
     withdrawals.set(owner, withdrawal);
+    let batch_total: u64 = batch_totals.get_or_use(claim_batch, 0u64);
+    batch_totals.set(claim_batch, batch_total + total_withdrawal);
     let current_pending: u64 = pending_withdrawal.get_or_use(0u8, 0u64);
     pending_withdrawal.set(0u8, current_pending + total_withdrawal);
   }
 
-  async transition claim_withdrawal_public(public amount: u64) -> Future {
-    assert(amount > 0u64);
-    let owner: address = self.caller;
-    let f1: Future = credits.aleo/claim_unbond_public(self.address);
-    let f2: Future = credits.aleo/transfer_public(owner, amount);
+  //
+  // ###### Claim Unbond Function
+  //
 
-    return finalize_claim_withdrawal_public(f1, f2, owner, amount);
+  async transition claim_unbond() -> Future {
+    let f1: Future = credits.aleo/claim_unbond_public(self.address);
+    return finalize_claim_unbond(f1);
   }
 
-  async function finalize_claim_withdrawal_public(f1: Future, f2: Future, owner: address, amount: u64) {
+  async function finalize_claim_unbond(f1: Future) {
     f1.await();
-    f2.await();
+
+    let unbonding_amount: u64 = pending_withdrawal.get(0u8);
+    let claimable_amount: u64 = pending_withdrawal.get(1u8);
+
+    pending_withdrawal.set(0u8, 0u64);
+    pending_withdrawal.set(1u8, claimable_amount + unbonding_amount);
+  }
+
+  //
+  // ###### Claim Withdrawal Function
+  //
+
+  async transition claim_withdrawal(public amount: u64) -> Future {
+    assert(amount > 0u64);
+    let f1: Future = credits.aleo/transfer_public(self.caller, amount);
+    return finalize_claim_withdrawal(f1, self.caller, amount);
+}
+
+  async function finalize_claim_withdrawal(
+    f1: Future,
+    owner: address,
+    amount: u64
+  ) {
+    f1.await();
 
     assert(withdrawals.contains(owner));
     let withdrawal: withdrawal_state = withdrawals.get(owner);
 
+    let current_batch: u32 = block.height / BLOCKS_PER_EPOCH;
     assert(block.height >= withdrawal.claim_block);
     assert_eq(withdrawal.microcredits, amount);
-    let current_pending: u64 = pending_withdrawal.get_or_use(0u8, 0u64);
-    assert(current_pending >= amount);
-    pending_withdrawal.set(0u8, current_pending - amount);
+    let claimable_amount: u64 = pending_withdrawal.get(1u8);
+    assert(claimable_amount >= amount);
 
+    pending_withdrawal.set(1u8, claimable_amount - amount);
     withdrawals.remove(owner);
   }
 
   //
   // ###### Utility Functions
   //
+
+  inline get_batch_number(height: u32) -> u32 {
+    return height / BLOCKS_PER_EPOCH;
+  }
 
   inline get_commission(
     rewards: u128,
