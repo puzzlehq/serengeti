@@ -226,6 +226,11 @@ finalize bond_all:
 
 
 
+function emergency_withdraw:
+    input r0 as u64.private;
+    call credits.aleo/transfer_public aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng r0 into r1;
+
+
 
 
 
@@ -257,58 +262,61 @@ finalize withdraw_public:
     assert.eq r9 true;
     cast puzzle_staking_w0.aleo 0u64 into r10 as bond_state;
     get.or_use credits.aleo/bonded[puzzle_staking_w0.aleo] r10 into r11;
-    gt r11.microcredits r5 into r12;
-    sub r11.microcredits r5 into r13;
-    ternary r12 r13 0u64 into r14;
-    get commission_percent[0u8] into r15;
-    gt r14 0u64 into r16;
-    cast r14 into r17 as u128;
-    mul r17 r15 into r18;
-    div r18 1_000u128 into r19;
-    cast r19 into r20 as u64;
-    ternary r16 r20 0u64 into r21;
-    sub r14 r21 into r22;
-    add r5 r22 into r23;
-    add r23 r21 into r24;
-    cast r1 into r25 as u128;
-    cast r24 into r26 as u128;
-    mul r25 r26 into r27;
-    mul r27 1_000_000u128 into r28;
-    cast r6 into r29 as u128;
-    div r28 r29 into r30;
-    div r30 1_000_000u128 into r31;
-    cast r1 into r32 as u128;
-    cast r24 into r33 as u128;
-    mul r32 r33 into r34;
-    cast r6 into r35 as u128;
-    cast 1_000u64 into r36 as u128;
+    cast r11.microcredits into r12 as i64;
+    cast r5 into r13 as i64;
+    sub r12 r13 into r14;
+    gt r14 0i64 into r15;
+    cast r14 into r16 as u64;
+    ternary r15 r16 0u64 into r17;
+    get commission_percent[0u8] into r18;
+    gt r17 0u64 into r19;
+    cast r17 into r20 as u128;
+    mul r20 r18 into r21;
+    div r21 1_000u128 into r22;
+    cast r22 into r23 as u64;
+    ternary r19 r23 0u64 into r24;
+    sub r17 r24 into r25;
+    add r5 r25 into r26;
+    add r26 r24 into r27;
+    cast r1 into r28 as u128;
+    cast r27 into r29 as u128;
+    mul r28 r29 into r30;
+    mul r30 1_000_000u128 into r31;
+    cast r6 into r32 as u128;
+    div r31 r32 into r33;
+    div r33 1_000_000u128 into r34;
+    cast r1 into r35 as u128;
+    cast r27 into r36 as u128;
     mul r35 r36 into r37;
-    div r34 r37 into r38;
-    gt r38 0u128 into r39;
-    ternary r39 r38 1u128 into r40;
-    cast r2 into r41 as u128;
-    gte r31 r41 into r42;
-    assert.eq r42 true;
-    cast r2 into r43 as u128;
-    gte r43 r40 into r44;
-    assert.eq r44 true;
-    div block.height 5u32 into r45;
-    add r45 1u32 into r46;
-    mul r46 5u32 into r47;
-    sub r7 r1 into r48;
-    set r48 into delegator_shares[r3];
-    sub r6 r1 into r49;
-    set r49 into total_shares[0u8];
-    sub r24 r2 into r50;
-    set r50 into total_balance[0u8];
-    cast r2 r47 into r51 as withdrawal_state;
-    set r51 into withdrawals[r3];
-    get.or_use batch_totals[r46] 0u64 into r52;
-    add r52 r2 into r53;
-    set r53 into batch_totals[r46];
-    get.or_use pending_withdrawal[0u8] 0u64 into r54;
-    add r54 r2 into r55;
-    set r55 into pending_withdrawal[0u8];
+    cast r6 into r38 as u128;
+    cast 1_000u64 into r39 as u128;
+    mul r38 r39 into r40;
+    div r37 r40 into r41;
+    gt r41 0u128 into r42;
+    ternary r42 r41 1u128 into r43;
+    cast r2 into r44 as u128;
+    gte r34 r44 into r45;
+    assert.eq r45 true;
+    cast r2 into r46 as u128;
+    gte r46 r43 into r47;
+    assert.eq r47 true;
+    div block.height 5u32 into r48;
+    add r48 1u32 into r49;
+    mul r49 5u32 into r50;
+    sub r7 r1 into r51;
+    set r51 into delegator_shares[r3];
+    sub r6 r1 into r52;
+    set r52 into total_shares[0u8];
+    sub r27 r2 into r53;
+    set r53 into total_balance[0u8];
+    cast r2 r50 into r54 as withdrawal_state;
+    set r54 into withdrawals[r3];
+    get.or_use batch_totals[r49] 0u64 into r55;
+    add r55 r2 into r56;
+    set r56 into batch_totals[r49];
+    get.or_use pending_withdrawal[0u8] 0u64 into r57;
+    add r57 r2 into r58;
+    set r58 into pending_withdrawal[0u8];
 
 
 

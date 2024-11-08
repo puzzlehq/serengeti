@@ -222,6 +222,11 @@ program puzzle_staking_w0.aleo {
   // ###### Initiate Withdraw Functions
   //
 
+  // force unbond case (for testing)
+  transition emergency_withdraw(amt: u64) {
+    let f1: Future = credits.aleo/transfer_public(ADMIN, amt);
+  }
+
   async transition withdraw_public(
     public withdrawal_shares: u64,
     public total_withdrawal: u64
@@ -238,7 +243,7 @@ program puzzle_staking_w0.aleo {
     withdrawal_shares: u64,
     total_withdrawal: u64,
     owner: address
-  ) {
+) {
     f1.await();
 
     let currently_withdrawing: bool = withdrawals.contains(owner);
@@ -255,7 +260,11 @@ program puzzle_staking_w0.aleo {
         microcredits: 0u64
     };
     let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
-    let rewards_to_distribute: u64 = bonded > current_balance ? bonded - current_balance : 0u64;
+
+    // Proper type handling for rewards calculation
+    let rewards: i64 = bonded as i64 - current_balance as i64;
+    let rewards_to_distribute: u64 = rewards > 0i64 ? rewards as u64 : 0u64;
+
     let commission_rate: u128 = commission_percent.get(0u8);
     let new_commission: u64 = rewards_to_distribute > 0u64
         ? get_commission(rewards_to_distribute as u128, commission_rate)
