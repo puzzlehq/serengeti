@@ -1,6 +1,6 @@
 import puzzle_arcade_ticket_v002.aleo;
 
-program puzzle_raffle_102324.aleo {
+program puzzle_giveaway_110724.aleo {
     const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
 
     // used for storing the raffle entries (multiple entries per address)
