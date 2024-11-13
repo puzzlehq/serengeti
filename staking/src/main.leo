@@ -1,12 +1,12 @@
 import credits.aleo;
 
-program puzzle_staking_w2.aleo {
+program puzzle_staking_g2.aleo {
   // Owner of the program
   const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   // todo - update this to be our validator
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const SHARES_TO_MICROCREDITS: u64 = 1_000u64;
-  const PRECISION_UNSIGNED: u128 = 1_000u128;
+  const PRECISION_FACTOR: u128 = 1_000_000u128;
   const MAX_COMMISSION_RATE: u128 = 500u128;
   const UNBONDING_PERIOD: u32 = 360u32;
   const MINIMUM_BOND_AMOUNT: u64 = 10_000_000_000u64;
@@ -82,7 +82,7 @@ program puzzle_staking_w2.aleo {
 
   async transition initialize(public commission_rate: u128, public validator_address: address) -> Future {
     assert_eq(self.caller, ADMIN);
-    assert(commission_rate < PRECISION_UNSIGNED);
+    assert(commission_rate < PRECISION_FACTOR);
     assert(commission_rate <= MAX_COMMISSION_RATE);
     assert_neq(validator_address, self.address);
 
@@ -189,14 +189,18 @@ program puzzle_staking_w2.aleo {
   async function finalize_bond_deposits(f1: Future, amount: u64) {
     f1.await();
 
+    assert(amount > 0u64);
+
     let account_balance: u64 = credits.aleo/account.get_or_use(self.address, 0u64);
     let pending_withdrawals: u64 = pending_withdrawal.get(0u8);
     let total_pending_deposits: u64 = pending_deposits.get(0u8);
 
     assert(account_balance >= pending_withdrawals);
     assert(total_pending_deposits > 0u64);
+    assert(amount <= total_pending_deposits);
 
     let current_balance: u64 = total_balance.get(0u8);
+
     total_balance.set(0u8, current_balance + amount);
     pending_deposits.set(0u8, total_pending_deposits - amount);
   }
@@ -209,10 +213,13 @@ program puzzle_staking_w2.aleo {
   async function finalize_bond_all(f1: Future, amount: u64) {
     f1.await();
 
+    assert(amount > 0u64);
     let total_pending_deposits: u64 = pending_deposits.get(0u8);
     assert(total_pending_deposits > 0u64);
+    assert(amount <= total_pending_deposits);
 
     let current_balance: u64 = total_balance.get(0u8);
+
     total_balance.set(0u8, current_balance + total_pending_deposits);
     pending_deposits.set(0u8, total_pending_deposits - amount);
   }
@@ -254,20 +261,39 @@ program puzzle_staking_w2.aleo {
     let currently_withdrawing: bool = withdrawals.contains(owner);
     assert_eq(currently_withdrawing, false);
 
+    let current_batch: u32 = current_batch_height.get_or_use(0u8, 0u32);
+    let min_claim_height: u32 = block.height + UNBONDING_PERIOD;
+    let new_batch: bool = current_batch == 0u32;
+    let unbonding_allowed: bool = new_batch || current_batch >= min_claim_height;
+    assert(unbonding_allowed);
+
     let current_balance: u64 = total_balance.get_or_use(0u8, 0u64);
+    let pending_deposit_pool: u64 = pending_deposits.get_or_use(0u8, 0u64);
     let current_shares: u64 = total_shares.get_or_use(0u8, 0u64);
     let user_shares: u64 = delegator_shares.get_or_use(owner, 0u64);
     assert(user_shares >= withdrawal_shares);
     assert(current_shares >= withdrawal_shares);
+
+    let base_unbonding: unbond_state = unbond_state {
+        microcredits: 0u64,
+        height: 0u32
+    };
+    let unbonding: u64 = credits.aleo/unbonding.get_or_use(self.address, base_unbonding).microcredits;
+    let unbonding_withdrawals: u64 = pending_withdrawal.get(0u8);
+    let newly_unbonded: u64 = unbonding - unbonding_withdrawals;
+    let sufficient_deposits: bool = newly_unbonded - total_withdrawal + pending_deposit_pool >= MINIMUM_BOND_AMOUNT;
 
     let base: bond_state = bond_state {
         validator: self.address,
         microcredits: 0u64
     };
     let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
+    assert(bonded >= MINIMUM_BOND_AMOUNT || !sufficient_deposits);
 
-    // Proper type handling for rewards calculation
-    let rewards: i64 = bonded as i64 - current_balance as i64;
+    bonded += newly_unbonded;
+    let full_pool: u128 = current_balance as u128 + pending_deposit_pool as u128;
+
+    let rewards: i64 = bonded as i64 - full_pool as i64;
     let rewards_to_distribute: i64 = rewards > 0i64 ? rewards : 0i64;
 
     let commission_rate: u128 = commission_percent.get(0u8);
@@ -275,9 +301,9 @@ program puzzle_staking_w2.aleo {
         ? get_commission(rewards_to_distribute as u128, commission_rate)
         : 0u64;
     let net_rewards: u64 = rewards_to_distribute as u64 - new_commission;
-    let updated_balance: u64 = current_balance + net_rewards + new_commission;
 
-    const PRECISION_FACTOR: u128 = 1_000_000u128;
+    let updated_balance: u64 = (full_pool as u64) + net_rewards + new_commission;
+
     let withdrawal_calculation: u128 = (withdrawal_shares as u128 * updated_balance as u128 * PRECISION_FACTOR) / current_shares as u128;
     withdrawal_calculation = withdrawal_calculation / PRECISION_FACTOR;
 
@@ -287,12 +313,12 @@ program puzzle_staking_w2.aleo {
     assert(withdrawal_calculation >= total_withdrawal as u128);
     assert(total_withdrawal as u128 >= min_withdrawal);
 
-    let current_batch: u32 = block.height / BLOCKS_PER_EPOCH;
     let claim_batch: u32 = current_batch + 1u32;
     let claim_height: u32 = claim_batch * BLOCKS_PER_EPOCH;
+
     delegator_shares.set(owner, user_shares - withdrawal_shares);
     total_shares.set(0u8, current_shares - withdrawal_shares);
-    total_balance.set(0u8, updated_balance - total_withdrawal);
+    total_balance.set(0u8, current_balance - total_withdrawal);
 
     let withdrawal: withdrawal_state = withdrawal_state {
         microcredits: total_withdrawal,
@@ -368,7 +394,7 @@ program puzzle_staking_w2.aleo {
   ) -> u64 {
     // calculated as % of the rewards
     // the total rewards accumulated * commission / precision
-    let commission: u128 = rewards * commission_rate / PRECISION_UNSIGNED;
+    let commission: u128 = rewards * commission_rate / PRECISION_FACTOR;
     let commission_64: u64 = commission as u64;
     return commission_64;
   }
@@ -387,6 +413,7 @@ program puzzle_staking_w2.aleo {
   }
 
   inline calculate_new_shares_new(total_bal: u128, deposits: u128, shares: u128) -> u64 {
+    // todo: do i need to handle overflow case here?
     let new_shares: u128 = shares == 0u128 ?
         (deposits * SHARES_TO_MICROCREDITS as u128) :
         (deposits * shares) / total_bal;
@@ -400,7 +427,7 @@ program puzzle_staking_w2.aleo {
 
   async transition set_commission_percent(public new_commission_rate: u128) -> Future {
     assert_eq(self.caller, ADMIN);
-    assert(new_commission_rate < PRECISION_UNSIGNED);
+    assert(new_commission_rate < PRECISION_FACTOR);
     assert(new_commission_rate <= MAX_COMMISSION_RATE);
 
     return finalize_set_commission_percent(new_commission_rate);
@@ -426,7 +453,6 @@ program puzzle_staking_w2.aleo {
     let net_rewards: u64 = rewards_to_distribute - new_commission;
     let updated_balance: u64 = current_balance + net_rewards;
 
-    const PRECISION_FACTOR: u128 = 1_000_000u128;
     let commission_shares: u128 = (new_commission as u128 * current_shares as u128 * PRECISION_FACTOR) / updated_balance as u128;
     let new_commission_shares: u64 = (commission_shares / PRECISION_FACTOR) as u64;
 
@@ -482,7 +508,6 @@ program puzzle_staking_w2.aleo {
     let net_rewards: u64 = rewards_to_distribute - new_commission;
     let updated_balance: u64 = current_balance + net_rewards;
 
-    const PRECISION_FACTOR: u128 = 1_000_000u128;
     let commission_shares: u128 = (new_commission as u128 * current_shares as u128 * PRECISION_FACTOR) / updated_balance as u128;
     let new_commission_shares: u64 = (commission_shares / PRECISION_FACTOR) as u64;
 
@@ -536,7 +561,6 @@ program puzzle_staking_w2.aleo {
       let net_rewards: u64 = rewards_to_distribute - new_commission;
       let updated_balance: u64 = current_balance + net_rewards + new_commission;
 
-      const PRECISION_FACTOR: u128 = 1_000_000u128;
       let withdrawal_calc: u128 = (withdrawal_shares as u128 * updated_balance as u128 * PRECISION_FACTOR) / current_shares as u128;
       let withdrawal_amount: u64 = (withdrawal_calc / PRECISION_FACTOR) as u64;
 
