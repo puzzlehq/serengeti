@@ -1,6 +1,6 @@
 import credits.aleo;
 
-program puzzle_staking_g2.aleo {
+program puzzle_staking_g3.aleo {
   // Owner of the program
   const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   // todo - update this to be our validator
@@ -406,10 +406,6 @@ program puzzle_staking_g2.aleo {
   // ###### Utility Functions
   //
 
-  inline get_batch_number(height: u32) -> u32 {
-    return height / BLOCKS_PER_EPOCH;
-  }
-
   inline get_commission(
     rewards: u128,
     commission_rate: u128,
@@ -490,19 +486,6 @@ program puzzle_staking_g2.aleo {
     total_balance.set(0u8, updated_total_balance);
 
     commission_percent.set(0u8, new_commission_rate);
-  }
-
-
-  // Update the validator address, to be applied automatically on the next bond_all call
-  async transition set_next_validator(public validator_address: address) -> Future {
-    assert_eq(self.caller, ADMIN);
-    assert_neq(validator_address, self.address);
-
-    return finalize_set_next_validator(validator_address);
-  }
-
-  async function finalize_set_next_validator(validator_address: address) {
-    validator.set(1u8, validator_address);
   }
 
   async transition claim_commission() -> Future {
