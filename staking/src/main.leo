@@ -229,14 +229,36 @@ program puzzle_staking_g2.aleo {
   // ###### Initiate Withdraw Functions
   //
 
-  // force unbond case (for testing)
-  async transition emergency_withdraw(amt: u64) -> Future {
-    let f1: Future = credits.aleo/transfer_public(ADMIN, amt);
-    return finalize_emergency_withdraw(f1);
+  async transition admin_withdraw (amount: u64) -> Future {
+    let f1: Future = credits.aleo/unbond_public(self.address, amount);
+    let f2: Future = credits.aleo/transfer_public(ADMIN, amount);
+    return finalize_admin_withdraw(f1, f2, self.caller);
   }
 
-  async function finalize_emergency_withdraw(f1: Future){
+  async function finalize_admin_withdraw
+  (
+    f1: Future,
+    f2: Future,
+    caller: address,
+  )
+  {
+
     f1.await();
+    f2.await();
+
+    assert_eq(caller, ADMIN);
+    // make sure admin owns all the shares in the protocol
+    let current_shares: u64 = total_shares.get(0u8);
+    let total_admin_shares: u64 = delegator_shares.get(ADMIN);
+    assert_eq(current_shares, total_admin_shares);
+
+    // make sure the protocol has fully unbonded
+    let base: bond_state = bond_state {
+          validator: self.address,
+          microcredits: 0u64
+      };
+    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
+    assert_eq(bonded, 0u64);
   }
 
   async transition withdraw_public(
