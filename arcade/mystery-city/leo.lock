@@ -1,0 +1,13 @@
+[[package]]
+name = "puzzle_arcade_coin_v002.aleo"
+location = "local"
+path = "/Users/lucas/code/puzzle/serengeti/arcade/spinner/../coin"
+checksum = "7a26131e89343e5b01adb60cc07e7c8deb3689eed23792d0519565b685414cfa"
+dependencies = []
+
+[[package]]
+name = "puzzle_arcade_ticket_v002.aleo"
+location = "local"
+path = "/Users/lucas/code/puzzle/serengeti/arcade/spinner/../ticket"
+checksum = "0706f68248b772638cb4b8b6d05214ae4dd1c499159dde07aace7128957237c9"
+dependencies = []

@@ -7,23 +7,16 @@ program puzzle_spinner_v002.aleo {
 
   struct Result {
     nonce: field,
-    max_tickets: u64
-    lat: u64
-    lng: u64
+    tickets: u64
   }
 
   async transition spin(
     coin: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
     public result: Result,
     sig: signature,
-    guess_lat: u64,
-    guess_lng: u64
   ) -> (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) {
     // verify signature to guarantee arcade operator's consent
     assert(sig.verify(OPERATOR, result));
-
-    let estimated_distance = 
-
 
     // verify tickets is valid amount
     let valid_tickets: bool = result.tickets == 1000000u64 || result.tickets == 2000000u64 || result.tickets == 5000000u64 || result.tickets == 10000000u64;
