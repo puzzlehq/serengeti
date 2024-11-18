@@ -6,14 +6,15 @@ program squash_time_oracle.aleo {
     time: u64
   }
 
-  transition mint (time: u64) -> Timestamp {
+  transition mint (public time: u64) -> Timestamp {
+    assert_eq(self.caller, OPERATOR);
     return Timestamp {
       owner: OPERATOR,
       time
     };
   }
 
-  transition update(timestamp: Timestamp, new_time: u64) -> Timestamp {
+  transition update(timestamp: Timestamp, public new_time: u64) -> Timestamp {
     return Timestamp {
       owner: OPERATOR,
       time: new_time
