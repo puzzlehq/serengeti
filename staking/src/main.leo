@@ -1,11 +1,11 @@
 import credits.aleo;
 
-program puzzle_staking_g3.aleo {
+program puzzle_staking_k1.aleo {
   // Owner of the program
   const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
   // todo - update this to be our validator
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
-  const SHARES_TO_MICROCREDITS: u64 = 1_000u64;
+  const SHARES_TO_MICROCREDITS: u64 = 1_000_000u64;
   const PRECISION_FACTOR: u128 = 1_000_000u128;
   const MAX_COMMISSION_RATE: u128 = 500u128;
   const UNBONDING_PERIOD: u32 = 360u32;
@@ -145,11 +145,7 @@ program puzzle_staking_g3.aleo {
     return finalize_deposit_public(f1, self.caller, microcredits);
   }
 
-  async function finalize_deposit_public(
-    f1: Future,
-    caller: address,
-    microcredits: u64
-  ) {
+  async function finalize_deposit_public(f1: Future, caller: address, microcredits: u64) {
     f1.await();
 
     let base: bond_state = bond_state {
@@ -157,22 +153,19 @@ program puzzle_staking_g3.aleo {
       microcredits: 0u64
     };
 
-    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     let current_balance: u64 = total_balance.get_or_use(0u8, 0u64);
     let current_shares: u64 = total_shares.get_or_use(0u8, 0u64);
     let pending_deposit_pool: u64 = pending_deposits.get_or_use(0u8, 0u64);
 
     let full_pool: u128 = current_balance as u128 + pending_deposit_pool as u128;
-    let new_shares: u64 = calculate_new_shares_new(full_pool, microcredits as u128, current_shares as u128);
+    let new_shares: u128 = (current_shares as u128 * (full_pool + microcredits as u128)) / full_pool;
+    let shares_to_mint: u64 = (new_shares - current_shares as u128) as u64;
 
-    assert(new_shares > 0u64 || microcredits == 0u64);
-    new_shares = new_shares == 0u64 && microcredits > 0u64 ? 1u64 : new_shares;
+    let actual_shares_to_mint: u64 = shares_to_mint == 0u64 && microcredits > 0u64 ? 1u64 : shares_to_mint;
 
     let user_shares: u64 = delegator_shares.get_or_use(caller, 0u64);
-    delegator_shares.set(caller, user_shares + new_shares);
-
-    total_shares.set(0u8, current_shares + new_shares);
-
+    delegator_shares.set(caller, user_shares + actual_shares_to_mint);
+    total_shares.set(0u8, current_shares + actual_shares_to_mint);
     pending_deposits.set(0u8, pending_deposit_pool + microcredits);
   }
 
@@ -329,6 +322,8 @@ program puzzle_staking_g3.aleo {
     let withdrawal_calculation: u128 = (withdrawal_shares as u128 * updated_balance as u128 * PRECISION_FACTOR) / current_shares as u128;
     withdrawal_calculation = withdrawal_calculation / PRECISION_FACTOR;
 
+    // let min_withdrawal: u128 = (withdrawal_shares as u128 * updated_balance as u128) / (current_shares as u128 * SHARES_TO_MICROCREDITS as u128);
+    // min_withdrawal = min_withdrawal > 0u128 ? min_withdrawal : 1u128;
     let min_withdrawal: u128 = (withdrawal_shares as u128 * updated_balance as u128) / (current_shares as u128 * SHARES_TO_MICROCREDITS as u128);
     min_withdrawal = min_withdrawal > 0u128 ? min_withdrawal : 1u128;
 
@@ -430,8 +425,16 @@ program puzzle_staking_g3.aleo {
     return shares_to_mint;
   }
 
+  // inline calculate_new_shares_new(total_bal: u128, deposits: u128, shares: u128) -> u64 {
+  //   // todo: do i need to handle overflow case here?
+  //   let new_shares: u128 = shares == 0u128 ?
+  //       (deposits * SHARES_TO_MICROCREDITS as u128) :
+  //       (deposits * shares) / total_bal;
+
+  //   return new_shares == 0u128 && deposits > 0u128 ? 1u64 : new_shares as u64;
+  // }
+
   inline calculate_new_shares_new(total_bal: u128, deposits: u128, shares: u128) -> u64 {
-    // todo: do i need to handle overflow case here?
     let new_shares: u128 = shares == 0u128 ?
         (deposits * SHARES_TO_MICROCREDITS as u128) :
         (deposits * shares) / total_bal;

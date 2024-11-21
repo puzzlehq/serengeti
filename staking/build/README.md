@@ -1,4 +1,4 @@
-# puzzle_staking_g3.aleo
+# puzzle_staking_k1.aleo
 
 ## Build Guide
 
