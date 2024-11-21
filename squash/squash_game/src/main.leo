@@ -35,7 +35,7 @@ program squash_testing_4.aleo {
     // missed a day?
     //    1731561125     <   1731561000 - 600
     if squash.last_water < timestamp.time - delta {
-      let days_missed: u64 = ((timestamp.time - squash.last_water) / delta) + 1u64;
+      let days_missed: u64 = ((timestamp.time - squash.last_water) / delta);
       let kg_penalty: u64 = days_missed / 2000000u64;
       let new_kg: u64 = squash.kg < kg_penalty ? 0u64 : squash.kg - kg_penalty;
       return Squash {
