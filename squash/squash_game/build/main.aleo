@@ -2,21 +2,17 @@ import timestamp_testing.aleo;
 import puzzle_arcade_ticket_v001.aleo;
 program squash_testing_5.aleo;
 
-
-
 record Squash:
     owner as address.private;
     kg as u64.private;
     last_water as u64.private;
     level as u8.private;
 
-
 function mint:
     input r0 as address.private;
     input r1 as timestamp_testing.aleo/Timestamp.record;
     cast r0 0u64 r1.time 0u8 into r2 as Squash.record;
     output r2 as Squash.record;
-
 
 function water:
     input r0 as Squash.record;
@@ -32,36 +28,29 @@ function water:
     sub r0.kg r8 into r10;
     ternary r9 0u64 r10 into r11;
     cast r0.owner r11 r2 r0.level into r12 as Squash.record;
-    lt r0.last_water r1.time into r13;
-    add r0.kg 1u64 into r14;
-    cast r0.owner r14 r2 r0.level into r15 as Squash.record;
-    not r5 into r16;
-    not r13 into r17;
-    and r16 r17 into r18;
-    not r18 into r19;
-    or r19 false into r20;
-    assert.eq r20 true;
-    not r5 into r21;
-    and r21 r13 into r22;
-    ternary r22 r15.owner r0.owner into r23;
-    not r5 into r24;
-    and r24 r13 into r25;
-    ternary r25 r15.kg r0.kg into r26;
-    not r5 into r27;
-    and r27 r13 into r28;
-    ternary r28 r15.last_water r0.last_water into r29;
-    not r5 into r30;
-    and r30 r13 into r31;
-    ternary r31 r15.level r0.level into r32;
-    cast r23 r26 r29 r32 into r33 as Squash.record;
-    ternary r5 r12.owner r33.owner into r34;
-    ternary r5 r12.kg r33.kg into r35;
-    ternary r5 r12.last_water r33.last_water into r36;
-    ternary r5 r12.level r33.level into r37;
-    cast r34 r35 r36 r37 into r38 as Squash.record;
-    output r38 as Squash.record;
-
-
+    not r5 into r13;
+    lt r0.last_water r1.time into r14;
+    add r0.kg 1u64 into r15;
+    cast r0.owner r15 r2 r0.level into r16 as Squash.record;
+    and r13 r14 into r17;
+    not r14 into r18;
+    and r13 r18 into r19;
+    not r19 into r20;
+    or r5 r17 into r21;
+    or false r20 into r22;
+    or r22 r21 into r23;
+    assert.eq r23 true;
+    ternary r17 r16.owner r0.owner into r24;
+    ternary r17 r16.kg r0.kg into r25;
+    ternary r17 r16.last_water r0.last_water into r26;
+    ternary r17 r16.level r0.level into r27;
+    cast r24 r25 r26 r27 into r28 as Squash.record;
+    ternary r5 r12.owner r28.owner into r29;
+    ternary r5 r12.kg r28.kg into r30;
+    ternary r5 r12.last_water r28.last_water into r31;
+    ternary r5 r12.level r28.level into r32;
+    cast r29 r30 r31 r32 into r33 as Squash.record;
+    output r33 as Squash.record;
 
 function water_and_level_up:
     input r0 as Squash.record;
@@ -71,14 +60,14 @@ function water_and_level_up:
     sub r1.time r3 into r4;
     lt r0.last_water r4 into r5;
     not r5 into r6;
-    or r6 false into r7;
+    or false r6 into r7;
     assert.eq r7 true;
-    lt r0.last_water r1.time into r8;
-    not r5 into r9;
-    not r8 into r10;
-    and r9 r10 into r11;
+    not r5 into r8;
+    lt r0.last_water r1.time into r9;
+    not r9 into r10;
+    and r8 r10 into r11;
     not r11 into r12;
-    or r12 false into r13;
+    or false r12 into r13;
     assert.eq r13 true;
     add r0.kg 1u64 into r14;
     div r14 10u64 into r15;
@@ -97,4 +86,3 @@ function water_and_level_up:
 finalize water_and_level_up:
     input r0 as puzzle_arcade_ticket_v001.aleo/mint.future;
     await r0;
-

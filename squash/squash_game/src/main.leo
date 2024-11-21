@@ -11,7 +11,7 @@ program squash_testing_5.aleo {
   record Squash {
     owner: address,
     kg: u64,
-    last_water: u64 // Timestamp.time
+    last_water: u64, // Timestamp.time
     level: u8 // one-way-street leveling system (aka this only goes up in order to protect against level-up-farmers)
   }
 
