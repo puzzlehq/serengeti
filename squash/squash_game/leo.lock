@@ -1,6 +1,6 @@
 [[package]]
 name = "squash_time_oracle.aleo"
 location = "local"
-path = "/Users/lucas/code/puzzle/serengeti/squash/squash_game/../squash_time_oracle"
+path = "/Users/jonathan/Desktop/serengeti/squash/squash_game/../squash_time_oracle"
 checksum = "034f908644380d68c38372593182306edf0c025586f6908ef7e029e902767e43"
 dependencies = []

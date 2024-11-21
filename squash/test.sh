@@ -45,7 +45,7 @@ timestamp=${outputs[0]}
 echo "initial timestamp: $timestamp"
 
 # 2 - mint the first squash
-cd ../squash_game
+cd ../squash_testing_4
 echo "minting initial squash..."
 echo "leo run mint $PLAYER_ADDRESS \"$timestamp\""
 run_output=$(leo run mint $PLAYER_ADDRESS "$timestamp")
