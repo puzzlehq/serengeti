@@ -27,13 +27,12 @@ program squash_testing_4.aleo {
 
   // fee: 0.002049
   transition water (
-    squash: Squash, // 1731561125
-    timestamp: squash_time_oracle.aleo/Timestamp, // 1731561000
-    public now: u64, // 1731561220
-    public delta: u64 // 600
+    squash: Squash,
+    timestamp: squash_time_oracle.aleo/Timestamp,
+    public now: u64,
+    public delta: u64
   ) -> Squash {
     // missed a day?
-    //    1731561125     <   1731561000 - 600
     if squash.last_water < timestamp.time - delta {
       let days_missed: u64 = ((timestamp.time - squash.last_water) / delta) + 1u64;
       let kg_penalty: u64 = days_missed / 2000000u64;
@@ -55,34 +54,53 @@ program squash_testing_4.aleo {
     } else {
       // double-water attempt -- bail
       assert(false);
+      // make the compiler happy
       return squash;
     }
   }
 
-  /**
-    called post-water for a Squash that should have its level incremented
+  // only call this if the watering should level the squash up!
+  async transition water_and_level_up(
+    squash: Squash,
+    timestamp: squash_time_oracle.aleo/Timestamp, // 1731561000
+    public now: u64, // 1731561220
+    public delta: u64 // 600
+  ) -> (Squash, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
+    if squash.last_water < timestamp.time - delta {
+      // missed a day? call water
+      assert(false);
+    // watered yesterday?
+    } else if squash.last_water < timestamp.time {
+      // noop (pass-through case)
+    } else {
+      // double-water attempt -- bail
+      assert(false);
+    }
 
-      - see if this expected level is greater than the Squash's current level
-      - if so, mint it some PART
-  */
-  async transition level_up(squash: Squash) -> (Squash, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
-    // calculate the expected level from squash.kg
+    // calculate new kg and new expected level
     // note: this assumes each level is 10kgs apart
-    let expected_level: u8 = (squash.kg / 10u64) as u8;
+    let new_kg: u64 = squash.kg + 1u64;
+    let expected_level: u8 = (new_kg / 10u64) as u8;
 
-    // assert(expected_level != 0u8 && squash.kg >= (expected_level * 10u8) as u64);
-    // let new_level: u8 = expected_level + 1u8;
-    // only set if the new level hasn't been met yet
-
-    // is this expected level is greater than the Squash's current level?
+    // is this expected level is greater than the squash's current level?
     assert(expected_level > squash.level);
 
-    // mint the PART too
-    let (ticket, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
+    // mint the PART
+    let (tickets, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
       squash.owner,
       (expected_level * 10u8) as u64
     );
-    return (squash, ticket, await_ticket_minting(future));
+    // return watered Squash, tickets, and await the ticket-minting
+    return (
+      Squash {
+        owner: squash.owner,
+        kg: new_kg,
+        last_water: now,
+        level: expected_level
+      },
+      tickets,
+      await_ticket_minting(future)
+    );
   }
   async function await_ticket_minting(f: Future) {
     f.await();

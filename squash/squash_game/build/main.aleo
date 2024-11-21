@@ -64,21 +64,38 @@ function water:
 
 
 
-function level_up:
+function water_and_level_up:
     input r0 as Squash.record;
-    div r0.kg 10u64 into r1;
-    cast r1 into r2 as u8;
-    gt r2 r0.level into r3;
-    assert.eq r3 true;
-    mul r2 10u8 into r4;
-    cast r4 into r5 as u64;
-    call puzzle_arcade_ticket_v001.aleo/mint r0.owner r5 into r6 r7;
-    async level_up r7 into r8;
-    output r0 as Squash.record;
-    output r6 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r8 as squash_testing_4.aleo/level_up.future;
+    input r1 as squash_time_oracle.aleo/Timestamp.record;
+    input r2 as u64.public;
+    input r3 as u64.public;
+    sub r1.time r3 into r4;
+    lt r0.last_water r4 into r5;
+    not r5 into r6;
+    or r6 false into r7;
+    assert.eq r7 true;
+    lt r0.last_water r1.time into r8;
+    not r5 into r9;
+    not r8 into r10;
+    and r9 r10 into r11;
+    not r11 into r12;
+    or r12 false into r13;
+    assert.eq r13 true;
+    add r0.kg 1u64 into r14;
+    div r14 10u64 into r15;
+    cast r15 into r16 as u8;
+    gt r16 r0.level into r17;
+    assert.eq r17 true;
+    mul r16 10u8 into r18;
+    cast r18 into r19 as u64;
+    call puzzle_arcade_ticket_v001.aleo/mint r0.owner r19 into r20 r21;
+    cast r0.owner r14 r2 r16 into r22 as Squash.record;
+    async water_and_level_up r21 into r23;
+    output r22 as Squash.record;
+    output r20 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r23 as squash_testing_4.aleo/water_and_level_up.future;
 
-finalize level_up:
+finalize water_and_level_up:
     input r0 as puzzle_arcade_ticket_v001.aleo/mint.future;
     await r0;
 
