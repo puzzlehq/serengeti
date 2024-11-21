@@ -1,6 +1,13 @@
 [[package]]
 name = "squash_time_oracle.aleo"
 location = "local"
-path = "/Users/jonathan/Desktop/serengeti/squash/squash_game/../squash_time_oracle"
+path = "/Users/lucas/code/puzzle/serengeti/squash/squash_game/../squash_time_oracle"
 checksum = "034f908644380d68c38372593182306edf0c025586f6908ef7e029e902767e43"
+dependencies = []
+
+[[package]]
+name = "puzzle_arcade_ticket_v001.aleo"
+network = "testnet"
+location = "network"
+checksum = "cdc6997cbeba912b2bd3e258b21bdc1576f60e05d8573d7e01788aee9163bcd7"
 dependencies = []
