@@ -1,7 +1,7 @@
-import squash_time_oracle.aleo;
+import timestamp_testing.aleo;
 import puzzle_arcade_ticket_v001.aleo;
 
-program squash_testing_4.aleo {
+program squash_testing_5.aleo {
   const LEVEL_1: u64 = 10u64;
   const LEVEL_2: u64 = 20u64;
   const LEVEL_3: u64 = 30u64;
@@ -16,7 +16,7 @@ program squash_testing_4.aleo {
   }
 
   // fee: 0.001505
-  transition mint (owner: address, timestamp: squash_time_oracle.aleo/Timestamp) -> Squash {
+  transition mint (owner: address, timestamp: timestamp_testing.aleo/Timestamp) -> Squash {
     return Squash {
       owner,
       kg: 0u64,
@@ -28,7 +28,7 @@ program squash_testing_4.aleo {
   // fee: 0.002049
   transition water (
     squash: Squash,
-    timestamp: squash_time_oracle.aleo/Timestamp,
+    timestamp: timestamp_testing.aleo/Timestamp,
     public now: u64,
     public delta: u64
   ) -> Squash {
@@ -62,7 +62,7 @@ program squash_testing_4.aleo {
   // only call this if the watering should level the squash up!
   async transition water_and_level_up(
     squash: Squash,
-    timestamp: squash_time_oracle.aleo/Timestamp, // 1731561000
+    timestamp: timestamp_testing.aleo/Timestamp, // 1731561000
     public now: u64, // 1731561220
     public delta: u64 // 600
   ) -> (Squash, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {

@@ -1,13 +1,13 @@
 {
-  "program": "squash_testing_4.aleo",
+  "program": "squash_testing_5.aleo",
   "version": "0.1.0",
   "description": "",
   "license": "MIT",
   "dependencies": [
     {
-      "name": "squash_time_oracle.aleo",
-      "location": "local",
-      "path": "../squash_time_oracle"
+      "name": "timestamp_testing.aleo",
+      "location": "network",
+      "network": "testnet"
     },
     {
       "name": "puzzle_arcade_ticket_v001.aleo",

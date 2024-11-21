@@ -1,8 +1,8 @@
 [[package]]
-name = "squash_time_oracle.aleo"
-location = "local"
-path = "/Users/lucas/code/puzzle/serengeti/squash/squash_game/../squash_time_oracle"
-checksum = "034f908644380d68c38372593182306edf0c025586f6908ef7e029e902767e43"
+name = "timestamp_testing.aleo"
+network = "testnet"
+location = "network"
+checksum = "94fc5f659e953816b648a9cce8746e65b91adab582934febd072ba0884a5d935"
 dependencies = []
 
 [[package]]
