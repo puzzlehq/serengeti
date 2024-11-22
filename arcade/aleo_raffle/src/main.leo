@@ -20,53 +20,15 @@ program puzzle_raffle_testing2.aleo {
     // total number of winners
     mapping winner_count: u64 => u64;
 
-    struct PrivateKey {
-        pk_pt1: u128,
-        pk_pt2: u128
-    }
-
-    record Prize {
-        owner: address,
-        private_key: PrivateKey,
-    }
-
-    record AuditPrize {
-        owner: address,
-        minter: address,
-        private_key: PrivateKey,
-    }
-
     async transition kickoff_raffle (microcredits: u64) -> Future {
-      let f1: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
-      return finalize_kickoff_raffle (f1);
+      assert_eq(self.caller, self.signer);
+      assert_eq(self.caller, OPERATOR);
+      let f: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
+      return finalize_kickoff_raffle (f);
     }
 
-    async function finalize_kickoff_raffle(f1: Future) {
-      f1.await();
-    }
-
-    transition mint_prize (pk_pt1: u128, pk_pt2: u128) -> (Prize, AuditPrize) {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, OPERATOR);
-
-        let prize: Prize = Prize {
-            owner: OPERATOR,
-            private_key: PrivateKey {
-                pk_pt1: pk_pt1,
-                pk_pt2: pk_pt2
-            },
-        };
-
-        let audit_prize: AuditPrize = AuditPrize {
-            owner: OPERATOR,
-            minter: OPERATOR,
-            private_key: PrivateKey {
-                pk_pt1: pk_pt1,
-                pk_pt2: pk_pt2
-            },
-        };
-
-        return (prize, audit_prize);
+    async function finalize_kickoff_raffle(f: Future) {
+      f.await();
     }
 
     async transition buy_one_entry (ticket: puzzle_arcade_ticket_testing.aleo/PuzzleArcadeTicket) -> (
@@ -299,42 +261,14 @@ program puzzle_raffle_testing2.aleo {
         Mapping::set(winner, current_winner_count, winner_address);
     }
 
-    async transition send_prize_to_winner (winning_address: address, winning_amt: u64) -> Future {
+    async transition send_prize_to_winner (winning_address: address, winning_amt_microcredits: u64) -> Future {
+      assert_eq(self.caller, self.signer);
       assert_eq(self.caller, OPERATOR);
-      let f1: Future = credits.aleo/transfer_public(winning_address, winning_amt);
-      return finalize_send_prize_to_winner(f1);
+      let f: Future = credits.aleo/transfer_public(winning_address, winning_amt_microcredits);
+      return finalize_send_prize_to_winner(f);
     }
 
-    async function finalize_send_prize_to_winner (f1: Future) {
-      f1.await();
+    async function finalize_send_prize_to_winner (f: Future) {
+      f.await();
     }
-
-
-
-    // transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize) {
-    //     assert_eq(self.caller, self.signer);
-    //     assert_eq(self.caller, OPERATOR);
-
-    //     let prize_to_winner: Prize = Prize {
-    //         owner: winner_addr,
-    //         private_key: prize.private_key,
-    //     };
-
-    //     // let audit_prize_to_winner: AuditPrizeToWinner = AuditPrizeToWinner {
-    //     //     owner: operator,
-    //     //     winner: winner_addr,
-    //     //     private_key: prize.private_key,
-    //     // };
-
-    //     return (prize_to_winner);
-    // }
-
-    // finalize send_prize_to_winner (public winner_addr: address) {
-    //     // get the current winner idx
-    //     // let current_winner_count_idx: u64 = Mapping::get_or_use(winner_count, 0u64, 0u64);
-    //     // get the current winner via the index (if draw_winner is called multiple times)
-    //     // let winner_addr_from_mapping: address = Mapping::get(winner, current_winner_count_idx);
-    //     // assert that this function is called with the winner_addr
-    //     // assert_eq(winner_addr, winner_addr_from_mapping);
-    // }
 }

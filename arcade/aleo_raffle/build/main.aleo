@@ -2,19 +2,6 @@ import puzzle_arcade_ticket_testing.aleo;
 import credits.aleo;
 program puzzle_raffle_testing2.aleo;
 
-struct PrivateKey:
-    pk_pt1 as u128;
-    pk_pt2 as u128;
-
-record Prize:
-    owner as address.private;
-    private_key as PrivateKey.private;
-
-record AuditPrize:
-    owner as address.private;
-    minter as address.private;
-    private_key as PrivateKey.private;
-
 mapping entries:
     key as u64.public;
     value as address.public;
@@ -41,6 +28,8 @@ mapping winner_count:
 
 function kickoff_raffle:
     input r0 as u64.private;
+    assert.eq self.caller self.signer;
+    assert.eq self.caller aleo1pkuty394j0000uedtqpazp4qejwmn2yshaac6qjr6wll25m9a5psuggt6d;
     call credits.aleo/transfer_public_as_signer puzzle_raffle_testing2.aleo r0 into r1;
     async kickoff_raffle r1 into r2;
     output r2 as puzzle_raffle_testing2.aleo/kickoff_raffle.future;
@@ -48,18 +37,6 @@ function kickoff_raffle:
 finalize kickoff_raffle:
     input r0 as credits.aleo/transfer_public_as_signer.future;
     await r0;
-
-function mint_prize:
-    input r0 as u128.private;
-    input r1 as u128.private;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pkuty394j0000uedtqpazp4qejwmn2yshaac6qjr6wll25m9a5psuggt6d;
-    cast r0 r1 into r2 as PrivateKey;
-    cast aleo1pkuty394j0000uedtqpazp4qejwmn2yshaac6qjr6wll25m9a5psuggt6d r2 into r3 as Prize.record;
-    cast r0 r1 into r4 as PrivateKey;
-    cast aleo1pkuty394j0000uedtqpazp4qejwmn2yshaac6qjr6wll25m9a5psuggt6d aleo1pkuty394j0000uedtqpazp4qejwmn2yshaac6qjr6wll25m9a5psuggt6d r4 into r5 as AuditPrize.record;
-    output r3 as Prize.record;
-    output r5 as AuditPrize.record;
 
 function buy_one_entry:
     input r0 as puzzle_arcade_ticket_testing.aleo/PuzzleArcadeTicket.record;
@@ -352,6 +329,7 @@ finalize draw_winner:
 function send_prize_to_winner:
     input r0 as address.private;
     input r1 as u64.private;
+    assert.eq self.caller self.signer;
     assert.eq self.caller aleo1pkuty394j0000uedtqpazp4qejwmn2yshaac6qjr6wll25m9a5psuggt6d;
     call credits.aleo/transfer_public r0 r1 into r2;
     async send_prize_to_winner r2 into r3;
