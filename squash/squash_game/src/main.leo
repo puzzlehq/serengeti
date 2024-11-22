@@ -2,12 +2,6 @@ import timestamp_testing.aleo;
 import puzzle_arcade_ticket_v001.aleo;
 
 program squash_testing_5.aleo {
-  const LEVEL_1: u64 = 10u64;
-  const LEVEL_2: u64 = 20u64;
-  const LEVEL_3: u64 = 30u64;
-  const LEVEL_4: u64 = 40u64;
-  const LEVEL_5: u64 = 50u64;
-
   record Squash {
     owner: address,
     kg: u64,
@@ -62,9 +56,9 @@ program squash_testing_5.aleo {
   // only call this if the watering should level the squash up!
   async transition water_and_level_up(
     squash: Squash,
-    timestamp: timestamp_testing.aleo/Timestamp, // 1731561000
-    public now: u64, // 1731561220
-    public delta: u64 // 600
+    timestamp: timestamp_testing.aleo/Timestamp,
+    public now: u64,
+    public delta: u64
   ) -> (Squash, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
     if squash.last_water < timestamp.time - delta {
       // missed a day? call water
@@ -88,7 +82,7 @@ program squash_testing_5.aleo {
     // mint the PART
     let (tickets, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
       squash.owner,
-      (expected_level * 10u8) as u64
+      expected_level as u64 * 10000000u64
     );
     // return watered Squash, tickets, and await the ticket-minting
     return (

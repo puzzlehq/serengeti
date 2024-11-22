@@ -74,8 +74,8 @@ function water_and_level_up:
     cast r15 into r16 as u8;
     gt r16 r0.level into r17;
     assert.eq r17 true;
-    mul r16 10u8 into r18;
-    cast r18 into r19 as u64;
+    cast r16 into r18 as u64;
+    mul r18 10000000u64 into r19;
     call puzzle_arcade_ticket_v001.aleo/mint r0.owner r19 into r20 r21;
     cast r0.owner r14 r2 r16 into r22 as Squash.record;
     async water_and_level_up r21 into r23;
