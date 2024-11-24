@@ -20,14 +20,14 @@ program puzzle_raffle_testing2.aleo {
     // total number of winners
     mapping winner_count: u64 => u64;
 
-    async transition kickoff_raffle (microcredits: u64) -> Future {
+    async transition fund (microcredits: u64) -> Future {
       assert_eq(self.caller, self.signer);
       assert_eq(self.caller, OPERATOR);
       let f: Future = credits.aleo/transfer_public_as_signer(self.address, microcredits);
-      return finalize_kickoff_raffle (f);
+      return finalize_fund (f);
     }
 
-    async function finalize_kickoff_raffle(f: Future) {
+    async function finalize_fund (f: Future) {
       f.await();
     }
 
