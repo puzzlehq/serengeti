@@ -22,6 +22,10 @@ mapping has_won:
     key as address.public;
     value as boolean.public;
 
+mapping has_claimed:
+    key as address.public;
+    value as boolean.public;
+
 mapping winner_count:
     key as u64.public;
     value as u64.public;
@@ -329,12 +333,19 @@ finalize draw_winner:
 function send_prize_to_winner:
     input r0 as address.private;
     input r1 as u64.private;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo1pkuty394j0000uedtqpazp4qejwmn2yshaac6qjr6wll25m9a5psuggt6d;
     call credits.aleo/transfer_public r0 r1 into r2;
-    async send_prize_to_winner r2 into r3;
+    async send_prize_to_winner r2 r0 r1 into r3;
     output r3 as puzzle_raffle_testing2.aleo/send_prize_to_winner.future;
 
 finalize send_prize_to_winner:
     input r0 as credits.aleo/transfer_public.future;
+    input r1 as address.public;
+    input r2 as u64.public;
     await r0;
+    get.or_use has_claimed[r1] false into r3;
+    assert.eq r3 false;
+    set true into has_claimed[r1];
+    gte 1000000u64 r2 into r4;
+    assert.eq r4 true;
+    get.or_use has_won[r1] false into r5;
+    assert.eq r5 true;

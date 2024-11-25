@@ -2,6 +2,9 @@ import puzzle_arcade_ticket_testing.aleo;
 import credits.aleo;
 
 program puzzle_raffle_testing2.aleo {
+    // set this every time we are starting up a new raffle
+    const PRIZE_PER_WINNER: u64 = 1000000u64;
+
     const OPERATOR: address = aleo1pkuty394j0000uedtqpazp4qejwmn2yshaac6qjr6wll25m9a5psuggt6d;
 
     // used for storing the raffle entries (multiple entries per address)
@@ -17,6 +20,8 @@ program puzzle_raffle_testing2.aleo {
     mapping winner: u64 => address;
     // mapping to store winner aleo1... => true (if addr has won)
     mapping has_won: address => bool;
+    // mapping to store whether a winner has claimed aleo1... => true (if addr has claimed)
+    mapping has_claimed: address => bool;
     // total number of winners
     mapping winner_count: u64 => u64;
 
@@ -262,13 +267,24 @@ program puzzle_raffle_testing2.aleo {
     }
 
     async transition send_prize_to_winner (winning_address: address, winning_amt_microcredits: u64) -> Future {
-      assert_eq(self.caller, self.signer);
-      assert_eq(self.caller, OPERATOR);
       let f: Future = credits.aleo/transfer_public(winning_address, winning_amt_microcredits);
-      return finalize_send_prize_to_winner(f);
+      return finalize_send_prize_to_winner(f, winning_address, winning_amt_microcredits);
     }
 
-    async function finalize_send_prize_to_winner (f: Future) {
+    async function finalize_send_prize_to_winner (f: Future, winning_address: address, winning_amt_microcredits: u64) {
       f.await();
+
+      // check that the user has not claimed yet
+      let has_addr_claimed: bool = Mapping::get_or_use(has_claimed, winning_address, false);
+      assert_eq(has_addr_claimed, false);
+      // set the claim to true so a user cannot claim twice
+      Mapping::set(has_claimed, winning_address, true);
+
+      // make sure a user is not able to claim more than should be claimable
+      assert(PRIZE_PER_WINNER >= winning_amt_microcredits);
+
+      // make sure tha address has won the raffle
+      let has_addr_won: bool = Mapping::get_or_use(has_won, winning_address, false);
+      assert_eq(has_addr_won, true);
     }
 }
