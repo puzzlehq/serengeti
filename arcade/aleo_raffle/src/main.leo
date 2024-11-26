@@ -266,12 +266,12 @@ program puzzle_raffle_testing2.aleo {
         Mapping::set(winner, current_winner_count, winner_address);
     }
 
-    async transition send_prize_to_winner (winning_address: address, winning_amt_microcredits: u64) -> Future {
-      let f: Future = credits.aleo/transfer_public(winning_address, winning_amt_microcredits);
-      return finalize_send_prize_to_winner(f, winning_address, winning_amt_microcredits);
+    async transition send_prize_to_winner (winning_address: address) -> Future {
+      let f: Future = credits.aleo/transfer_public(winning_address, PRIZE_PER_WINNER);
+      return finalize_send_prize_to_winner(f, winning_address);
     }
 
-    async function finalize_send_prize_to_winner (f: Future, winning_address: address, winning_amt_microcredits: u64) {
+    async function finalize_send_prize_to_winner (f: Future, winning_address: address) {
       f.await();
 
       // check that the user has not claimed yet
@@ -279,9 +279,6 @@ program puzzle_raffle_testing2.aleo {
       assert_eq(has_addr_claimed, false);
       // set the claim to true so a user cannot claim twice
       Mapping::set(has_claimed, winning_address, true);
-
-      // make sure a user is not able to claim more than should be claimable
-      assert(PRIZE_PER_WINNER >= winning_amt_microcredits);
 
       // make sure tha address has won the raffle
       let has_addr_won: bool = Mapping::get_or_use(has_won, winning_address, false);

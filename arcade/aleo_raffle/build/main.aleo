@@ -332,20 +332,16 @@ finalize draw_winner:
 
 function send_prize_to_winner:
     input r0 as address.private;
-    input r1 as u64.private;
-    call credits.aleo/transfer_public r0 r1 into r2;
-    async send_prize_to_winner r2 r0 r1 into r3;
-    output r3 as puzzle_raffle_testing2.aleo/send_prize_to_winner.future;
+    call credits.aleo/transfer_public r0 1000000u64 into r1;
+    async send_prize_to_winner r1 r0 into r2;
+    output r2 as puzzle_raffle_testing2.aleo/send_prize_to_winner.future;
 
 finalize send_prize_to_winner:
     input r0 as credits.aleo/transfer_public.future;
     input r1 as address.public;
-    input r2 as u64.public;
     await r0;
-    get.or_use has_claimed[r1] false into r3;
-    assert.eq r3 false;
+    get.or_use has_claimed[r1] false into r2;
+    assert.eq r2 false;
     set true into has_claimed[r1];
-    gte 1000000u64 r2 into r4;
-    assert.eq r4 true;
-    get.or_use has_won[r1] false into r5;
-    assert.eq r5 true;
+    get.or_use has_won[r1] false into r3;
+    assert.eq r3 true;
