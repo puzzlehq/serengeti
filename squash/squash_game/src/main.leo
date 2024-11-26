@@ -29,7 +29,7 @@ program squash_testing_5.aleo {
     // missed a day?
     if squash.last_water < (timestamp.time - delta) {
       let days_missed: u64 = (timestamp.time - squash.last_water) / delta;
-      let kg_penalty: u64 = days_missed / 2u64;
+      let kg_penalty: u64 = (days_missed * 1000000u64) / 2u64;
       let new_kg: u64 = squash.kg < kg_penalty ? 0u64 : (squash.kg - kg_penalty);
       return Squash {
         owner: squash.owner,
@@ -73,7 +73,7 @@ program squash_testing_5.aleo {
 
     // calculate new kg and new expected level
     // note: this assumes each level is 10kgs apart
-    let new_kg: u64 = squash.kg + 1u64;
+    let new_kg: u64 = squash.kg + 1000000u64;
     let expected_level: u8 = (new_kg / 10u64) as u8;
 
     // is this expected level is greater than the squash's current level?

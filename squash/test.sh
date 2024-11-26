@@ -1,7 +1,7 @@
 # to swap out private keys:
 # sed -i '' "s/PRIVATE_KEY=.*/PRIVATE_KEY=$ORACLE_KEY/" .env
 
-PLAYER_ADDRESS=aleo1x4qm9ycjnm4uht6a7jvvl8v6vu20hhx864zagdtp34lscx6rhs9s8m3834
+PLAYER_ADDRESS=aleo189pjvf988j58x2a3nxcexm8e8e4afxdfgymejnf2hhek4r8lcq9snjtdxz
 DELTA=600u64
 
 extract_outputs() {
@@ -43,7 +43,7 @@ function extract_time() {
 }
 
 function water_squash() {
-  # echo -e "leo run water \"$SQUASH\" \"$TIMESTAMP\" $1 10u64\n"
+  echo -e "leo run water \"$SQUASH\" \"$TIMESTAMP\" $1 10u64\n"
   cd ../squash_game
   run_output=$(leo run water "$SQUASH" "$TIMESTAMP" $1 10u64)
   outputs=$(extract_outputs "$run_output")
@@ -105,9 +105,19 @@ water_squash 35u64
 echo "updated squash: $SQUASH"
 echo "updated kg: $(extract_kg $SQUASH)"
 
-# 8 - 
-# 9 - 
-# 19 - 
+# 8 - update timestamp
+echo "\nupdating timestamp to 40s..."
+update_timestamp 40u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 9 - water squash -- kg should be 1.5
+echo "\nwatering squash at 35s..."
+water_squash 35u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH)"
+
+# 10 - 
 # 11 - 
 # 12 - 
 # 13 - 
