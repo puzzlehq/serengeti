@@ -27,10 +27,12 @@ program squash_testing_5.aleo {
     public delta: u64
   ) -> Squash {
     assert(now >= timestamp.time);
+    assert(now >= squash.last_water);
+    assert(timestamp.time >= squash.last_water);
     // missed a day?
     if squash.last_water < (timestamp.time - delta) {
-      let days_missed: u64 = (timestamp.time - squash.last_water) / delta;
-      let kg_penalty: u64 = (days_missed * 1000000u64) / 2u64;
+      let days_missed: u64 = ((timestamp.time - squash.last_water) / delta) as u64;
+      let kg_penalty: u64 = ((days_missed * 1000000u64) / 2u64) as u64;
       let new_kg: u64 = squash.kg <= kg_penalty ? 0u64 : (squash.kg - kg_penalty);
       return Squash {
         owner: squash.owner,
