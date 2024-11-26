@@ -26,14 +26,15 @@ program squash_testing_5.aleo {
     public now: u64,
     public delta: u64
   ) -> Squash {
+    assert(now >= timestamp.time);
     // missed a day?
     if squash.last_water < (timestamp.time - delta) {
       let days_missed: u64 = (timestamp.time - squash.last_water) / delta;
       let kg_penalty: u64 = (days_missed * 1000000u64) / 2u64;
-      let new_kg: u64 = squash.kg < kg_penalty ? 0u64 : (squash.kg - kg_penalty);
+      let new_kg: u64 = squash.kg <= kg_penalty ? 0u64 : (squash.kg - kg_penalty);
       return Squash {
         owner: squash.owner,
-        kg: kg_penalty,
+        kg: new_kg + 1000000u64,
         last_water: now,
         level: squash.level
       };
@@ -60,6 +61,7 @@ program squash_testing_5.aleo {
     public now: u64,
     public delta: u64
   ) -> (Squash, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
+    assert(now >= timestamp.time);
     if squash.last_water < timestamp.time - delta {
       // missed a day? call water
       assert(false);
