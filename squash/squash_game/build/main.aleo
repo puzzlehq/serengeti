@@ -11,7 +11,7 @@ record Squash:
 function mint:
     input r0 as address.private;
     input r1 as timestamp_testing.aleo/Timestamp.record;
-    cast r0 0u64 r1.time 0u8 into r2 as Squash.record;
+    cast r0 1000000u64 r1.time 0u8 into r2 as Squash.record;
     output r2 as Squash.record;
 
 function water:
@@ -23,14 +23,14 @@ function water:
     lt r0.last_water r4 into r5;
     sub r1.time r0.last_water into r6;
     div r6 r3 into r7;
-    div r7 2000000u64 into r8;
+    div r7 2u64 into r8;
     lt r0.kg r8 into r9;
     sub r0.kg r8 into r10;
     ternary r9 0u64 r10 into r11;
-    cast r0.owner r11 r2 r0.level into r12 as Squash.record;
+    cast r0.owner r8 r2 r0.level into r12 as Squash.record;
     not r5 into r13;
     lt r0.last_water r1.time into r14;
-    add r0.kg 1u64 into r15;
+    add r0.kg 1000000u64 into r15;
     cast r0.owner r15 r2 r0.level into r16 as Squash.record;
     and r13 r14 into r17;
     not r14 into r18;

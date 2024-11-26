@@ -13,7 +13,7 @@ program squash_testing_5.aleo {
   transition mint (owner: address, timestamp: timestamp_testing.aleo/Timestamp) -> Squash {
     return Squash {
       owner,
-      kg: 0u64,
+      kg: 1000000u64,
       last_water: timestamp.time,
       level: 0u8
     };
@@ -27,13 +27,13 @@ program squash_testing_5.aleo {
     public delta: u64
   ) -> Squash {
     // missed a day?
-    if squash.last_water < timestamp.time - delta {
-      let days_missed: u64 = ((timestamp.time - squash.last_water) / delta);
-      let kg_penalty: u64 = days_missed / 2000000u64;
-      let new_kg: u64 = squash.kg < kg_penalty ? 0u64 : squash.kg - kg_penalty;
+    if squash.last_water < (timestamp.time - delta) {
+      let days_missed: u64 = (timestamp.time - squash.last_water) / delta;
+      let kg_penalty: u64 = days_missed / 2u64;
+      let new_kg: u64 = squash.kg < kg_penalty ? 0u64 : (squash.kg - kg_penalty);
       return Squash {
         owner: squash.owner,
-        kg: new_kg,
+        kg: kg_penalty,
         last_water: now,
         level: squash.level
       };
@@ -41,7 +41,7 @@ program squash_testing_5.aleo {
     } else if squash.last_water < timestamp.time {
       return Squash {
         owner: squash.owner,
-        kg: squash.kg + 1u64,
+        kg: squash.kg + 1000000u64,
         last_water: now,
         level: squash.level
       };
