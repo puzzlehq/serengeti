@@ -55,11 +55,7 @@ function water_squash_and_level_up() {
   cd ../squash_game
   run_output=$(leo run water_and_level_up "$SQUASH" "$TIMESTAMP" $1 $DELTA)
   outputs=$(extract_outputs "$run_output")
-  outputs_1= ${outputs[0]}
-  outputs_2= ${outputs_1[0]}
-  echo "outputs_1 $outputs_1"
-  echo "outputs_2 $outputs_2"
-  SQUASH=${outputs_2}
+  SQUASH=${outputs}
 }
 
 function extract_kg() {
