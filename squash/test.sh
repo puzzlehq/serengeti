@@ -361,7 +361,7 @@ update_timestamp 290u64
 echo "updated timestamp: $TIMESTAMP"
 echo "time: $(extract_time $TIMESTAMP)"
 
-# 45 - water squash -- kg should be 10.0
+# 45 - water squash and level up -- kg should be 10.0, level should be 1
 echo "\nwatering and leveling up squash at 295s..."
 water_squash_and_level_up 295u64
 echo "updated squash: $SQUASH"
@@ -380,3 +380,41 @@ water_squash 305u64
 echo "updated squash: $SQUASH"
 echo "updated kg: $(extract_kg $SQUASH) , expected kg: 11000000"
 echo "level: $(extract_level $SQUASH) , expected level: 1"
+
+# 48 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 310s..."
+update_timestamp 310u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 49 - update timestamp - 1 days missed,  0.5 kg loss
+echo "\nupdating timestamp to 320s..."
+update_timestamp 320u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 50 - update timestamp - 2 days missed,  1.0 kg loss
+echo "\nupdating timestamp to 330s..."
+update_timestamp 330u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 51 - update timestamp - 3 days missed,  1.5 kg loss
+echo "\nupdating timestamp to 340s..."
+update_timestamp 340u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# # 52 - water squash and level up -- this should fail bc we already leveled up
+# echo "\nwatering and leveling up squash at 335s..."
+# water_squash_and_level_up 335u64
+# echo "updated squash: $SQUASH"
+# echo "updated kg: $(extract_kg $SQUASH) , expected kg: 9500000"
+# echo "updated level: $(extract_level $SQUASH) , expected level: 1"
+
+# 53 - water squash -- kg should be 10.5, level should be 1
+echo "\nwatering and leveling up squash at 345s..."
+water_squash 345u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 10500000"
+echo "updated level: $(extract_level $SQUASH) , expected level: 1"
