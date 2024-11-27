@@ -28,6 +28,17 @@ extract_outputs() {
   echo "${bullets_array[@]}"
 }
 
+function get_first_text_section() {
+    local input_string="$1"
+    local first_word
+
+    # Use awk to extract the first word before any whitespace
+    first_word=$(echo "$input_string" | awk '{print $1}')
+
+    # Print the first word
+    echo "$first_word"
+}
+
 function update_timestamp() {
   # echo "leo run update \"$TIMESTAMP\" $1\n"
   cd ../squash_time_oracle
@@ -55,7 +66,9 @@ function water_squash_and_level_up() {
   cd ../squash_game
   run_output=$(leo run water_and_level_up "$SQUASH" "$TIMESTAMP" $1 $DELTA)
   outputs=$(extract_outputs "$run_output")
-  SQUASH=${outputs}
+  output=${outputs[0]};
+  split_output=$(get_first_text_section "$output")
+  SQUASH=${split_output}
 }
 
 function extract_kg() {
