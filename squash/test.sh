@@ -68,7 +68,6 @@ function extract_kg() {
 function extract_level() {
   local input="$1"
   local level=$(echo "$input" | awk -F'level:|u8' '{print $2}' | tr -d '[:space:]')
-  # echo "scale=6; $kg / 1000" | bc
   echo "$level"
 }
 
