@@ -6,16 +6,18 @@ program squash_testing_5.aleo {
     owner: address,
     kg: u64,
     last_water: u64, // Timestamp.time
-    level: u8 // one-way-street leveling system (aka this only goes up in order to protect against level-up-farmers)
+    level: u8, // one-way-street leveling system (aka this only goes up in order to protect against level-up-farmers)
+    squash_id: u32,
   }
 
   // fee: 0.001505
-  transition mint (owner: address, timestamp: timestamp_testing.aleo/Timestamp) -> Squash {
+  transition mint (owner: address, squash_id: u32, timestamp: timestamp_testing.aleo/Timestamp) -> Squash {
     return Squash {
       owner,
       kg: 1000000u64,
       last_water: timestamp.time,
-      level: 0u8
+      level: 0u8,
+      squash_id
     };
   }
 
@@ -44,7 +46,8 @@ program squash_testing_5.aleo {
         owner: squash.owner,
         kg: new_kg + 1000000u64,
         last_water: now,
-        level: squash.level
+        level: squash.level,
+        squash_id: squash.squash_id
       };
     // watered yesterday?
     } else if squash.last_water < timestamp.time {
@@ -52,7 +55,8 @@ program squash_testing_5.aleo {
         owner: squash.owner,
         kg: squash.kg + 1000000u64,
         last_water: now,
-        level: squash.level
+        level: squash.level,
+        squash_id: squash.squash_id
       };
     } else {
       // double-water attempt -- bail
@@ -103,7 +107,8 @@ program squash_testing_5.aleo {
         owner: squash.owner,
         kg: new_kg,
         last_water: now,
-        level: new_level
+        level: new_level,
+        squash_id: squash.squash_id
       },
       tickets,
       await_ticket_minting(future)

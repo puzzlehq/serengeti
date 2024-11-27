@@ -96,7 +96,7 @@ echo "time: $(extract_time $TIMESTAMP)"
 # 2 - mint the first squash
 echo "\nminting initial squash..."
 cd ../squash_game
-run_output=$(leo run mint $PLAYER_ADDRESS "$TIMESTAMP")
+run_output=$(leo run mint $PLAYER_ADDRESS 123456u32 "$TIMESTAMP")
 outputs=$(extract_outputs "$run_output")
 SQUASH=${outputs[0]}
 echo "\ninitial squash: $SQUASH"
