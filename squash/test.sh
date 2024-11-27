@@ -55,7 +55,11 @@ function water_squash_and_level_up() {
   cd ../squash_game
   run_output=$(leo run water_and_level_up "$SQUASH" "$TIMESTAMP" $1 $DELTA)
   outputs=$(extract_outputs "$run_output")
-  SQUASH=${outputs[0]}
+  outputs_1= ${outputs[0]}
+  outputs_2= ${outputs_1[0]}
+  echo "outputs_1 $outputs_1"
+  echo "outputs_2 $outputs_2"
+  SQUASH=${outputs_2}
 }
 
 function extract_kg() {
@@ -63,6 +67,13 @@ function extract_kg() {
   local kg=$(echo "$input" | awk -F'kg:|u64' '{print $2}' | tr -d '[:space:]')
   # echo "scale=6; $kg / 1000" | bc
   echo "$kg"
+}
+
+function extract_level() {
+  local input="$1"
+  local level=$(echo "$input" | awk -F'level:|u8' '{print $2}' | tr -d '[:space:]')
+  # echo "scale=6; $kg / 1000" | bc
+  echo "$level"
 }
 
 # 1 - mint the first timestamp
@@ -181,7 +192,7 @@ echo "time: $(extract_time $TIMESTAMP)"
 
 # 19 - update timestamp AGAIN - 2 days missed, 1.0 kg loss
 echo "\nupdating timestamp to 120s..."
-update_timestamp 110u64
+update_timestamp 120u64
 echo "updated timestamp: $TIMESTAMP"
 echo "time: $(extract_time $TIMESTAMP)"
 
@@ -227,10 +238,137 @@ update_timestamp 190u64
 echo "updated timestamp: $TIMESTAMP"
 echo "time: $(extract_time $TIMESTAMP)"
 
+# 26 - update timestamp AGAIN - 10 days missed, 5.0 kg loss
+echo "\nupdating timestamp to 200s..."
+update_timestamp 200u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
 # 27 - water squash -- kg should be 1.0
-echo "\nwatering squash at 195s..."
-water_squash 195u64
+echo "\nwatering squash at 205s..."
+water_squash 205u64
 echo "updated squash: $SQUASH"
 echo "updated kg: $(extract_kg $SQUASH) , expected kg: 1000000"
 
-# 15 - attempt double-water (fails)
+# 28 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 210s..."
+update_timestamp 210u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 29 - water squash -- kg should be 2.0
+echo "\nwatering squash at 215s..."
+water_squash 215u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 2000000"
+
+# 30 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 220s..."
+update_timestamp 220u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 31 - water squash -- kg should be 3.0
+echo "\nwatering squash at 225s..."
+water_squash 225u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 3000000"
+
+# 32 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 230s..."
+update_timestamp 230u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 33 - water squash -- kg should be 4.0
+echo "\nwatering squash at 235s..."
+water_squash 235u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 4000000"
+
+# 34 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 240s..."
+update_timestamp 240u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 35 - water squash -- kg should be 5.0
+echo "\nwatering squash at 245s..."
+water_squash 245u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 5000000"
+
+# 36 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 250s..."
+update_timestamp 250u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 37 - water squash -- kg should be 6.0
+echo "\nwatering squash at 255s..."
+water_squash 255u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 6000000"
+
+# 38 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 260s..."
+update_timestamp 260u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 39 - water squash -- kg should be 7.0
+echo "\nwatering squash at 265s..."
+water_squash 265u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 7000000"
+
+# 40 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 270s..."
+update_timestamp 270u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 41 - water squash -- kg should be 8.0
+echo "\nwatering squash at 275s..."
+water_squash 275u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 8000000"
+
+# 42 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 280s..."
+update_timestamp 280u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 43 - water squash -- kg should be 9.0
+echo "\nwatering squash at 285s..."
+water_squash 285u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 9000000"
+echo "level: $(extract_level $SQUASH) , expected level: 0"
+
+# 44 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 290s..."
+update_timestamp 290u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 45 - water squash -- kg should be 10.0
+echo "\nwatering and leveling up squash at 295s..."
+water_squash_and_level_up 295u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 10000000"
+echo "updated level: $(extract_level $SQUASH) , expected level: 1"
+
+# 46 - update timestamp - 0 days missed
+echo "\nupdating timestamp to 300s..."
+update_timestamp 300u64
+echo "updated timestamp: $TIMESTAMP"
+echo "time: $(extract_time $TIMESTAMP)"
+
+# 47 - water squash -- kg should be 11.0
+echo "\nwatering squash at 305s..."
+water_squash 305u64
+echo "updated squash: $SQUASH"
+echo "updated kg: $(extract_kg $SQUASH) , expected kg: 11000000"
+echo "level: $(extract_level $SQUASH) , expected level: 1"

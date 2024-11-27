@@ -33,7 +33,13 @@ program squash_testing_5.aleo {
     if squash.last_water < (timestamp.time - delta) {
       let days_missed: u64 = ((timestamp.time - squash.last_water) / delta) as u64;
       let kg_penalty: u64 = ((days_missed * 1000000u64) / 2u64) as u64;
-      let new_kg: u64 = squash.kg <= kg_penalty ? 0u64 : (squash.kg - kg_penalty);
+
+      let squash_kg_i: i64 = squash.kg as i64;
+      let kg_penalty_i: i64 = kg_penalty as i64;
+      let diff_i: i64 = squash_kg_i - kg_penalty_i;
+      let new_kg_i: i64 = squash_kg_i <= kg_penalty_i ? 0i64 : diff_i;
+
+      let new_kg: u64 = new_kg_i as u64;
       return Squash {
         owner: squash.owner,
         kg: new_kg + 1000000u64,
@@ -64,7 +70,10 @@ program squash_testing_5.aleo {
     public delta: u64
   ) -> (Squash, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
     assert(now >= timestamp.time);
-    if squash.last_water < timestamp.time - delta {
+    assert(now >= squash.last_water);
+    assert(timestamp.time >= squash.last_water);
+
+    if squash.last_water < (timestamp.time - delta) {
       // missed a day? call water
       assert(false);
     // watered yesterday?
@@ -78,15 +87,15 @@ program squash_testing_5.aleo {
     // calculate new kg and new expected level
     // note: this assumes each level is 10kgs apart
     let new_kg: u64 = squash.kg + 1000000u64;
-    let expected_level: u8 = (new_kg / 10u64) as u8;
+    let new_level: u8 = (new_kg / 10000000u64) as u8;
 
     // is this expected level is greater than the squash's current level?
-    assert(expected_level > squash.level);
+    assert(new_level > squash.level);
 
     // mint the PART
     let (tickets, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
       squash.owner,
-      expected_level as u64 * 10000000u64
+      (new_level as u64) * 10000000u64
     );
     // return watered Squash, tickets, and await the ticket-minting
     return (
@@ -94,7 +103,7 @@ program squash_testing_5.aleo {
         owner: squash.owner,
         kg: new_kg,
         last_water: now,
-        level: expected_level
+        level: new_level
       },
       tickets,
       await_ticket_minting(future)
