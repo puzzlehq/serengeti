@@ -417,35 +417,6 @@ program puzzle_staking_k1.aleo {
     return get_commission(rewards, commission_rate);
   }
 
-  inline calculate_new_shares(bonded_balance: u128, pending_deposit_pool: u128, deposit: u128, shares: u128) -> u64 {
-    let full_balance: u128 = bonded_balance + pending_deposit_pool;
-    let new_total_shares: u128 = (shares * (full_balance + deposit)) / full_balance;
-    let diff: u128 = new_total_shares - shares;
-    let shares_to_mint: u64 = diff as u64;
-    return shares_to_mint;
-  }
-
-  // inline calculate_new_shares_new(total_bal: u128, deposits: u128, shares: u128) -> u64 {
-  //   // todo: do i need to handle overflow case here?
-  //   let new_shares: u128 = shares == 0u128 ?
-  //       (deposits * SHARES_TO_MICROCREDITS as u128) :
-  //       (deposits * shares) / total_bal;
-
-  //   return new_shares == 0u128 && deposits > 0u128 ? 1u64 : new_shares as u64;
-  // }
-
-  inline calculate_new_shares_new(total_bal: u128, deposits: u128, shares: u128) -> u64 {
-    let new_shares: u128 = shares == 0u128 ?
-        (deposits * SHARES_TO_MICROCREDITS as u128) :
-        (deposits * shares) / total_bal;
-
-    return new_shares == 0u128 && deposits > 0u128 ? 1u64 : new_shares as u64;
-  }
-  // utiility function to calculate the new shares based on the pending deposit pool
-  transition calculate_new_shares_test(bonded_balance: u128, pending_deposit_pool: u128, deposit: u128, shares: u128) -> u64 {
-    return calculate_new_shares(bonded_balance, pending_deposit_pool, deposit, shares);
-  }
-
   async transition set_commission_percent(public new_commission_rate: u128) -> Future {
     assert_eq(self.caller, ADMIN);
     assert(new_commission_rate < PRECISION_FACTOR);
