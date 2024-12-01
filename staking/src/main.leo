@@ -322,8 +322,6 @@ program puzzle_staking_k1.aleo {
     let withdrawal_calculation: u128 = (withdrawal_shares as u128 * updated_balance as u128 * PRECISION_FACTOR) / current_shares as u128;
     withdrawal_calculation = withdrawal_calculation / PRECISION_FACTOR;
 
-    // let min_withdrawal: u128 = (withdrawal_shares as u128 * updated_balance as u128) / (current_shares as u128 * SHARES_TO_MICROCREDITS as u128);
-    // min_withdrawal = min_withdrawal > 0u128 ? min_withdrawal : 1u128;
     let min_withdrawal: u128 = (withdrawal_shares as u128 * updated_balance as u128) / (current_shares as u128 * SHARES_TO_MICROCREDITS as u128);
     min_withdrawal = min_withdrawal > 0u128 ? min_withdrawal : 1u128;
 
