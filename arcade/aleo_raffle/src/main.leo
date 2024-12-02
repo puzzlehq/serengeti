@@ -245,9 +245,9 @@ program puzzle_raffle_testing2.aleo {
         // get total entries
         let num_entries: u16 = Mapping::get(total_entries, 0u16);
         // grab random number
-        let random_number: u16 = ChaCha::rand_u16();
+        let random_number: u64 = ChaCha::rand_u64();
         // select winning index
-        let winner_index: u16 = random_number % num_entries;
+        let winner_index: u16 = random_number as u16 % num_entries;
         // get address at winning index
         let winner_address: address = Mapping::get(entries, winner_index);
         // true if addr has already won, false if not

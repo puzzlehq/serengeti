@@ -319,16 +319,17 @@ function draw_winner:
 
 finalize draw_winner:
     get total_entries[0u16] into r0;
-    rand.chacha into r1 as u16;
-    rem r1 r0 into r2;
-    get entries[r2] into r3;
-    get.or_use has_won[r3] false into r4;
-    assert.eq r4 false;
-    get.or_use winner_count[0u16] 0u16 into r5;
-    set true into has_won[r3];
-    add r5 1u16 into r6;
-    set r6 into winner_count[0u16];
-    set r3 into winner[r5];
+    rand.chacha into r1 as u64;
+    cast r1 into r2 as u16;
+    rem r2 r0 into r3;
+    get entries[r3] into r4;
+    get.or_use has_won[r4] false into r5;
+    assert.eq r5 false;
+    get.or_use winner_count[0u16] 0u16 into r6;
+    set true into has_won[r4];
+    add r6 1u16 into r7;
+    set r7 into winner_count[0u16];
+    set r4 into winner[r6];
 
 function send_prize_to_winner:
     input r0 as address.private;
