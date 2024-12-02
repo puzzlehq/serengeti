@@ -3,7 +3,7 @@ import credits.aleo;
 program puzzle_raffle_testing2.aleo;
 
 mapping entries:
-    key as u64.public;
+    key as u16.public;
     value as address.public;
 
 mapping user_entries:
@@ -11,11 +11,11 @@ mapping user_entries:
     value as u16.public;
 
 mapping total_entries:
-    key as u64.public;
-    value as u64.public;
+    key as u16.public;
+    value as u16.public;
 
 mapping winner:
-    key as u64.public;
+    key as u16.public;
     value as address.public;
 
 mapping has_won:
@@ -27,8 +27,8 @@ mapping has_claimed:
     value as boolean.public;
 
 mapping winner_count:
-    key as u64.public;
-    value as u64.public;
+    key as u16.public;
+    value as u16.public;
 
 function fund:
     input r0 as u64.private;
@@ -51,10 +51,10 @@ function buy_one_entry:
 
 finalize buy_one_entry:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
+    get.or_use total_entries[0u16] 0u16 into r1;
     set r0 into entries[r1];
-    add r1 1u64 into r2;
-    set r2 into total_entries[0u64];
+    add r1 1u16 into r2;
+    set r2 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r3;
     add r3 1u16 into r4;
     set r4 into user_entries[r0];
@@ -68,13 +68,13 @@ function buy_two_entries:
 
 finalize buy_two_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
-    add r1 0u64 into r2;
+    get.or_use total_entries[0u16] 0u16 into r1;
+    add r1 0u16 into r2;
     set r0 into entries[r2];
-    add r1 1u64 into r3;
+    add r1 1u16 into r3;
     set r0 into entries[r3];
-    add r1 2u64 into r4;
-    set r4 into total_entries[0u64];
+    add r1 2u16 into r4;
+    set r4 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r5;
     add r5 2u16 into r6;
     set r6 into user_entries[r0];
@@ -88,15 +88,15 @@ function buy_three_entries:
 
 finalize buy_three_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
-    add r1 0u64 into r2;
+    get.or_use total_entries[0u16] 0u16 into r1;
+    add r1 0u16 into r2;
     set r0 into entries[r2];
-    add r1 1u64 into r3;
+    add r1 1u16 into r3;
     set r0 into entries[r3];
-    add r1 2u64 into r4;
+    add r1 2u16 into r4;
     set r0 into entries[r4];
-    add r1 3u64 into r5;
-    set r5 into total_entries[0u64];
+    add r1 3u16 into r5;
+    set r5 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r6;
     add r6 3u16 into r7;
     set r7 into user_entries[r0];
@@ -110,17 +110,17 @@ function buy_four_entries:
 
 finalize buy_four_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
-    add r1 0u64 into r2;
+    get.or_use total_entries[0u16] 0u16 into r1;
+    add r1 0u16 into r2;
     set r0 into entries[r2];
-    add r1 1u64 into r3;
+    add r1 1u16 into r3;
     set r0 into entries[r3];
-    add r1 2u64 into r4;
+    add r1 2u16 into r4;
     set r0 into entries[r4];
-    add r1 3u64 into r5;
+    add r1 3u16 into r5;
     set r0 into entries[r5];
-    add r1 4u64 into r6;
-    set r6 into total_entries[0u64];
+    add r1 4u16 into r6;
+    set r6 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r7;
     add r7 4u16 into r8;
     set r8 into user_entries[r0];
@@ -134,19 +134,19 @@ function buy_five_entries:
 
 finalize buy_five_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
-    add r1 0u64 into r2;
+    get.or_use total_entries[0u16] 0u16 into r1;
+    add r1 0u16 into r2;
     set r0 into entries[r2];
-    add r1 1u64 into r3;
+    add r1 1u16 into r3;
     set r0 into entries[r3];
-    add r1 2u64 into r4;
+    add r1 2u16 into r4;
     set r0 into entries[r4];
-    add r1 3u64 into r5;
+    add r1 3u16 into r5;
     set r0 into entries[r5];
-    add r1 4u64 into r6;
+    add r1 4u16 into r6;
     set r0 into entries[r6];
-    add r1 5u64 into r7;
-    set r7 into total_entries[0u64];
+    add r1 5u16 into r7;
+    set r7 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r8;
     add r8 5u16 into r9;
     set r9 into user_entries[r0];
@@ -160,21 +160,21 @@ function buy_six_entries:
 
 finalize buy_six_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
-    add r1 0u64 into r2;
+    get.or_use total_entries[0u16] 0u16 into r1;
+    add r1 0u16 into r2;
     set r0 into entries[r2];
-    add r1 1u64 into r3;
+    add r1 1u16 into r3;
     set r0 into entries[r3];
-    add r1 2u64 into r4;
+    add r1 2u16 into r4;
     set r0 into entries[r4];
-    add r1 3u64 into r5;
+    add r1 3u16 into r5;
     set r0 into entries[r5];
-    add r1 4u64 into r6;
+    add r1 4u16 into r6;
     set r0 into entries[r6];
-    add r1 5u64 into r7;
+    add r1 5u16 into r7;
     set r0 into entries[r7];
-    add r1 6u64 into r8;
-    set r8 into total_entries[0u64];
+    add r1 6u16 into r8;
+    set r8 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r9;
     add r9 6u16 into r10;
     set r10 into user_entries[r0];
@@ -188,23 +188,23 @@ function buy_seven_entries:
 
 finalize buy_seven_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
-    add r1 0u64 into r2;
+    get.or_use total_entries[0u16] 0u16 into r1;
+    add r1 0u16 into r2;
     set r0 into entries[r2];
-    add r1 1u64 into r3;
+    add r1 1u16 into r3;
     set r0 into entries[r3];
-    add r1 2u64 into r4;
+    add r1 2u16 into r4;
     set r0 into entries[r4];
-    add r1 3u64 into r5;
+    add r1 3u16 into r5;
     set r0 into entries[r5];
-    add r1 4u64 into r6;
+    add r1 4u16 into r6;
     set r0 into entries[r6];
-    add r1 5u64 into r7;
+    add r1 5u16 into r7;
     set r0 into entries[r7];
-    add r1 6u64 into r8;
+    add r1 6u16 into r8;
     set r0 into entries[r8];
-    add r1 7u64 into r9;
-    set r9 into total_entries[0u64];
+    add r1 7u16 into r9;
+    set r9 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r10;
     add r10 7u16 into r11;
     set r11 into user_entries[r0];
@@ -218,25 +218,25 @@ function buy_eight_entries:
 
 finalize buy_eight_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
-    add r1 0u64 into r2;
+    get.or_use total_entries[0u16] 0u16 into r1;
+    add r1 0u16 into r2;
     set r0 into entries[r2];
-    add r1 1u64 into r3;
+    add r1 1u16 into r3;
     set r0 into entries[r3];
-    add r1 2u64 into r4;
+    add r1 2u16 into r4;
     set r0 into entries[r4];
-    add r1 3u64 into r5;
+    add r1 3u16 into r5;
     set r0 into entries[r5];
-    add r1 4u64 into r6;
+    add r1 4u16 into r6;
     set r0 into entries[r6];
-    add r1 5u64 into r7;
+    add r1 5u16 into r7;
     set r0 into entries[r7];
-    add r1 6u64 into r8;
+    add r1 6u16 into r8;
     set r0 into entries[r8];
-    add r1 7u64 into r9;
+    add r1 7u16 into r9;
     set r0 into entries[r9];
-    add r1 8u64 into r10;
-    set r10 into total_entries[0u64];
+    add r1 8u16 into r10;
+    set r10 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r11;
     add r11 8u16 into r12;
     set r12 into user_entries[r0];
@@ -250,27 +250,27 @@ function buy_nine_entries:
 
 finalize buy_nine_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
-    add r1 0u64 into r2;
+    get.or_use total_entries[0u16] 0u16 into r1;
+    add r1 0u16 into r2;
     set r0 into entries[r2];
-    add r1 1u64 into r3;
+    add r1 1u16 into r3;
     set r0 into entries[r3];
-    add r1 2u64 into r4;
+    add r1 2u16 into r4;
     set r0 into entries[r4];
-    add r1 3u64 into r5;
+    add r1 3u16 into r5;
     set r0 into entries[r5];
-    add r1 4u64 into r6;
+    add r1 4u16 into r6;
     set r0 into entries[r6];
-    add r1 5u64 into r7;
+    add r1 5u16 into r7;
     set r0 into entries[r7];
-    add r1 6u64 into r8;
+    add r1 6u16 into r8;
     set r0 into entries[r8];
-    add r1 7u64 into r9;
+    add r1 7u16 into r9;
     set r0 into entries[r9];
-    add r1 8u64 into r10;
+    add r1 8u16 into r10;
     set r0 into entries[r10];
-    add r1 9u64 into r11;
-    set r11 into total_entries[0u64];
+    add r1 9u16 into r11;
+    set r11 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r12;
     add r12 9u16 into r13;
     set r13 into user_entries[r0];
@@ -284,29 +284,29 @@ function buy_ten_entries:
 
 finalize buy_ten_entries:
     input r0 as address.public;
-    get.or_use total_entries[0u64] 0u64 into r1;
-    add r1 0u64 into r2;
+    get.or_use total_entries[0u16] 0u16 into r1;
+    add r1 0u16 into r2;
     set r0 into entries[r2];
-    add r1 1u64 into r3;
+    add r1 1u16 into r3;
     set r0 into entries[r3];
-    add r1 2u64 into r4;
+    add r1 2u16 into r4;
     set r0 into entries[r4];
-    add r1 3u64 into r5;
+    add r1 3u16 into r5;
     set r0 into entries[r5];
-    add r1 4u64 into r6;
+    add r1 4u16 into r6;
     set r0 into entries[r6];
-    add r1 5u64 into r7;
+    add r1 5u16 into r7;
     set r0 into entries[r7];
-    add r1 6u64 into r8;
+    add r1 6u16 into r8;
     set r0 into entries[r8];
-    add r1 7u64 into r9;
+    add r1 7u16 into r9;
     set r0 into entries[r9];
-    add r1 8u64 into r10;
+    add r1 8u16 into r10;
     set r0 into entries[r10];
-    add r1 9u64 into r11;
+    add r1 9u16 into r11;
     set r0 into entries[r11];
-    add r1 10u64 into r12;
-    set r12 into total_entries[0u64];
+    add r1 10u16 into r12;
+    set r12 into total_entries[0u16];
     get.or_use user_entries[r0] 0u16 into r13;
     add r13 10u16 into r14;
     set r14 into user_entries[r0];
@@ -318,16 +318,16 @@ function draw_winner:
     output r0 as puzzle_raffle_testing2.aleo/draw_winner.future;
 
 finalize draw_winner:
-    get total_entries[0u64] into r0;
-    rand.chacha into r1 as u64;
+    get total_entries[0u16] into r0;
+    rand.chacha into r1 as u16;
     rem r1 r0 into r2;
     get entries[r2] into r3;
     get.or_use has_won[r3] false into r4;
     assert.eq r4 false;
-    get.or_use winner_count[0u64] 0u64 into r5;
+    get.or_use winner_count[0u16] 0u16 into r5;
     set true into has_won[r3];
-    add r5 1u64 into r6;
-    set r6 into winner_count[0u64];
+    add r5 1u16 into r6;
+    set r6 into winner_count[0u16];
     set r3 into winner[r5];
 
 function send_prize_to_winner:
