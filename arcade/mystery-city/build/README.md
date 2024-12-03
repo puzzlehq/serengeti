@@ -1,4 +1,4 @@
-# puzzle_spinner_v002.aleo
+# mystery_city_test_v001.aleo
 
 ## Build Guide
 
