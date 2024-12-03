@@ -4,11 +4,9 @@ record PuzzleArcadeTicket:
     owner as address.private;
     amount as u64.private;
 
-
 mapping registry:
-	key as address.public;
-	value as boolean.public;
-
+    key as address.public;
+    value as boolean.public;
 
 function add_program_to_registry:
     input r0 as address.private;
@@ -20,9 +18,6 @@ function add_program_to_registry:
 finalize add_program_to_registry:
     input r0 as address.public;
     set true into registry[r0];
-
-
-
 
 function mint:
     input r0 as address.public;
@@ -37,8 +32,6 @@ finalize mint:
     get.or_use registry[r0] false into r1;
     assert.eq r1 true;
 
-
-
 function spend:
     input r0 as PuzzleArcadeTicket.record;
     input r1 as u64.public;
@@ -47,7 +40,6 @@ function spend:
     sub r0.amount r1 into r3;
     cast r0.owner r3 into r4 as PuzzleArcadeTicket.record;
     output r4 as PuzzleArcadeTicket.record;
-
 
 function join:
     input r0 as PuzzleArcadeTicket.record;
@@ -59,7 +51,6 @@ function join:
     add r0.amount r1.amount into r4;
     cast self.signer r4 into r5 as PuzzleArcadeTicket.record;
     output r5 as PuzzleArcadeTicket.record;
-
 
 function join3:
     input r0 as PuzzleArcadeTicket.record;
@@ -75,7 +66,6 @@ function join3:
     add r6 r2.amount into r7;
     cast self.signer r7 into r8 as PuzzleArcadeTicket.record;
     output r8 as PuzzleArcadeTicket.record;
-
 
 function join4:
     input r0 as PuzzleArcadeTicket.record;
@@ -95,7 +85,6 @@ function join4:
     add r9 r3.amount into r10;
     cast self.signer r10 into r11 as PuzzleArcadeTicket.record;
     output r11 as PuzzleArcadeTicket.record;
-
 
 function join5:
     input r0 as PuzzleArcadeTicket.record;

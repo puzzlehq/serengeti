@@ -2,5 +2,5 @@
 name = "puzzle_arcade_ticket_v002.aleo"
 location = "local"
 path = "/Users/jonathan/Desktop/serengeti/arcade/raffle/../ticket"
-checksum = "0706f68248b772638cb4b8b6d05214ae4dd1c499159dde07aace7128957237c9"
+checksum = "62705078d06ab0ce2dfb7244b958735e1c8272e7be51db8adf80386df51a938c"
 dependencies = []
