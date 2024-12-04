@@ -1,20 +1,18 @@
 {
-  "program": "mystery_city_test_v001.aleo",
+  "program": "mystery_city_test_v002.aleo",
   "version": "0.0.0",
   "description": "",
   "license": "MIT",
   "dependencies": [
     {
-      "name": "puzzle_arcade_coin_v002.aleo",
-      "location": "local",
-      "network": null,
-      "path": "../coin"
+      "name": "puzzle_arcade_coin_v001.aleo",
+      "location": "network",
+      "network": "testnet"
     },
     {
-      "name": "puzzle_arcade_ticket_v002.aleo",
-      "location": "local",
-      "network": null,
-      "path": "../ticket"
+      "name": "puzzle_arcade_ticket_v001.aleo",
+      "location": "network",
+      "network": "testnet"
     }
   ]
 }

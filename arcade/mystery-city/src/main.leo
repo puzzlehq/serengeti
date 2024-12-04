@@ -1,7 +1,7 @@
-import puzzle_arcade_coin_v002.aleo;
-import puzzle_arcade_ticket_v002.aleo;
+import puzzle_arcade_coin_v001.aleo;
+import puzzle_arcade_ticket_v001.aleo;
 
-program mystery_city_test_v001.aleo {
+program mystery_city_test_v002.aleo {
   const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
   mapping used_nonces: field => bool;
 
@@ -11,10 +11,10 @@ program mystery_city_test_v001.aleo {
   }
 
   async transition submit_game(
-    coin: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
+    coin: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
     public result: Result,
     sig: signature,
-  ) -> (puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin, puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) {
+  ) -> (puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
     // verify signature to guarantee arcade operator's consent
     assert(sig.verify(OPERATOR, result));
 
@@ -38,9 +38,9 @@ program mystery_city_test_v001.aleo {
 
     assert(valid_tickets);
 
-    let spent_coin: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin = puzzle_arcade_coin_v002.aleo/spend (coin, 1000000u64);
+    let spent_coin: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin = puzzle_arcade_coin_v001.aleo/spend (coin, 1000000u64);
 
-    let (ticket, future): (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v002.aleo/mint (
+    let (ticket, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
       coin.owner,
       result.tickets
     );
