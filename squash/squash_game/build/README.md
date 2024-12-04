@@ -1,4 +1,4 @@
-# squash_testing_5.aleo
+# squash_testing_6.aleo
 
 ## Build Guide
 

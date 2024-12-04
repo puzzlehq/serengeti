@@ -1,7 +1,7 @@
 import timestamp_testing.aleo;
 import puzzle_arcade_ticket_v001.aleo;
 
-program squash_testing_5.aleo {
+program squash_testing_6.aleo {
   record Squash {
     owner: address,
     kg: u64,
