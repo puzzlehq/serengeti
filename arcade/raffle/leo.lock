@@ -1,6 +1,0 @@
-[[package]]
-name = "puzzle_arcade_ticket_v002.aleo"
-location = "local"
-path = "/Users/jonathan/Desktop/serengeti/arcade/raffle/../ticket"
-checksum = "0706f68248b772638cb4b8b6d05214ae4dd1c499159dde07aace7128957237c9"
-dependencies = []
