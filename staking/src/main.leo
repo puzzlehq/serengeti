@@ -240,16 +240,12 @@ program puzzle_staking_k1.aleo {
     f2.await();
 
     assert_eq(caller, ADMIN);
-    // make sure admin owns all the shares in the protocol
-    let current_shares: u64 = total_shares.get(0u8);
-    let total_admin_shares: u64 = delegator_shares.get(ADMIN);
-    assert_eq(current_shares, total_admin_shares);
 
     // make sure the protocol has fully unbonded
     let base: bond_state = bond_state {
-          validator: self.address,
-          microcredits: 0u64
-      };
+      validator: self.address,
+      microcredits: 0u64
+    };
     let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
     assert_eq(bonded, 0u64);
   }

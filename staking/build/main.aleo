@@ -213,12 +213,9 @@ finalize admin_withdraw:
     await r0;
     await r1;
     assert.eq r2 aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
-    get total_shares[0u8] into r3;
-    get delegator_shares[aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng] into r4;
-    assert.eq r3 r4;
-    cast puzzle_staking_k1.aleo 0u64 into r5 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_staking_k1.aleo] r5 into r6;
-    assert.eq r6.microcredits 0u64;
+    cast puzzle_staking_k1.aleo 0u64 into r3 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_staking_k1.aleo] r3 into r4;
+    assert.eq r4.microcredits 0u64;
 
 function withdraw_public:
     input r0 as u64.public;
