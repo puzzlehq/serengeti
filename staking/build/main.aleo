@@ -199,24 +199,6 @@ finalize bond_all:
     sub r3 r1 into r8;
     set r8 into pending_deposits[0u8];
 
-function admin_withdraw:
-    input r0 as u64.private;
-    call credits.aleo/unbond_public puzzle_staking_k1.aleo r0 into r1;
-    call credits.aleo/transfer_public aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng r0 into r2;
-    async admin_withdraw r1 r2 self.caller into r3;
-    output r3 as puzzle_staking_k1.aleo/admin_withdraw.future;
-
-finalize admin_withdraw:
-    input r0 as credits.aleo/unbond_public.future;
-    input r1 as credits.aleo/transfer_public.future;
-    input r2 as address.public;
-    await r0;
-    await r1;
-    assert.eq r2 aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
-    cast puzzle_staking_k1.aleo 0u64 into r3 as bond_state;
-    get.or_use credits.aleo/bonded[puzzle_staking_k1.aleo] r3 into r4;
-    assert.eq r4.microcredits 0u64;
-
 function withdraw_public:
     input r0 as u64.public;
     input r1 as u64.public;
@@ -364,6 +346,51 @@ finalize claim_withdrawal:
     sub r7 r2 into r9;
     set r9 into pending_withdrawal[1u8];
     remove withdrawals[r1];
+
+function forced_unbond_withdraw:
+    input r0 as u64.public;
+    input r1 as u64.public;
+    call credits.aleo/transfer_public self.caller r1 into r2;
+    async forced_unbond_withdraw r2 r0 r1 self.caller into r3;
+    output r3 as puzzle_staking_k1.aleo/forced_unbond_withdraw.future;
+
+finalize forced_unbond_withdraw:
+    input r0 as credits.aleo/transfer_public.future;
+    input r1 as u64.public;
+    input r2 as u64.public;
+    input r3 as address.public;
+    await r0;
+    contains withdrawals[r3] into r4;
+    assert.eq r4 false;
+    cast puzzle_staking_k1.aleo 0u64 into r5 as bond_state;
+    get.or_use credits.aleo/bonded[puzzle_staking_k1.aleo] r5 into r6;
+    assert.eq r6.microcredits 0u64;
+    get pending_deposits[0u8] into r7;
+    get pending_withdrawal[0u8] into r8;
+    assert.eq r7 0u64;
+    assert.eq r8 0u64;
+    get.or_use total_shares[0u8] 0u64 into r9;
+    get.or_use delegator_shares[r3] 0u64 into r10;
+    gte r10 r1 into r11;
+    assert.eq r11 true;
+    gte r9 r1 into r12;
+    assert.eq r12 true;
+    get total_balance[0u8] into r13;
+    cast r1 into r14 as u128;
+    cast r13 into r15 as u128;
+    mul r14 r15 into r16;
+    mul r16 1_000_000u128 into r17;
+    cast r9 into r18 as u128;
+    div r17 r18 into r19;
+    div r19 1_000_000u128 into r20;
+    cast r20 into r21 as u64;
+    assert.eq r2 r21;
+    sub r10 r1 into r22;
+    set r22 into delegator_shares[r3];
+    sub r9 r1 into r23;
+    set r23 into total_shares[0u8];
+    sub r13 r2 into r24;
+    set r24 into total_balance[0u8];
 
 function get_commission_test:
     input r0 as u128.private;

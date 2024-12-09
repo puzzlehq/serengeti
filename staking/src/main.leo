@@ -222,34 +222,6 @@ program puzzle_staking_k1.aleo {
   // ###### Initiate Withdraw Functions
   //
 
-  async transition admin_withdraw (amount: u64) -> Future {
-    let f1: Future = credits.aleo/unbond_public(self.address, amount);
-    let f2: Future = credits.aleo/transfer_public(ADMIN, amount);
-    return finalize_admin_withdraw(f1, f2, self.caller);
-  }
-
-  async function finalize_admin_withdraw
-  (
-    f1: Future,
-    f2: Future,
-    caller: address,
-  )
-  {
-
-    f1.await();
-    f2.await();
-
-    assert_eq(caller, ADMIN);
-
-    // make sure the protocol has fully unbonded
-    let base: bond_state = bond_state {
-      validator: self.address,
-      microcredits: 0u64
-    };
-    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
-    assert_eq(bonded, 0u64);
-  }
-
   async transition withdraw_public(
     public withdrawal_shares: u64,
     public total_withdrawal: u64
@@ -389,6 +361,60 @@ program puzzle_staking_k1.aleo {
 
     pending_withdrawal.set(1u8, claimable_amount - amount);
     withdrawals.remove(owner);
+  }
+
+
+  //
+  // ###### Forced Unbond Case
+  //
+
+  async transition forced_unbond_withdraw(
+    public withdrawal_shares: u64,
+    public amount: u64
+  ) -> Future {
+    let f1: Future = credits.aleo/transfer_public(self.caller, amount);
+    return finalize_forced_unbond_withdraw(f1, withdrawal_shares, amount, self.caller);
+  }
+
+  async function finalize_forced_unbond_withdraw(
+      f1: Future,
+      withdrawal_shares: u64,
+      amount: u64,
+      caller: address
+  ) {
+    f1.await();
+
+    // Verify no active withdrawal in progress
+    let currently_withdrawing: bool = withdrawals.contains(caller);
+    assert_eq(currently_withdrawing, false);
+
+    // Verify validator has force unbonded
+    let base: bond_state = bond_state {
+        validator: self.address,
+        microcredits: 0u64
+    };
+    let bonded: u64 = credits.aleo/bonded.get_or_use(self.address, base).microcredits;
+    assert_eq(bonded, 0u64);
+
+    let pending_deposits_amt: u64 = pending_deposits.get(0u8);
+    let pending_withdrawal_amount: u64 = pending_withdrawal.get(0u8);
+    assert_eq(pending_deposits_amt, 0u64);
+    assert_eq(pending_withdrawal_amount, 0u64);
+
+    let current_shares: u64 = total_shares.get_or_use(0u8, 0u64);
+    let user_shares: u64 = delegator_shares.get_or_use(caller, 0u64);
+    assert(user_shares >= withdrawal_shares);
+    assert(current_shares >= withdrawal_shares);
+
+    let current_balance: u64 = total_balance.get(0u8);
+    let withdrawal_calculation: u128 = (withdrawal_shares as u128 * current_balance as u128 * PRECISION_FACTOR) / current_shares as u128;
+    let expected_amount: u64 = (withdrawal_calculation / PRECISION_FACTOR) as u64;
+    assert_eq(amount, expected_amount);
+
+    // Update protocol state
+    delegator_shares.set(caller, user_shares - withdrawal_shares);
+    total_shares.set(0u8, current_shares - withdrawal_shares);
+    total_balance.set(0u8, current_balance - amount);
   }
 
   //
