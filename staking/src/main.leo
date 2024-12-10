@@ -204,6 +204,9 @@ program puzzle_staking_k1.aleo {
     pending_deposits.set(0u8, total_pending_deposits - amount);
   }
 
+
+  // bonds credits to the puzzle validator
+  // updates the pending deposits and the total balance of the contract
   async transition bond_all(public amount: u64) -> Future {
     let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, amount);
     return finalize_bond_all(f1, amount);
