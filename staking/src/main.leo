@@ -3,7 +3,7 @@ import credits.aleo;
 program puzzle_staking_k1.aleo {
   // Owner of the program
   const ADMIN: address = aleo1f7zquf7ax3u0gprx6vek9ww9hhz36kgwjkuujq3stxfqc8n9nq8qq4y8ng;
-  // todo - update this to be our validator
+  // todo - update this to be our mainnet validator before mainnet deployment
   const PUZZLE_VALIDATOR_ADDRESS: address = aleo1zdzzxfrhgzlhh89vqpf4384ewqs0g32wqzvdeltzlynq25hkju8s38953f;
   const SHARES_TO_MICROCREDITS: u64 = 1_000_000u64;
   const PRECISION_FACTOR: u128 = 1_000_000u128;
@@ -104,6 +104,8 @@ program puzzle_staking_k1.aleo {
     current_batch_height.set(0u8, 0u32);
   }
 
+  // initial deposit to kick off the protocol
+  // transfers 10k credits to the contract and bonds 10k credits to the puzzle validator
   async transition initial_deposit(
     public microcredits: u64,
   ) -> Future {
@@ -138,6 +140,8 @@ program puzzle_staking_k1.aleo {
   // ###### Deposit Functions
   //
 
+  // tranfers a user's credits to the program
+  // updates pending deposits, delegator shares, total shares mappings
   async transition deposit_public(
     public microcredits: u64
   ) -> Future {
@@ -174,6 +178,8 @@ program puzzle_staking_k1.aleo {
   // ###### Bonding Functions
   //
 
+  // bonds credits to the puzzle validator
+  // updates the pending deposits and the total balance of the contract
   async transition bond_deposits(public amount: u64) -> Future {
     let f1: Future = credits.aleo/bond_public(PUZZLE_VALIDATOR_ADDRESS, self.address, amount);
     return finalize_bond_deposits(f1, amount);
