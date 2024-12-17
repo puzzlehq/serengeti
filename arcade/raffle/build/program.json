@@ -2,13 +2,5 @@
     "program": "puzzle_giveaway_112724.aleo",
     "version": "0.0.0",
     "description": "",
-    "license": "MIT",
-    "dependencies": [
-      {
-        "name": "puzzle_arcade_ticket_v002.aleo",
-        "location": "local",
-        "network": null,
-        "path": "../ticket"
-      }
-    ]
+    "license": "MIT"
 }

@@ -2,6 +2,7 @@ import puzzle_arcade_ticket_v002.aleo;
 
 program puzzle_giveaway_112724.aleo {
     const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
+    const MAX_ENTRIES: u64 = 20_000u64;
 
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
@@ -69,6 +70,8 @@ program puzzle_giveaway_112724.aleo {
     async function add_one_entry (public participant: address) {
         // get current raffle count, if first entry, choose default of 0u64
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
+
         // add address to entry mapping
         Mapping::set(entries, current_raffle_count, participant);
         // increment raffle total entries by 1
@@ -87,6 +90,7 @@ program puzzle_giveaway_112724.aleo {
     }
     async function add_two_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
         
         for i: u64 in 0u64..2u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -107,6 +111,7 @@ program puzzle_giveaway_112724.aleo {
     }
     async function add_three_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
         
         for i: u64 in 0u64..3u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -127,6 +132,7 @@ program puzzle_giveaway_112724.aleo {
     }
     async function add_four_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
         
         for i: u64 in 0u64..4u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -147,6 +153,7 @@ program puzzle_giveaway_112724.aleo {
     }
     async function add_five_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
         
         for i: u64 in 0u64..5u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -167,6 +174,7 @@ program puzzle_giveaway_112724.aleo {
     }
     async function add_six_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
         
         for i: u64 in 0u64..6u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -187,6 +195,7 @@ program puzzle_giveaway_112724.aleo {
     }
     async function add_seven_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
         
         for i: u64 in 0u64..7u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -207,6 +216,7 @@ program puzzle_giveaway_112724.aleo {
     }
     async function add_eight_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
 
         for i: u64 in 0u64..8u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -227,6 +237,7 @@ program puzzle_giveaway_112724.aleo {
     }
     async function add_nine_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
 
         for i: u64 in 0u64..9u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -247,6 +258,7 @@ program puzzle_giveaway_112724.aleo {
     }
     async function add_ten_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
+        assert(current_raffle_count < MAX_ENTRIES);
         
         for i: u64 in 0u64..10u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
