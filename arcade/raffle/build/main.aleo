@@ -1,5 +1,5 @@
-import puzzle_arcade_ticket_v002.aleo;
-program puzzle_giveaway_112724.aleo;
+import puzzle_arcade_ticket_v001.aleo;
+program giveaway_entry_limits.aleo;
 
 struct PrivateKey:
     pk_pt1 as u128;
@@ -51,16 +51,16 @@ function mint_prize:
     output r5 as AuditPrize.record;
 
 function buy_one_entry:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 1000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 1000000u64 into r1;
     async buy_one_entry r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_one_entry.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_one_entry.future;
 
 finalize buy_one_entry:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     set r0 into entries[r1];
     add r1 1u64 into r3;
@@ -70,16 +70,16 @@ finalize buy_one_entry:
     set r5 into user_entries[r0];
 
 function buy_two_entries:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 2000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 2000000u64 into r1;
     async buy_two_entries r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_two_entries.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_two_entries.future;
 
 finalize buy_two_entries:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     add r1 0u64 into r3;
     set r0 into entries[r3];
@@ -92,16 +92,16 @@ finalize buy_two_entries:
     set r7 into user_entries[r0];
 
 function buy_three_entries:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 3000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 3000000u64 into r1;
     async buy_three_entries r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_three_entries.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_three_entries.future;
 
 finalize buy_three_entries:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     add r1 0u64 into r3;
     set r0 into entries[r3];
@@ -116,16 +116,16 @@ finalize buy_three_entries:
     set r8 into user_entries[r0];
 
 function buy_four_entries:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 4000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 4000000u64 into r1;
     async buy_four_entries r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_four_entries.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_four_entries.future;
 
 finalize buy_four_entries:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     add r1 0u64 into r3;
     set r0 into entries[r3];
@@ -142,16 +142,16 @@ finalize buy_four_entries:
     set r9 into user_entries[r0];
 
 function buy_five_entries:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 5000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 5000000u64 into r1;
     async buy_five_entries r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_five_entries.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_five_entries.future;
 
 finalize buy_five_entries:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     add r1 0u64 into r3;
     set r0 into entries[r3];
@@ -170,16 +170,16 @@ finalize buy_five_entries:
     set r10 into user_entries[r0];
 
 function buy_six_entries:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 6000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 6000000u64 into r1;
     async buy_six_entries r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_six_entries.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_six_entries.future;
 
 finalize buy_six_entries:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     add r1 0u64 into r3;
     set r0 into entries[r3];
@@ -200,16 +200,16 @@ finalize buy_six_entries:
     set r11 into user_entries[r0];
 
 function buy_seven_entries:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 7000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 7000000u64 into r1;
     async buy_seven_entries r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_seven_entries.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_seven_entries.future;
 
 finalize buy_seven_entries:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     add r1 0u64 into r3;
     set r0 into entries[r3];
@@ -232,16 +232,16 @@ finalize buy_seven_entries:
     set r12 into user_entries[r0];
 
 function buy_eight_entries:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 8000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 8000000u64 into r1;
     async buy_eight_entries r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_eight_entries.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_eight_entries.future;
 
 finalize buy_eight_entries:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     add r1 0u64 into r3;
     set r0 into entries[r3];
@@ -266,16 +266,16 @@ finalize buy_eight_entries:
     set r13 into user_entries[r0];
 
 function buy_nine_entries:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 9000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 9000000u64 into r1;
     async buy_nine_entries r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_nine_entries.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_nine_entries.future;
 
 finalize buy_nine_entries:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     add r1 0u64 into r3;
     set r0 into entries[r3];
@@ -302,16 +302,16 @@ finalize buy_nine_entries:
     set r14 into user_entries[r0];
 
 function buy_ten_entries:
-    input r0 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    call puzzle_arcade_ticket_v002.aleo/spend r0 10000000u64 into r1;
+    input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    call puzzle_arcade_ticket_v001.aleo/spend r0 10000000u64 into r1;
     async buy_ten_entries r0.owner into r2;
-    output r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r2 as puzzle_giveaway_112724.aleo/buy_ten_entries.future;
+    output r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r2 as giveaway_entry_limits.aleo/buy_ten_entries.future;
 
 finalize buy_ten_entries:
     input r0 as address.public;
     get.or_use total_entries[0u64] 0u64 into r1;
-    lt r1 20_000u64 into r2;
+    lt r1 250u64 into r2;
     assert.eq r2 true;
     add r1 0u64 into r3;
     set r0 into entries[r3];
@@ -343,7 +343,7 @@ function draw_winner:
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
     async draw_winner into r0;
-    output r0 as puzzle_giveaway_112724.aleo/draw_winner.future;
+    output r0 as giveaway_entry_limits.aleo/draw_winner.future;
 
 finalize draw_winner:
     get total_entries[0u64] into r0;
