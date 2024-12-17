@@ -1,4 +1,4 @@
-# puzzle_giveaway_112724.aleo
+# giveaway_entry_limits.aleo
 
 ## Build Guide
 
