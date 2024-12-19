@@ -1,6 +1,6 @@
-import puzzle_arcade_coin_v001.aleo;
-import puzzle_arcade_ticket_v001.aleo;
-program mystery_city_test_v002.aleo;
+import puzzle_arcade_coin_v002.aleo;
+import puzzle_arcade_ticket_v002.aleo;
+program mystery_city_v001.aleo;
 
 struct Result:
     nonce as field;
@@ -11,7 +11,7 @@ mapping used_nonces:
     value as boolean.public;
 
 function submit_game:
-    input r0 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
+    input r0 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
     input r1 as Result.public;
     input r2 as signature.private;
     sign.verify r2 aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l r1 into r3;
@@ -46,15 +46,15 @@ function submit_game:
     is.eq r1.tickets 15000000u64 into r31;
     or r30 r31 into r32;
     assert.eq r32 true;
-    call puzzle_arcade_coin_v001.aleo/spend r0 1000000u64 into r33;
-    call puzzle_arcade_ticket_v001.aleo/mint r0.owner r1.tickets into r34 r35;
+    call puzzle_arcade_coin_v002.aleo/spend r0 1000000u64 into r33;
+    call puzzle_arcade_ticket_v002.aleo/mint r0.owner r1.tickets into r34 r35;
     async submit_game r35 r1.nonce into r36;
-    output r33 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
-    output r34 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r36 as mystery_city_test_v002.aleo/submit_game.future;
+    output r33 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
+    output r34 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
+    output r36 as mystery_city_v001.aleo/submit_game.future;
 
 finalize submit_game:
-    input r0 as puzzle_arcade_ticket_v001.aleo/mint.future;
+    input r0 as puzzle_arcade_ticket_v002.aleo/mint.future;
     input r1 as field.public;
     get.or_use used_nonces[r1] false into r2;
     assert.eq r2 false;

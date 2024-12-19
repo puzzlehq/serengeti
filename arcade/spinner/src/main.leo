@@ -22,9 +22,6 @@ program puzzle_spinner_v002.aleo {
     // verify signature to guarantee arcade operator's consent
     assert(sig.verify(OPERATOR, result));
 
-    let estimated_distance = 
-
-
     // verify tickets is valid amount
     let valid_tickets: bool = result.tickets == 1000000u64 || result.tickets == 2000000u64 || result.tickets == 5000000u64 || result.tickets == 10000000u64;
     assert(valid_tickets);

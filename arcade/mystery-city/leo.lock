@@ -1,13 +1,13 @@
 [[package]]
-name = "puzzle_arcade_coin_v001.aleo"
-network = "testnet"
+name = "puzzle_arcade_coin_v002.aleo"
+network = "mainnet"
 location = "network"
-checksum = "f383e663b66c47342fd6330d438b48c1e7a73149755b5341f12847bdd1225d0c"
+checksum = "1d4706a514504a59469385726005f36a9c4cbb8b3b1ee004076d9322b6cc74d9"
 dependencies = []
 
 [[package]]
-name = "puzzle_arcade_ticket_v001.aleo"
-network = "testnet"
+name = "puzzle_arcade_ticket_v002.aleo"
+network = "mainnet"
 location = "network"
-checksum = "cdc6997cbeba912b2bd3e258b21bdc1576f60e05d8573d7e01788aee9163bcd7"
+checksum = "57a6dd0337f1036933fb846720ac51bf3987e0293ced5d7ffd53e083d54aa005"
 dependencies = []
