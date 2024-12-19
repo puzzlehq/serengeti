@@ -20,6 +20,7 @@ program giveaway_private.aleo {
     mapping winner_count: u64 => u64;
 
     struct Item {
+        item_type: u8,
         pt1: u128,
         pt2: u128,
         pt3: u128,
@@ -32,13 +33,14 @@ program giveaway_private.aleo {
         item: Item,
     }
 
-    transition mint_prize (pt1: u128, pt2: u128, pt3: u128, pt4: u128, pt5: u128) -> Prize {
+    transition mint_prize (item_type: u8, pt1: u128, pt2: u128, pt3: u128, pt4: u128, pt5: u128) -> Prize {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, OPERATOR);
 
         let prize: Prize = Prize {
             owner: OPERATOR,
             item: Item {
+                item_type: item_type,
                 pt1,
                 pt2,
                 pt3,
@@ -78,7 +80,7 @@ program giveaway_private.aleo {
     }
     async function add_two_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..2u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -98,7 +100,7 @@ program giveaway_private.aleo {
     }
     async function add_three_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..3u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -118,7 +120,7 @@ program giveaway_private.aleo {
     }
     async function add_four_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..4u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -138,7 +140,7 @@ program giveaway_private.aleo {
     }
     async function add_five_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..5u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -158,7 +160,7 @@ program giveaway_private.aleo {
     }
     async function add_six_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..6u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -178,7 +180,7 @@ program giveaway_private.aleo {
     }
     async function add_seven_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..7u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -238,7 +240,7 @@ program giveaway_private.aleo {
     }
     async function add_ten_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        
+
         for i: u64 in 0u64..10u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }

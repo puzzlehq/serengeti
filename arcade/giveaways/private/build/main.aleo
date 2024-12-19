@@ -2,6 +2,7 @@ import puzzle_arcade_ticket_testing.aleo;
 program giveaway_private.aleo;
 
 struct Item:
+    item_type as u8;
     pt1 as u128;
     pt2 as u128;
     pt3 as u128;
@@ -37,16 +38,17 @@ mapping winner_count:
     value as u64.public;
 
 function mint_prize:
-    input r0 as u128.private;
+    input r0 as u8.private;
     input r1 as u128.private;
     input r2 as u128.private;
     input r3 as u128.private;
     input r4 as u128.private;
+    input r5 as u128.private;
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
-    cast r0 r1 r2 r3 r4 into r5 as Item;
-    cast aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l r5 into r6 as Prize.record;
-    output r6 as Prize.record;
+    cast r0 r1 r2 r3 r4 r5 into r6 as Item;
+    cast aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l r6 into r7 as Prize.record;
+    output r7 as Prize.record;
 
 function buy_one_entry:
     input r0 as puzzle_arcade_ticket_testing.aleo/PuzzleArcadeTicket.record;

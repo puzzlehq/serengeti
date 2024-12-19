@@ -1,6 +1,6 @@
 [[package]]
 name = "puzzle_arcade_ticket_testing.aleo"
 location = "local"
-path = "/Users/lucas/code/puzzle/serengeti/arcade/giveaways/private/../../ticket"
+path = "/Users/asharma/code/medici/serengeti/arcade/giveaways/private/../../ticket"
 checksum = "6116e071bff1f3a38c7755c750ec9e543b08aada325eb83ea64c6c6dee4f5e51"
 dependencies = []
