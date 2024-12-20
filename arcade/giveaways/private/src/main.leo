@@ -19,8 +19,7 @@ program giveaway_private.aleo {
     // total number of winners
     mapping winner_count: u64 => u64;
 
-    struct Item {
-        item_type: u8,
+    struct Code {
         pt1: u128,
         pt2: u128,
         pt3: u128,
@@ -30,17 +29,18 @@ program giveaway_private.aleo {
 
     record Prize {
         owner: address,
-        item: Item,
+        id: u64,
+        code: Code
     }
 
-    transition mint_prize (item_type: u8, pt1: u128, pt2: u128, pt3: u128, pt4: u128, pt5: u128) -> Prize {
+    transition mint_prize (id: u64, pt1: u128, pt2: u128, pt3: u128, pt4: u128, pt5: u128) -> Prize {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, OPERATOR);
 
         let prize: Prize = Prize {
             owner: OPERATOR,
-            item: Item {
-                item_type: item_type,
+            id: id,
+            code: Code {
                 pt1,
                 pt2,
                 pt3,
@@ -288,7 +288,8 @@ program giveaway_private.aleo {
 
         let prize_to_winner: Prize = Prize {
             owner: winner_addr,
-            item: prize.item,
+            id: prize.id,
+            code: prize.code
         };
 
         return (prize_to_winner);
