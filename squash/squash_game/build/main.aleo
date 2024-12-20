@@ -1,17 +1,17 @@
 import timestamp_testing.aleo;
 import puzzle_arcade_ticket_v001.aleo;
-program squash_testing_6.aleo;
+program squash_testing_7.aleo;
 
 record Squash:
     owner as address.private;
     kg as u64.private;
     last_water as u64.private;
     level as u8.private;
-    squash_id as u32.private;
+    squash_name as u128.private;
 
 function mint:
     input r0 as address.private;
-    input r1 as u32.private;
+    input r1 as u128.private;
     input r2 as timestamp_testing.aleo/Timestamp.record;
     cast r0 1000000u64 r2.time 0u8 r1 into r3 as Squash.record;
     output r3 as Squash.record;
@@ -42,11 +42,11 @@ function water:
     ternary r18 0i64 r17 into r19;
     cast r19 into r20 as u64;
     add r20 1000000u64 into r21;
-    cast r0.owner r21 r2 r0.level r0.squash_id into r22 as Squash.record;
+    cast r0.owner r21 r2 r0.level r0.squash_name into r22 as Squash.record;
     not r8 into r23;
     lt r0.last_water r1.time into r24;
     add r0.kg 1000000u64 into r25;
-    cast r0.owner r25 r2 r0.level r0.squash_id into r26 as Squash.record;
+    cast r0.owner r25 r2 r0.level r0.squash_name into r26 as Squash.record;
     and r23 r24 into r27;
     not r24 into r28;
     and r23 r28 into r29;
@@ -59,13 +59,13 @@ function water:
     ternary r27 r26.kg r0.kg into r35;
     ternary r27 r26.last_water r0.last_water into r36;
     ternary r27 r26.level r0.level into r37;
-    ternary r27 r26.squash_id r0.squash_id into r38;
+    ternary r27 r26.squash_name r0.squash_name into r38;
     cast r34 r35 r36 r37 r38 into r39 as Squash.record;
     ternary r8 r22.owner r39.owner into r40;
     ternary r8 r22.kg r39.kg into r41;
     ternary r8 r22.last_water r39.last_water into r42;
     ternary r8 r22.level r39.level into r43;
-    ternary r8 r22.squash_id r39.squash_id into r44;
+    ternary r8 r22.squash_name r39.squash_name into r44;
     cast r40 r41 r42 r43 r44 into r45 as Squash.record;
     output r45 as Squash.record;
 
@@ -100,11 +100,11 @@ function water_and_level_up:
     cast r19 into r21 as u64;
     mul r21 10000000u64 into r22;
     call puzzle_arcade_ticket_v001.aleo/mint r0.owner r22 into r23 r24;
-    cast r0.owner r17 r2 r19 r0.squash_id into r25 as Squash.record;
+    cast r0.owner r17 r2 r19 r0.squash_name into r25 as Squash.record;
     async water_and_level_up r24 into r26;
     output r25 as Squash.record;
     output r23 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r26 as squash_testing_6.aleo/water_and_level_up.future;
+    output r26 as squash_testing_7.aleo/water_and_level_up.future;
 
 finalize water_and_level_up:
     input r0 as puzzle_arcade_ticket_v001.aleo/mint.future;
