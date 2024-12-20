@@ -1,4 +1,4 @@
-# squash_time_oracle.aleo
+# squash_v001.aleo
 
 ## Build Guide
 

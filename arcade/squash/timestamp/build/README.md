@@ -1,4 +1,4 @@
-# squash_testing_6.aleo
+# squash_timestamp.aleo
 
 ## Build Guide
 
