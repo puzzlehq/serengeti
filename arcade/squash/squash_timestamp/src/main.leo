@@ -1,5 +1,5 @@
-program squash_time_oracle.aleo {
-  const OPERATOR: address = aleo18xacl585anaqc06320r3yw8yjx9u3278l7vlrjj7nkpznz667gxq3kr2ev;
+program squash_timestamp.aleo {
+  const OPERATOR: address = aleo12e0yyyqw0lfff8nufdss94k5hml9d9jl45rlfwu5l3e73wpu9s8sdznsev;
 
   record Timestamp {
     owner: address,

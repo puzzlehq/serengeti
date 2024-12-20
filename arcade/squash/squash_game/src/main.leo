@@ -1,7 +1,7 @@
-import timestamp_testing.aleo;
-import puzzle_arcade_ticket_v001.aleo;
+import squash_timestamp.aleo;
+import puzzle_arcade_ticket_v002.aleo;
 
-program squash_testing_6.aleo {
+program squash_v001.aleo {
   record Squash {
     owner: address,
     kg: u64,
@@ -11,7 +11,7 @@ program squash_testing_6.aleo {
   }
 
   // fee: 0.001505
-  transition mint (owner: address, squash_id: u32, timestamp: timestamp_testing.aleo/Timestamp) -> Squash {
+  transition mint (owner: address, squash_id: u32, timestamp: squash_timestamp.aleo/Timestamp) -> Squash {
     return Squash {
       owner,
       kg: 1000000u64,
@@ -24,7 +24,7 @@ program squash_testing_6.aleo {
   // fee: 0.002049
   transition water (
     squash: Squash,
-    timestamp: timestamp_testing.aleo/Timestamp,
+    timestamp: squash_timestamp.aleo/Timestamp,
     public now: u64,
     public delta: u64
   ) -> Squash {
@@ -69,10 +69,10 @@ program squash_testing_6.aleo {
   // only call this if the watering should level the squash up!
   async transition water_and_level_up(
     squash: Squash,
-    timestamp: timestamp_testing.aleo/Timestamp,
+    timestamp: squash_timestamp.aleo/Timestamp,
     public now: u64,
     public delta: u64
-  ) -> (Squash, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
+  ) -> (Squash, puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) {
     assert(now >= timestamp.time);
     assert(now >= squash.last_water);
     assert(timestamp.time >= squash.last_water);
@@ -97,7 +97,7 @@ program squash_testing_6.aleo {
     assert(new_level > squash.level);
 
     // mint the PART
-    let (tickets, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
+    let (tickets, future): (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v002.aleo/mint (
       squash.owner,
       (new_level as u64) * 10000000u64
     );
