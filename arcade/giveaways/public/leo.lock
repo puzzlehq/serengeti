@@ -1,0 +1,13 @@
+[[package]]
+name = "puzzle_arcade_ticket_testing.aleo"
+location = "local"
+path = "/Users/asharma/code/medici/serengeti/arcade/aleo_raffle/../ticket"
+checksum = "6116e071bff1f3a38c7755c750ec9e543b08aada325eb83ea64c6c6dee4f5e51"
+dependencies = []
+
+[[package]]
+name = "credits.aleo"
+network = "testnet"
+location = "network"
+checksum = "e185a49fba7f5e477c3fedf8968be9912ae7d8db34531c246041e899175e4d33"
+dependencies = []

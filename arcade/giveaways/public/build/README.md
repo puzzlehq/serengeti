@@ -1,4 +1,4 @@
-# puzzle_arcade_ticket_testing.aleo
+# puzzle_raffle_testing2.aleo
 
 ## Build Guide
 
