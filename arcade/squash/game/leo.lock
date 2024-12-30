@@ -1,0 +1,13 @@
+[[package]]
+name = "timestamp_testing.aleo"
+network = "testnet"
+location = "network"
+checksum = "94fc5f659e953816b648a9cce8746e65b91adab582934febd072ba0884a5d935"
+dependencies = []
+
+[[package]]
+name = "puzzle_arcade_ticket_v001.aleo"
+network = "testnet"
+location = "network"
+checksum = "cdc6997cbeba912b2bd3e258b21bdc1576f60e05d8573d7e01788aee9163bcd7"
+dependencies = []

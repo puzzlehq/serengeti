@@ -1,0 +1,18 @@
+{
+  "program": "mystery_city_v001.aleo",
+  "version": "0.0.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "puzzle_arcade_coin_v002.aleo",
+      "location": "network",
+      "network": "mainnet"
+    },
+    {
+      "name": "puzzle_arcade_ticket_v002.aleo",
+      "location": "network",
+      "network": "mainnet"
+    }
+  ]
+}
