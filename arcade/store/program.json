@@ -3,5 +3,12 @@
   "version": "0.1.0",
   "description": "",
   "license": "MIT",
-  "dependencies": null
+  "dependencies": [
+    {
+      "name": "puzzle_arcade_ticket_v002.aleo",
+      "location": "network",
+      "network": "testnet",
+      "path": null
+    }
+  ]
 }

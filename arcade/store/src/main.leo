@@ -1,4 +1,5 @@
-// The 'store' program.
+import puzzle_arcade_ticket_v002.aleo;
+
 program puzzle_arcade_store.aleo {
   const STORE_OPERATOR: address = aleo14y7ahmrzka0wphss6p5wtvs0s08u4e00azr8ua6wxr3h60vlgyyqw7mxtd;
   struct Code {
@@ -19,9 +20,18 @@ program puzzle_arcade_store.aleo {
     return Product { owner: STORE_OPERATOR, id, code };
   }
 
-  transition purchase(id: u64) {
-    // what exactly happens here?
-    // do we set some mappings? just do everything offchain?
+  transition purchase(
+    id: u64,
+    ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
+    buyer: address,
+    product: Product
+  ) -> (Product)
+  {
+    return Product {
+      owner: buyer,
+      id: product.id,
+      code: product.code
+    };
   }
 
   transition fulfill(buyer: address, product: Product) -> Product {
