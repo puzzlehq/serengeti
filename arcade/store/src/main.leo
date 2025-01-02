@@ -24,14 +24,17 @@ program puzzle_arcade_store.aleo {
     id: u64,
     ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
     buyer: address,
-    product: Product
-  ) -> (Product)
+    product: Product,
+    amt: u64
+  ) -> (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Product)
   {
-    return Product {
+    let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, amt);
+    let output_product: Product = Product {
       owner: buyer,
       id: product.id,
-      code: product.code
+      code: product.code,
     };
+    return (spent_ticket, output_product);
   }
 
   transition fulfill(buyer: address, product: Product) -> Product {
