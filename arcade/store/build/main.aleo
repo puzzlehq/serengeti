@@ -22,13 +22,9 @@ function mint:
 function purchase:
     input r0 as u64.private;
     input r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    input r2 as address.private;
-    input r3 as Product.record;
-    input r4 as u64.private;
-    call puzzle_arcade_ticket_v002.aleo/spend r1 r4 into r5;
-    cast r2 r3.id r3.code into r6 as Product.record;
-    output r5 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r6 as Product.record;
+    input r2 as u64.private;
+    call puzzle_arcade_ticket_v002.aleo/spend r1 r2 into r3;
+    output r3 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
 
 function fulfill:
     input r0 as address.private;
