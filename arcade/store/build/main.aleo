@@ -29,5 +29,6 @@ function purchase:
 function fulfill:
     input r0 as address.private;
     input r1 as Product.record;
+    assert.eq r1.owner aleo14y7ahmrzka0wphss6p5wtvs0s08u4e00azr8ua6wxr3h60vlgyyqw7mxtd;
     cast r0 r1.id r1.code into r2 as Product.record;
     output r2 as Product.record;

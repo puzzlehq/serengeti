@@ -32,6 +32,8 @@ program puzzle_arcade_store.aleo {
   }
 
   transition fulfill(buyer: address, product: Product) -> Product {
+    // assert the product is owned by the store operator to prevent a secondary market
+    assert_eq(product.owner, STORE_OPERATOR);
     // transfer the product to the purchaser
     return Product {
       owner: buyer,
