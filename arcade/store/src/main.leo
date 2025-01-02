@@ -26,12 +26,13 @@ program puzzle_arcade_store.aleo {
     amt: u64, // amount of PART to burn
   ) -> (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket)
   {
-    // burn user's part
+    // burn purchaser's part
     let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, amt);
     return (spent_ticket);
   }
 
   transition fulfill(buyer: address, product: Product) -> Product {
+    // transfer the product to the purchaser
     return Product {
       owner: buyer,
       id: product.id,
