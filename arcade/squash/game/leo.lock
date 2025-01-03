@@ -1,0 +1,13 @@
+[[package]]
+name = "squash_timestamp.aleo"
+network = "mainnet"
+location = "network"
+checksum = "5a5cc1dc34c562d2c8ba870756d73acc86c6719cfbb2f72d37794f4a86f2301e"
+dependencies = []
+
+[[package]]
+name = "puzzle_arcade_ticket_v002.aleo"
+network = "mainnet"
+location = "network"
+checksum = "57a6dd0337f1036933fb846720ac51bf3987e0293ced5d7ffd53e083d54aa005"
+dependencies = []

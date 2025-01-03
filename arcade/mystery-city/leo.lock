@@ -1,0 +1,13 @@
+[[package]]
+name = "puzzle_arcade_coin_v002.aleo"
+network = "mainnet"
+location = "network"
+checksum = "1d4706a514504a59469385726005f36a9c4cbb8b3b1ee004076d9322b6cc74d9"
+dependencies = []
+
+[[package]]
+name = "puzzle_arcade_ticket_v002.aleo"
+network = "mainnet"
+location = "network"
+checksum = "57a6dd0337f1036933fb846720ac51bf3987e0293ced5d7ffd53e083d54aa005"
+dependencies = []
