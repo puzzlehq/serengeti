@@ -70,7 +70,7 @@ program giveaway_731_3.aleo {
     async function add_one_entry (public participant: address) {
         // get current raffle count, if first entry, choose default of 0u64
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_coun + 1u64 < MAX_ENTRIES);
 
         // add address to entry mapping
         Mapping::set(entries, current_raffle_count, participant);
@@ -90,7 +90,7 @@ program giveaway_731_3.aleo {
     }
     async function add_two_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_count + 2u64 < MAX_ENTRIES);
         
         for i: u64 in 0u64..2u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -111,7 +111,7 @@ program giveaway_731_3.aleo {
     }
     async function add_three_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_count + 3u64 < MAX_ENTRIES);
         
         for i: u64 in 0u64..3u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -132,7 +132,7 @@ program giveaway_731_3.aleo {
     }
     async function add_four_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_count + 4u64 < MAX_ENTRIES);
         
         for i: u64 in 0u64..4u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -153,7 +153,7 @@ program giveaway_731_3.aleo {
     }
     async function add_five_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_count + 5u64 < MAX_ENTRIES);
         
         for i: u64 in 0u64..5u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -174,7 +174,7 @@ program giveaway_731_3.aleo {
     }
     async function add_six_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_count + 6u64 < MAX_ENTRIES);
         
         for i: u64 in 0u64..6u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -195,7 +195,7 @@ program giveaway_731_3.aleo {
     }
     async function add_seven_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_count + 7u64 < MAX_ENTRIES);
         
         for i: u64 in 0u64..7u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -216,7 +216,7 @@ program giveaway_731_3.aleo {
     }
     async function add_eight_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_count + 8u64 < MAX_ENTRIES);
 
         for i: u64 in 0u64..8u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -237,7 +237,7 @@ program giveaway_731_3.aleo {
     }
     async function add_nine_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_count + 9u64 < MAX_ENTRIES);
 
         for i: u64 in 0u64..9u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
@@ -258,7 +258,7 @@ program giveaway_731_3.aleo {
     }
     async function add_ten_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_count < MAX_ENTRIES);
+        assert(current_raffle_count + 10u64 < MAX_ENTRIES);
         
         for i: u64 in 0u64..10u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
