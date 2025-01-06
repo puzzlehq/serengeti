@@ -5,10 +5,10 @@
     "license": "MIT",
     "dependencies": [
       {
-        "name": "puzzle_arcade_ticket_testing.aleo",
-        "location": "local",
-        "network": null,
-        "path": "../../ticket"
+        "name": "puzzle_arcade_ticket_v001.aleo",
+        "location": "network",
+        "network": "testnet",
+        "path": null
       }
     ]
 }

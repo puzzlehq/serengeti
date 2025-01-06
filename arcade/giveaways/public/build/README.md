@@ -1,4 +1,4 @@
-# puzzle_raffle_testing2.aleo
+# giveaway_public.aleo
 
 ## Build Guide
 
