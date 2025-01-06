@@ -1,6 +1,6 @@
 import puzzle_arcade_ticket_v001.aleo;
 
-program giveaway_731_3.aleo {
+program giveaway.aleo {
     const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
     const MAX_ENTRIES: u64 = 50u64;
 
@@ -70,7 +70,7 @@ program giveaway_731_3.aleo {
     async function add_one_entry (public participant: address) {
         // get current raffle count, if first entry, choose default of 0u64
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
-        assert(current_raffle_coun + 1u64 < MAX_ENTRIES);
+        assert(current_raffle_count + 1u64 < MAX_ENTRIES);
 
         // add address to entry mapping
         Mapping::set(entries, current_raffle_count, participant);

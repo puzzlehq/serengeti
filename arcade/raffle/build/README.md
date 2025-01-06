@@ -1,4 +1,4 @@
-# giveaway_731_3.aleo
+# giveaway.aleo
 
 ## Build Guide
 
