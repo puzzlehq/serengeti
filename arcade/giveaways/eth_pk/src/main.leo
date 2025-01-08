@@ -1,8 +1,8 @@
 import puzzle_arcade_ticket_v001.aleo;
 
-program giveaway_private.aleo {
+program puzzle_giveaway_010825.aleo {
     const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
-    const MAX_ENTRIES: u64 = 50u64;
+    const MAX_ENTRIES: u64 = 25000u64;
 
     // used for storing the raffle entries (multiple entries per address)
     //   i.e. 0 -> aleo1...asdf, 1 -> aleo1...ghjk
