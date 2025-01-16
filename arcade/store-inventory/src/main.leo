@@ -1,5 +1,5 @@
-program puzzle_arcade_store_inventory.aleo {
-  const STORE_OPERATOR: address = aleo14y7ahmrzka0wphss6p5wtvs0s08u4e00azr8ua6wxr3h60vlgyyqw7mxtd;
+program par_store_inventory_v1.aleo {
+  const OPERATOR: address = aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
 
   record Product {
     owner: address,
@@ -17,12 +17,13 @@ program puzzle_arcade_store_inventory.aleo {
   }
 
   transition mint(id: u64, code: Code, price: u64) -> Product {
-    return Product { owner: STORE_OPERATOR, id, code, price };
+    assert_eq(self.caller, OPERATOR);
+    return Product { owner: OPERATOR, id, code, price };
   }
 
   transition fulfill(buyer: address, product: Product) -> Product {
     // assert the product is owned by the store operator to prevent a secondary market
-    assert_eq(product.owner, STORE_OPERATOR);
+    assert_eq(product.owner, OPERATOR);
     // transfer the product to the purchaser
     return Product {
       owner: buyer,

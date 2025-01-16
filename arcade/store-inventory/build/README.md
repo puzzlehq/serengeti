@@ -1,4 +1,4 @@
-# puzzle_arcade_store_inventory.aleo
+# par_store_inventory_v1.aleo
 
 ## Build Guide
 

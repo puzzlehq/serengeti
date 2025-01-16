@@ -1,13 +1,13 @@
 [[package]]
-name = "puzzle_arcade_ticket_v002.aleo"
+name = "puzzle_arcade_ticket_v001.aleo"
 network = "testnet"
 location = "network"
-checksum = "57a6dd0337f1036933fb846720ac51bf3987e0293ced5d7ffd53e083d54aa005"
+checksum = "cdc6997cbeba912b2bd3e258b21bdc1576f60e05d8573d7e01788aee9163bcd7"
 dependencies = []
 
 [[package]]
-name = "puzzle_arcade_store_inventory.aleo"
-location = "local"
-path = "/Users/asharma/code/medici/serengeti/arcade/store/../store-inventory"
-checksum = "e2c9886c761a88b60379be4696b2173d1196328ef80ef9cff632760e4e428d49"
+name = "par_store_inventory_v1.aleo"
+network = "testnet"
+location = "network"
+checksum = "44bf6e876c5804686645807d1d4a350fd6c8e837a008829e2b4437eaaa480736"
 dependencies = []
