@@ -20,6 +20,15 @@ program puzzle_arcade_store.aleo {
     code: Code
   }
 
+  async transition add_product_to_price_mapping (id: u64, price: u64) -> Future {
+    assert_eq(self.caller, STORE_OPERATOR);
+    return finalize_add_product(id, price);
+  }
+
+  async function finalize_add_product(id: u64, price: u64) {
+    Mapping::set(prices, id, price);
+  }
+
   transition mint(id: u64, code: Code) -> Product {
     return Product { owner: STORE_OPERATOR, id, code };
   }

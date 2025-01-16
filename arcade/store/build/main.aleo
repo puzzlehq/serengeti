@@ -23,6 +23,18 @@ function mint:
     cast aleo14y7ahmrzka0wphss6p5wtvs0s08u4e00azr8ua6wxr3h60vlgyyqw7mxtd r0 r1 into r2 as Product.record;
     output r2 as Product.record;
 
+function add_product_to_price_mapping:
+    input r0 as u64.private;
+    input r1 as u64.private;
+    assert.eq self.caller aleo14y7ahmrzka0wphss6p5wtvs0s08u4e00azr8ua6wxr3h60vlgyyqw7mxtd;
+    async add_product_to_price_mapping r0 r1 into r2;
+    output r2 as puzzle_arcade_store.aleo/add_product_to_price_mapping.future;
+
+finalize add_product_to_price_mapping:
+    input r0 as u64.public;
+    input r1 as u64.public;
+    set r1 into prices[r0];
+
 function purchase:
     input r0 as u64.private;
     input r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
