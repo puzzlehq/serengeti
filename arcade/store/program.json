@@ -9,6 +9,12 @@
       "location": "network",
       "network": "testnet",
       "path": null
+    },
+    {
+      "name": "puzzle_arcade_store_inventory.aleo",
+      "location": "local",
+      "network": null,
+      "path": "../store-inventory"
     }
   ]
 }

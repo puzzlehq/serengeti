@@ -4,3 +4,10 @@ network = "testnet"
 location = "network"
 checksum = "57a6dd0337f1036933fb846720ac51bf3987e0293ced5d7ffd53e083d54aa005"
 dependencies = []
+
+[[package]]
+name = "puzzle_arcade_store_inventory.aleo"
+location = "local"
+path = "/Users/asharma/code/medici/serengeti/arcade/store/../store-inventory"
+checksum = "e2c9886c761a88b60379be4696b2173d1196328ef80ef9cff632760e4e428d49"
+dependencies = []
