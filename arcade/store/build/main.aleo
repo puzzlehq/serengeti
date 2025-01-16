@@ -13,6 +13,10 @@ record Product:
     id as u64.private;
     code as Code.private;
 
+mapping prices:
+    key as u64.public;
+    value as u64.public;
+
 function mint:
     input r0 as u64.private;
     input r1 as Code.private;
@@ -24,7 +28,15 @@ function purchase:
     input r1 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
     input r2 as u64.private;
     call puzzle_arcade_ticket_v002.aleo/spend r1 r2 into r3;
+    async purchase r0 r2 into r4;
     output r3 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
+    output r4 as puzzle_arcade_store.aleo/purchase.future;
+
+finalize purchase:
+    input r0 as u64.public;
+    input r1 as u64.public;
+    get prices[r0] into r2;
+    assert.eq r1 r2;
 
 function fulfill:
     input r0 as address.private;

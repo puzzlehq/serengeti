@@ -2,6 +2,10 @@ import puzzle_arcade_ticket_v002.aleo;
 
 program puzzle_arcade_store.aleo {
   const STORE_OPERATOR: address = aleo14y7ahmrzka0wphss6p5wtvs0s08u4e00azr8ua6wxr3h60vlgyyqw7mxtd;
+
+  // mapping of product ids to prices ex: {1u64: 2u64}
+  mapping prices: u64 => u64;
+
   struct Code {
     pt1: u128,
     pt2: u128,
@@ -20,15 +24,25 @@ program puzzle_arcade_store.aleo {
     return Product { owner: STORE_OPERATOR, id, code };
   }
 
-  transition purchase(
+  async transition purchase(
     id: u64,
     ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket,
     amt: u64, // amount of PART to burn
-  ) -> (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket)
+  ) -> (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future)
   {
+    // todo: how do we validate that the user is paying the correct amount? gated by frontend?
     // burn purchaser's part
-    let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend (ticket, amt);
-    return (spent_ticket);
+    let spent_ticket: puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket = puzzle_arcade_ticket_v002.aleo/spend(ticket, amt);
+    return (spent_ticket, finalize_purchase(id, amt));
+  }
+
+  async function finalize_purchase
+  (
+    id: u64,
+    amt: u64,
+  ) {
+    let price: u64 = Mapping::get(prices, id);
+    assert_eq(amt, price);
   }
 
   transition fulfill(buyer: address, product: Product) -> Product {
