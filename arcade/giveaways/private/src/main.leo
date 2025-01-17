@@ -1,4 +1,5 @@
 import puzzle_arcade_ticket_v001.aleo;
+import par_store_inventory_v1.aleo;
 
 program giveaway_private.aleo {
     const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
@@ -20,36 +21,10 @@ program giveaway_private.aleo {
     // total number of winners
     mapping winner_count: u64 => u64;
 
-    struct Code {
-        pt1: u128,
-        pt2: u128,
-        pt3: u128,
-        pt4: u128,
-        pt5: u128
-    }
+    transition mint_prize (id: u64, code: Code, price: u64) -> par_store_inventory_v1.aleo/Product {
+        assert_eq(self.signer, OPERATOR); // todo: needs to be store operator
 
-    record Prize {
-        owner: address,
-        id: u8,
-        code: Code
-    }
-
-    transition mint_prize (id: u8, pt1: u128, pt2: u128, pt3: u128, pt4: u128, pt5: u128) -> Prize {
-        assert_eq(self.signer, OPERATOR);
-
-        let prize: Prize = Prize {
-            owner: OPERATOR,
-            id,
-            code: Code {
-                pt1,
-                pt2,
-                pt3,
-                pt4,
-                pt5
-            },
-        };
-
-        return (prize);
+        return par_store_inventory_v1.aleo/mint(id, code, price);
     }
 
     async transition buy_one_entry (ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket) -> (
@@ -292,16 +267,10 @@ program giveaway_private.aleo {
         Mapping::set(winner, current_winner_count, winner_address);
     }
 
-    transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> Prize {
+    transition send_prize_to_winner (public winner_addr: address, public prize: par_store_inventory_v1.aleo/Product) -> par_store_inventory_v1.aleo/Product {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, OPERATOR);
+        assert_eq(self.caller, OPERATOR);  // todo: needs to be store operator
 
-        let prize_to_winner: Prize = Prize {
-            owner: winner_addr,
-            id: prize.id,
-            code: prize.code
-        };
-
-        return (prize_to_winner);
+        return par_store_inventory_v1.aleo/fulfill(winner_addr, prize);
     }
 }

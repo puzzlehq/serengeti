@@ -1,4 +1,5 @@
 import puzzle_arcade_ticket_v001.aleo;
+import par_store_inventory_v1.aleo;
 program giveaway_private.aleo;
 
 struct Code:
@@ -7,11 +8,6 @@ struct Code:
     pt3 as u128;
     pt4 as u128;
     pt5 as u128;
-
-record Prize:
-    owner as address.private;
-    id as u8.private;
-    code as Code.private;
 
 mapping entries:
     key as u64.public;
@@ -38,16 +34,12 @@ mapping winner_count:
     value as u64.public;
 
 function mint_prize:
-    input r0 as u8.private;
-    input r1 as u128.private;
-    input r2 as u128.private;
-    input r3 as u128.private;
-    input r4 as u128.private;
-    input r5 as u128.private;
+    input r0 as u64.private;
+    input r1 as Code.private;
+    input r2 as u64.private;
     assert.eq self.signer aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
-    cast r1 r2 r3 r4 r5 into r6 as Code;
-    cast aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l r0 r6 into r7 as Prize.record;
-    output r7 as Prize.record;
+    call par_store_inventory_v1.aleo/mint r0 r1 r2 into r3;
+    output r3 as par_store_inventory_v1.aleo/Product.record;
 
 function buy_one_entry:
     input r0 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
@@ -369,8 +361,8 @@ finalize draw_winner:
 
 function send_prize_to_winner:
     input r0 as address.public;
-    input r1 as Prize.record;
+    input r1 as par_store_inventory_v1.aleo/Product.record;
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
-    cast r0 r1.id r1.code into r2 as Prize.record;
-    output r2 as Prize.record;
+    call par_store_inventory_v1.aleo/fulfill r0 r1 into r2;
+    output r2 as par_store_inventory_v1.aleo/Product.record;
