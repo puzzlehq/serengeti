@@ -6,8 +6,8 @@ checksum = "cdc6997cbeba912b2bd3e258b21bdc1576f60e05d8573d7e01788aee9163bcd7"
 dependencies = []
 
 [[package]]
-name = "par_store_inventory_v1.aleo"
+name = "par_store_inventory_v3.aleo"
 network = "testnet"
 location = "network"
-checksum = "44bf6e876c5804686645807d1d4a350fd6c8e837a008829e2b4437eaaa480736"
+checksum = "1b30b17b37401d82e4469ec1b8f31f2be5074bdc92fb2d8b4f58e64b4bd04439"
 dependencies = []

@@ -1,4 +1,4 @@
-# par_store_inventory_v1.aleo
+# par_store_inventory_v3.aleo
 
 ## Build Guide
 

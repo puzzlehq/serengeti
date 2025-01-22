@@ -1,4 +1,4 @@
-program par_store_inventory_v1.aleo;
+program par_store_inventory_v3.aleo;
 
 struct Code:
     pt1 as u128;
@@ -9,12 +9,12 @@ struct Code:
 
 record Product:
     owner as address.private;
-    id as u64.private;
+    id as u128.private;
     code as Code.private;
     price as u64.private;
 
 function mint:
-    input r0 as u64.private;
+    input r0 as u128.private;
     input r1 as Code.private;
     input r2 as u64.private;
     assert.eq self.caller aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;

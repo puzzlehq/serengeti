@@ -1,9 +1,9 @@
-program par_store_inventory_v1.aleo {
+program par_store_inventory_v3.aleo {
   const OPERATOR: address = aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
 
   record Product {
     owner: address,
-    id: u64,
+    id: u128,
     code: Code,
     price: u64
   }
@@ -16,7 +16,7 @@ program par_store_inventory_v1.aleo {
     pt5: u128
   }
 
-  transition mint(id: u64, code: Code, price: u64) -> Product {
+  transition mint(id: u128, code: Code, price: u64) -> Product {
     assert_eq(self.caller, OPERATOR);
     return Product { owner: OPERATOR, id, code, price };
   }
