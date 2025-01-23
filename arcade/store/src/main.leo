@@ -13,304 +13,98 @@ program par_store_v4.aleo {
 
   transition two_part_purchase(
     id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, product.price);
 
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
+    return puzzle_arcade_ticket_v001.aleo/spend(ticket2, product.price);
   }
 
   transition three_part_purchase(
     id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, product.price);
+    return puzzle_arcade_ticket_v001.aleo/spend(ticket3, product.price);
   }
 
   transition four_part_purchase(
     id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, product.price);
+    return puzzle_arcade_ticket_v001.aleo/spend(ticket4, product.price);
   }
 
   transition five_part_purchase(
     id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket4, product.price);
+    return puzzle_arcade_ticket_v001.aleo/spend(ticket5, product.price);
   }
 
   transition six_part_purchase(
     id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_six: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket6: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_six, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket4, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket5, product.price);
+    return puzzle_arcade_ticket_v001.aleo/spend(ticket6, product.price);
   }
 
   transition seven_part_purchase(
     id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_six: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_seven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket6: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket7: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_six, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_seven, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket4, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket5, product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket6, product.price);
+    return puzzle_arcade_ticket_v001.aleo/spend(ticket7, product.price);
   }
-
-  transition eight_part_purchase(
-    id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_six: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_seven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eight: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    product: par_store_inventory_v3.aleo/Product,
-  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
-  {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_six, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_seven, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_eight, product.price);
-  }
-
-  transition nine_part_purchase(
-    id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_six: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_seven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eight: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_nine: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    product: par_store_inventory_v3.aleo/Product,
-  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
-  {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_six, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_seven, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_eight, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_nine, product.price);
-  }
-
-  transition ten_part_purchase(
-    id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_six: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_seven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eight: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_nine: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_ten: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    product: par_store_inventory_v3.aleo/Product,
-  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
-  {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_six, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_seven, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_eight, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_nine, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_ten, product.price);
-  }
-
-  transition eleven_part_purchase(
-    id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_six: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_seven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eight: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_nine: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_ten: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eleven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    product: par_store_inventory_v3.aleo/Product,
-  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
-  {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_six, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_seven, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_eight, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_nine, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_ten, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_eleven, product.price);
-  }
-
-  transition twelve_part_purchase(
-    id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_six: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_seven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eight: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_nine: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_ten: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eleven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_twelve: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    product: par_store_inventory_v3.aleo/Product,
-  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
-  {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_six, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_seven, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_eight, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_nine, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_ten, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_eleven, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_twelve, product.price);
-  }
-
-  transition thirteen_part_purchase(
-    id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_six: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_seven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eight: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_nine: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_ten: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eleven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_twelve: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_thirteen: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    product: par_store_inventory_v3.aleo/Product,
-  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
-  {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_six, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_seven, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_eight, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_nine, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_ten, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_eleven, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_twelve, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_thirteen, product.price);
-  }
-
-  // max num of inputs to a transition is 16
-  // see console/network/src/lib.rs in snarkVM
-  transition fourteen_part_purchase(
-    id: u128,
-    ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_two: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_three: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_four: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_five: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_six: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_seven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eight: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_nine: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_ten: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_eleven: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_twelve: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_thirteen: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket_fourteen: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    product: par_store_inventory_v3.aleo/Product,
-  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
-  {
-    puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_two, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_three, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_four, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_five, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_six, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_seven, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_eight, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_nine, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_ten, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_eleven, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_twelve, product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket_thirteen, product.price);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket_fourteen, product.price);
-  }
-
 }
