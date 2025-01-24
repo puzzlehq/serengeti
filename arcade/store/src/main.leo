@@ -11,133 +11,192 @@ program par_store_v4.aleo {
     return puzzle_arcade_ticket_v001.aleo/spend(ticket, product.price);
   }
 
-  transition two_part_purchase(
+  transition purchase2(
     id: u128,
     ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount1: u64,
-    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount2: u64,
+    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    amount: u64,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    assert(amount1 + amount2 >= product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket1, amount1);
-
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket2, amount2);
+    assert(ticket1.amount + amount >= product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, amount);
   }
 
-  transition three_part_purchase(
+  transition purchase3(
     id: u128,
     ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount1: u64,
     ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount2: u64,
-    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount3: u64,
+    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    amount: u64,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    assert(amount1 + amount2 + amount3 >= product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket1, amount1);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket2, amount2);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket3, amount3);
+    assert(ticket1.amount + ticket2.amount + amount >= product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
+    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, amount);
   }
 
-  transition four_part_purchase(
+  transition purchase4(
     id: u128,
     ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount1: u64,
     ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount2: u64,
     ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount3: u64,
+    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    amount: u64,
+    product: par_store_inventory_v3.aleo/Product,
+  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
+  {
+    assert(ticket1.amount + ticket2.amount + ticket3.amount + amount >= product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, ticket3.amount);
+    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, amount);
+  }
+
+  transition purchase5(
+    id: u128,
+    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
     ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount4: u64,
+    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    amount: u64,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    assert(amount1 + amount2 + amount3 + amount4 >= product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket1, amount1);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket2, amount2);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket3, amount3);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket4, amount4);
+    assert(ticket1.amount + ticket2.amount + ticket3.amount + ticket4.amount + amount >= product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, ticket3.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket4, ticket4.amount);
+    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, amount);
   }
 
-  transition five_part_purchase(
+  transition purchase6(
     id: u128,
     ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount1: u64,
     ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount2: u64,
     ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount3: u64,
     ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount4: u64,
     ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount5: u64,
+    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    amount: u64,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    assert(amount1 + amount2 + amount3 + amount4 + amount5 >= product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket1, amount1);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket2, amount2);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket3, amount3);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket4, amount4);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket5, amount5);
+    assert(ticket1.amount + ticket2.amount + ticket3.amount + ticket4.amount + ticket5.amount + amount >= product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, ticket3.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket4, ticket4.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket5, ticket5.amount);
+    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, amount);
   }
 
-  transition six_part_purchase(
+  transition purchase7(
     id: u128,
     ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount1: u64,
     ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount2: u64,
     ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount3: u64,
     ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount4: u64,
     ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount5: u64,
     ticket6: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount6: u64,
+    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    amount: u64,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    assert(amount1 + amount2 + amount3 + amount4 + amount5 + amount6 >= product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket1, amount1);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket2, amount2);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket3, amount3);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket4, amount4);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket5, amount5);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket6, amount6);
+    assert(ticket1.amount + ticket2.amount + ticket3.amount + ticket4.amount + ticket5.amount + ticket6.amount + amount >= product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, ticket3.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket4, ticket4.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket5, ticket5.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket6, ticket6.amount);
+    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, amount);
   }
 
-  transition seven_part_purchase(
+  transition purchase8(
     id: u128,
     ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount1: u64,
     ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount2: u64,
     ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount3: u64,
     ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount4: u64,
     ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount5: u64,
     ticket6: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount6: u64,
     ticket7: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    amount7: u64,
+    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    amount: u64,
     product: par_store_inventory_v3.aleo/Product,
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
   {
-    assert(amount1 + amount2 + amount3 + amount4 + amount5 + amount6 + amount7 >= product.price);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket1, amount1);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket2, amount2);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket3, amount3);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket4, amount4);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket5, amount5);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket6, amount6);
-    return puzzle_arcade_ticket_v001.aleo/spend(ticket7, amount7);
+    assert(ticket1.amount + ticket2.amount + ticket3.amount + ticket4.amount + ticket5.amount + ticket6.amount + ticket7.amount + amount >= product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, ticket3.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket4, ticket4.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket5, ticket5.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket6, ticket6.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket7, ticket7.amount);
+    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, amount);
+  }
+
+  transition purchase9(
+    id: u128,
+    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket6: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket7: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket8: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    amount: u64,
+    product: par_store_inventory_v3.aleo/Product,
+  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
+  {
+    assert(ticket1.amount + ticket2.amount + ticket3.amount + ticket4.amount + ticket5.amount + ticket6.amount + ticket7.amount + ticket8.amount + amount >= product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, ticket3.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket4, ticket4.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket5, ticket5.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket6, ticket6.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket7, ticket7.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket8, ticket8.amount);
+    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, amount);
+  }
+
+  transition purchase10(
+    id: u128,
+    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket6: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket7: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket8: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    ticket9: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+    amount: u64,
+    product: par_store_inventory_v3.aleo/Product,
+  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
+  {
+    assert(ticket1.amount + ticket2.amount + ticket3.amount + ticket4.amount + ticket5.amount + ticket6.amount + ticket7.amount + ticket8.amount + ticket9.amount + amount >= product.price);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket3, ticket3.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket4, ticket4.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket5, ticket5.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket6, ticket6.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket7, ticket7.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket8, ticket8.amount);
+    puzzle_arcade_ticket_v001.aleo/spend(ticket9, ticket9.amount);
+    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, amount);
   }
 }
