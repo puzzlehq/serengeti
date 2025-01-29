@@ -1,4 +1,4 @@
-# giveaway.aleo
+# par_store_inventory_v1.aleo
 
 ## Build Guide
 

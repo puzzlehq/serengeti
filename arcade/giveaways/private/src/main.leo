@@ -1,6 +1,7 @@
 import puzzle_arcade_ticket_v001.aleo;
+import par_store_inventory_v1.aleo;
 
-program giveaway.aleo {
+program giveaway_private.aleo {
     const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
     const MAX_ENTRIES: u64 = 50u64;
 
@@ -20,44 +21,10 @@ program giveaway.aleo {
     // total number of winners
     mapping winner_count: u64 => u64;
 
-    struct PrivateKey {
-        pk_pt1: u128,
-        pk_pt2: u128
-    }
+    transition mint_prize (id: u64, code: Code, price: u64) -> par_store_inventory_v1.aleo/Product {
+        assert_eq(self.signer, OPERATOR); // todo: needs to be store operator
 
-    record Prize {
-        owner: address,
-        private_key: PrivateKey,
-    }
-
-    record AuditPrize {
-        owner: address,
-        minter: address,
-        private_key: PrivateKey,
-    }
-
-    transition mint_prize (pk_pt1: u128, pk_pt2: u128) -> (Prize, AuditPrize) {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, OPERATOR);
-
-        let prize: Prize = Prize {
-            owner: OPERATOR,
-            private_key: PrivateKey {
-                pk_pt1: pk_pt1,
-                pk_pt2: pk_pt2
-            },
-        };
-
-        let audit_prize: AuditPrize = AuditPrize {
-            owner: OPERATOR,
-            minter: OPERATOR,
-            private_key: PrivateKey {
-                pk_pt1: pk_pt1,
-                pk_pt2: pk_pt2
-            },
-        };
-
-        return (prize, audit_prize);
+        return par_store_inventory_v1.aleo/mint(id, code, price);
     }
 
     async transition buy_one_entry (ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket) -> (
@@ -91,7 +58,7 @@ program giveaway.aleo {
     async function add_two_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         assert(current_raffle_count + 2u64 < MAX_ENTRIES);
-        
+
         for i: u64 in 0u64..2u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -112,7 +79,7 @@ program giveaway.aleo {
     async function add_three_entries (public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         assert(current_raffle_count + 3u64 < MAX_ENTRIES);
-        
+
         for i: u64 in 0u64..3u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -133,7 +100,7 @@ program giveaway.aleo {
     async function add_four_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         assert(current_raffle_count + 4u64 < MAX_ENTRIES);
-        
+
         for i: u64 in 0u64..4u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -154,7 +121,7 @@ program giveaway.aleo {
     async function add_five_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         assert(current_raffle_count + 5u64 < MAX_ENTRIES);
-        
+
         for i: u64 in 0u64..5u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -175,7 +142,7 @@ program giveaway.aleo {
     async function add_six_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         assert(current_raffle_count + 6u64 < MAX_ENTRIES);
-        
+
         for i: u64 in 0u64..6u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -196,7 +163,7 @@ program giveaway.aleo {
     async function add_seven_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         assert(current_raffle_count + 7u64 < MAX_ENTRIES);
-        
+
         for i: u64 in 0u64..7u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -259,7 +226,7 @@ program giveaway.aleo {
     async function add_ten_entries(public participant: address) {
         let current_raffle_count: u64 = Mapping::get_or_use(total_entries, 0u64, 0u64);
         assert(current_raffle_count + 10u64 < MAX_ENTRIES);
-        
+
         for i: u64 in 0u64..10u64 {
           Mapping::set(entries, current_raffle_count + i, participant);
         }
@@ -270,7 +237,6 @@ program giveaway.aleo {
         Mapping::set(user_entries, participant, current_user_entries + 10u16);
     }
 
-    // todo: allow draw winner to only be called once
     async transition draw_winner () -> (Future) {
         assert_eq(self.caller, self.signer);
         assert_eq(self.caller, OPERATOR);
@@ -301,30 +267,10 @@ program giveaway.aleo {
         Mapping::set(winner, current_winner_count, winner_address);
     }
 
-    transition send_prize_to_winner (public winner_addr: address, public prize: Prize) -> (Prize) {
+    transition send_prize_to_winner (public winner_addr: address, public prize: par_store_inventory_v1.aleo/Product) -> par_store_inventory_v1.aleo/Product {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, OPERATOR);
+        assert_eq(self.caller, OPERATOR);  // todo: needs to be store operator
 
-        let prize_to_winner: Prize = Prize {
-            owner: winner_addr,
-            private_key: prize.private_key,
-        };
-
-        // let audit_prize_to_winner: AuditPrizeToWinner = AuditPrizeToWinner {
-        //     owner: operator,
-        //     winner: winner_addr,
-        //     private_key: prize.private_key,
-        // };
-
-        return (prize_to_winner);
+        return par_store_inventory_v1.aleo/fulfill(winner_addr, prize);
     }
-
-    // finalize send_prize_to_winner (public winner_addr: address) {
-    //     // get the current winner idx
-    //     // let current_winner_count_idx: u64 = Mapping::get_or_use(winner_count, 0u64, 0u64);
-    //     // get the current winner via the index (if draw_winner is called multiple times)
-    //     // let winner_addr_from_mapping: address = Mapping::get(winner, current_winner_count_idx);
-    //     // assert that this function is called with the winner_addr
-    //     // assert_eq(winner_addr, winner_addr_from_mapping);
-    // }
 }

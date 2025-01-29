@@ -1,4 +1,4 @@
-# puzzle_arcade_ticket_testing.aleo
+# puzzle_giveaway_010825.aleo
 
 ## Build Guide
 
