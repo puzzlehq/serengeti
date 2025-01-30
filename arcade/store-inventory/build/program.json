@@ -1,7 +1,6 @@
 {
-  "program": "par_store_inventory_v3.aleo",
-  "version": "0.1.0",
-  "description": "",
-  "license": "MIT",
-  "dependencies": null
+    "program": "par_store_inventory_v4.aleo",
+    "version": "0.0.0",
+    "description": "",
+    "license": "MIT"
 }
