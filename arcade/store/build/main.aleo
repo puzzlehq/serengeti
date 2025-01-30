@@ -188,38 +188,3 @@ function purchase9:
     call puzzle_arcade_ticket_v001.aleo/spend r8 r8.amount into r27;
     call puzzle_arcade_ticket_v001.aleo/spend r9 r19 into r28;
     output r28 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-
-function purchase10:
-    input r0 as u128.private;
-    input r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r3 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r4 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r5 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r6 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r7 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r8 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r9 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r10 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    input r11 as par_store_inventory_v3.aleo/Product.record;
-    add r1.amount r2.amount into r12;
-    add r12 r3.amount into r13;
-    add r13 r4.amount into r14;
-    add r14 r5.amount into r15;
-    add r15 r6.amount into r16;
-    add r16 r7.amount into r17;
-    add r17 r8.amount into r18;
-    add r18 r9.amount into r19;
-    add r19 r10.amount into r20;
-    sub r20 r11.price into r21;
-    call puzzle_arcade_ticket_v001.aleo/spend r1 r1.amount into r22;
-    call puzzle_arcade_ticket_v001.aleo/spend r2 r2.amount into r23;
-    call puzzle_arcade_ticket_v001.aleo/spend r3 r3.amount into r24;
-    call puzzle_arcade_ticket_v001.aleo/spend r4 r4.amount into r25;
-    call puzzle_arcade_ticket_v001.aleo/spend r5 r5.amount into r26;
-    call puzzle_arcade_ticket_v001.aleo/spend r6 r6.amount into r27;
-    call puzzle_arcade_ticket_v001.aleo/spend r7 r7.amount into r28;
-    call puzzle_arcade_ticket_v001.aleo/spend r8 r8.amount into r29;
-    call puzzle_arcade_ticket_v001.aleo/spend r9 r9.amount into r30;
-    call puzzle_arcade_ticket_v001.aleo/spend r10 r21 into r31;
-    output r31 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;

@@ -207,41 +207,41 @@ program par_store_v5.aleo {
     return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, change);
   }
 
-  transition purchase10(
-    id: u128,
-    ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket6: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket7: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket8: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    ticket9: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
-    product: par_store_inventory_v3.aleo/Product,
-  ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
-  {
-    let change: u64 = ticket1.amount
-      + ticket2.amount
-      + ticket3.amount
-      + ticket4.amount
-      + ticket5.amount
-      + ticket6.amount
-      + ticket7.amount
-      + ticket8.amount
-      + ticket9.amount
-      + partialTicket.amount
-      - product.price;
-    puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket3, ticket3.amount);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket4, ticket4.amount);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket5, ticket5.amount);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket6, ticket6.amount);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket7, ticket7.amount);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket8, ticket8.amount);
-    puzzle_arcade_ticket_v001.aleo/spend(ticket9, ticket9.amount);
-    return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, change);
-  }
+  // transition purchase10(
+  //   id: u128,
+  //   ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   ticket2: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   ticket3: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   ticket4: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   ticket5: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   ticket6: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   ticket7: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   ticket8: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   ticket9: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   partialTicket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
+  //   product: par_store_inventory_v3.aleo/Product,
+  // ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket)
+  // {
+  //   let change: u64 = ticket1.amount
+  //     + ticket2.amount
+  //     + ticket3.amount
+  //     + ticket4.amount
+  //     + ticket5.amount
+  //     + ticket6.amount
+  //     + ticket7.amount
+  //     + ticket8.amount
+  //     + ticket9.amount
+  //     + partialTicket.amount
+  //     - product.price;
+  //   puzzle_arcade_ticket_v001.aleo/spend(ticket1, ticket1.amount);
+  //   puzzle_arcade_ticket_v001.aleo/spend(ticket2, ticket2.amount);
+  //   puzzle_arcade_ticket_v001.aleo/spend(ticket3, ticket3.amount);
+  //   puzzle_arcade_ticket_v001.aleo/spend(ticket4, ticket4.amount);
+  //   puzzle_arcade_ticket_v001.aleo/spend(ticket5, ticket5.amount);
+  //   puzzle_arcade_ticket_v001.aleo/spend(ticket6, ticket6.amount);
+  //   puzzle_arcade_ticket_v001.aleo/spend(ticket7, ticket7.amount);
+  //   puzzle_arcade_ticket_v001.aleo/spend(ticket8, ticket8.amount);
+  //   puzzle_arcade_ticket_v001.aleo/spend(ticket9, ticket9.amount);
+  //   return puzzle_arcade_ticket_v001.aleo/spend(partialTicket, change);
+  // }
 }
