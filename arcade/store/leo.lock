@@ -6,8 +6,8 @@ checksum = "cdc6997cbeba912b2bd3e258b21bdc1576f60e05d8573d7e01788aee9163bcd7"
 dependencies = []
 
 [[package]]
-name = "par_store_inventory_v3.aleo"
-network = "testnet"
-location = "network"
-checksum = "1b30b17b37401d82e4469ec1b8f31f2be5074bdc92fb2d8b4f58e64b4bd04439"
+name = "par_store_inventory_v4.aleo"
+location = "local"
+path = "/Users/lucas/code/puzzle/serengeti/arcade/store/../store-inventory"
+checksum = "b76c566906c3a034cfe0a673f7abbbecc2e0e0a725b09a6d83e7174b61d42b64"
 dependencies = []
