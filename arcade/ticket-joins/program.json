@@ -1,5 +1,5 @@
 {
-  "program": "par_store_v7.aleo",
+  "program": "par_ticket_joins_v1.aleo",
   "version": "0.1.0",
   "description": "",
   "license": "MIT",
@@ -9,11 +9,6 @@
       "location": "network",
       "network": "testnet",
       "path": null
-    },
-    {
-      "name": "par_store_inventory_v5.aleo",
-      "location": "local",
-      "path": "../store-inventory"
     }
   ]
 }
