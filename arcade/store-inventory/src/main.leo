@@ -1,16 +1,14 @@
-program par_store_inventory_v4.aleo {
+program par_store_inventory_v5.aleo {
   const OPERATOR: address = aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
 
   // sku_id => price
-  mapping sku_prices: u128 => u64;
-  // Product id => sku_id
-  mapping product_ids_to_skus: u128 => u128;
-  // Product.id => availability
-  mapping availability: u128 => bool;
+  mapping sku_prices: u16 => u64;
+  // sku_id => number in stock
+  mapping sku_stock: u16 => u32;
 
   record Product {
     owner: address,
-    id: u128,
+    sku_id: u16,
     code: Code,
   }
 
@@ -22,37 +20,38 @@ program par_store_inventory_v4.aleo {
     pt5: u128
   }
 
-  async transition set_sku_price(sku_id: u128, price: u64) -> Future {
+  async transition set_sku_price(sku_id: u16, price: u64) -> Future {
     assert_eq(self.caller, OPERATOR);
     return finalize_set_sku_price(sku_id, price);
   }
-  async function finalize_set_sku_price(sku_id: u128, price: u64) {
+  async function finalize_set_sku_price(sku_id: u16, price: u64) {
     Mapping::set(sku_prices, sku_id, price);
   }
 
-  async transition mint(id: u128, sku_id: u128, code: Code, price: u64) -> (Product, Future) {
+  async transition mint(sku_id: u16, code: Code, price: u64) -> (Product, Future) {
     assert_eq(self.caller, OPERATOR);
-    let product: Product = Product { owner: OPERATOR, id, code };
-    return (product, finalize_mint(id, sku_id));
+    let product: Product = Product { owner: OPERATOR, sku_id, code };
+    return (product, finalize_mint(sku_id));
   }
-  async function finalize_mint(id: u128, sku_id: u128) {
-    // link the product to a sku so we can validate its purchase price later
-    Mapping::set(product_ids_to_skus, id, sku_id);
+  async function finalize_mint(sku_id: u16) {
     // set its availability to true
-    Mapping::set(availability, id, true);
+    let stock: u32 = Mapping::get_or_use(sku_stock, sku_id, 0u32);
+    Mapping::set(sku_stock, sku_id, stock + 1u32);
   }
 
-  async transition validate_purchase(id: u128, price: u64) -> Future {
-    return finalize_validate_purchase(id, price);
+  async transition validate_purchase(sku_id: u16, price: u64) -> Future {
+    return finalize_validate_purchase(sku_id, price);
   }
-  async function finalize_validate_purchase(id: u128, price: u64) {
-    // assert the product still is available
-    assert(Mapping::get_or_use(availability, id, false));
-    let sku_id: u128 = Mapping::get(product_ids_to_skus, id);
+  async function finalize_validate_purchase(sku_id: u16, price: u64) {
+    // assert sku_id has stock
+    let stock: u32 = Mapping::get_or_use(sku_stock, sku_id, 0u32);
+    assert(stock > 0u32);
+    
     // assert the price is correct
     assert_eq(price, Mapping::get(sku_prices, sku_id));
-    // set the product's availability
-    Mapping::set(availability, id, false);
+
+    // reduce the sku stock
+    Mapping::set(sku_stock, sku_id, stock - 1u32);
   }
 
   transition fulfill(buyer: address, product: Product) -> Product {
@@ -61,7 +60,7 @@ program par_store_inventory_v4.aleo {
     // transfer the product to the purchaser
     return Product {
       owner: buyer,
-      id: product.id,
+      sku_id: product.sku_id,
       code: product.code
     };
   }
