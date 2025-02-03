@@ -1,4 +1,4 @@
-# squash_v001.aleo
+# squash_v002.aleo
 
 ## Build Guide
 

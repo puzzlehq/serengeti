@@ -1,23 +1,25 @@
 import squash_timestamp.aleo;
 import puzzle_arcade_ticket_v002.aleo;
 
-program squash_v001.aleo {
+program squash_v002.aleo {
   record Squash {
     owner: address,
     kg: u64,
     last_water: u64, // Timestamp.time
     level: u8, // one-way-street leveling system (aka this only goes up in order to protect against level-up-farmers)
     squash_name: u128,
+    squash_id: u32, // random number, used to differentiate two squashes with the same name
   }
 
   // fee: 0.001505
-  transition mint (owner: address, squash_name: u128, timestamp: squash_timestamp.aleo/Timestamp) -> Squash {
+  transition mint (owner: address, squash_name: u128, squash_id: u32, timestamp: squash_timestamp.aleo/Timestamp) -> Squash {
     return Squash {
       owner,
       kg: 1000000u64,
       last_water: timestamp.time,
       level: 0u8,
-      squash_name
+      squash_name,
+      squash_id
     };
   }
 
@@ -47,7 +49,8 @@ program squash_v001.aleo {
         kg: new_kg + 1000000u64,
         last_water: now,
         level: squash.level,
-        squash_name: squash.squash_name
+        squash_name: squash.squash_name,
+        squash_id: squash.squash_id
       };
     // watered yesterday?
     } else if squash.last_water < timestamp.time {
@@ -56,7 +59,8 @@ program squash_v001.aleo {
         kg: squash.kg + 1000000u64,
         last_water: now,
         level: squash.level,
-        squash_name: squash.squash_name
+        squash_name: squash.squash_name,
+        squash_id: squash.squash_id
       };
     } else {
       // double-water attempt -- bail
@@ -77,10 +81,10 @@ program squash_v001.aleo {
     assert(now >= squash.last_water);
     assert(timestamp.time >= squash.last_water);
 
-    if squash.last_water < (timestamp.time - delta) {
-      // missed a day? call water
+    if squash.last_water < (timestamp.time - delta - delta) {
+      // missed two days? call water
       assert(false);
-    // watered yesterday?
+    // watered within two days?
     } else if squash.last_water < timestamp.time {
       // noop (pass-through case)
     } else {
@@ -108,7 +112,8 @@ program squash_v001.aleo {
         kg: new_kg,
         last_water: now,
         level: new_level,
-        squash_name: squash.squash_name
+        squash_name: squash.squash_name,
+        squash_id: squash.squash_id
       },
       tickets,
       await_ticket_minting(future)

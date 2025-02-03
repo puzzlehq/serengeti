@@ -41,7 +41,7 @@ function get_first_text_section() {
 
 function update_timestamp() {
   # echo "leo run update \"$TIMESTAMP\" $1\n"
-  cd ../squash_time_oracle
+  cd ../timestamp
   run_output=$(leo run update "$TIMESTAMP" $1)
   outputs=$(extract_outputs "$run_output")
   TIMESTAMP=${outputs[0]}
@@ -55,7 +55,7 @@ function extract_time() {
 
 function water_squash() {
   echo -e "leo run water \"$SQUASH\" \"$TIMESTAMP\" $1 $DELTA\n"
-  cd ../squash_game
+  cd ../game
   run_output=$(leo run water "$SQUASH" "$TIMESTAMP" $1 $DELTA)
   outputs=$(extract_outputs "$run_output")
   SQUASH=${outputs[0]}
@@ -63,7 +63,7 @@ function water_squash() {
 
 function water_squash_and_level_up() {
   echo -e "leo run water_and_level_up \"$SQUASH\" \"$TIMESTAMP\" $1 $DELTA\n"
-  cd ../squash_game
+  cd ../game
   run_output=$(leo run water_and_level_up "$SQUASH" "$TIMESTAMP" $1 $DELTA)
   outputs=$(extract_outputs "$run_output")
   output=${outputs[0]};
@@ -86,7 +86,7 @@ function extract_level() {
 
 # 1 - mint the first timestamp
 echo "minting initial timestamp..."
-cd ./squash_time_oracle
+cd ./timestamp
 run_output=$(leo run mint 0u64)
 outputs=$(extract_outputs "$run_output")
 TIMESTAMP=${outputs[0]}
@@ -95,8 +95,8 @@ echo "time: $(extract_time $TIMESTAMP)"
 
 # 2 - mint the first squash
 echo "\nminting initial squash..."
-cd ../squash_game
-run_output=$(leo run mint $PLAYER_ADDRESS 123456u32 "$TIMESTAMP")
+cd ../game
+run_output=$(leo run mint $PLAYER_ADDRESS 123456u128 123456u32 "$TIMESTAMP")
 outputs=$(extract_outputs "$run_output")
 SQUASH=${outputs[0]}
 echo "\ninitial squash: $SQUASH"
