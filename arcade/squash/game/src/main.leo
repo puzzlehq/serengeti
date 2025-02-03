@@ -2,7 +2,7 @@ import squash_timestamp.aleo;
 import squash_v001.aleo;
 import puzzle_arcade_ticket_v002.aleo;
 
-program squash_v002.aleo {
+program squash_v2.aleo {
   record Squash {
     owner: address,
     kg: u64,

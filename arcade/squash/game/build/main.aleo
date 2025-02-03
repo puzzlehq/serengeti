@@ -1,7 +1,7 @@
 import squash_timestamp.aleo;
 import puzzle_arcade_ticket_v002.aleo;
 import squash_v001.aleo;
-program squash_v002.aleo;
+program squash_v2.aleo;
 
 record Squash:
     owner as address.private;
@@ -110,7 +110,7 @@ function water_and_level_up:
     async water_and_level_up r25 into r27;
     output r26 as Squash.record;
     output r24 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r27 as squash_v002.aleo/water_and_level_up.future;
+    output r27 as squash_v2.aleo/water_and_level_up.future;
 
 finalize water_and_level_up:
     input r0 as puzzle_arcade_ticket_v002.aleo/mint.future;
