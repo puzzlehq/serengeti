@@ -1,4 +1,5 @@
 import squash_timestamp.aleo;
+import squash_v001.aleo;
 import puzzle_arcade_ticket_v002.aleo;
 
 program squash_v002.aleo {
@@ -22,6 +23,24 @@ program squash_v002.aleo {
       squash_id
     };
   }
+
+  transition migrate_from_v1 (squash: squash_v001.aleo/Squash, squash_id: u32, timestamp: squash_timestamp.aleo/Timestamp) -> Squash {
+    const OPERATOR: address = aleo12e0yyyqw0lfff8nufdss94k5hml9d9jl45rlfwu5l3e73wpu9s8sdznsev;
+
+    assert_eq(self.caller, OPERATOR);
+
+    let new_level: u8 = (squash.kg / 10000000u64) as u8;
+
+    return Squash {
+      owner: squash.owner,
+      kg: squash.kg,
+      last_water: timestamp.time,
+      level: new_level,
+      squash_name: squash.squash_name,
+      squash_id
+    };
+  }
+
 
   // fee: 0.002049
   transition water (

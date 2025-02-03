@@ -13,6 +13,11 @@
       "name": "puzzle_arcade_ticket_v002.aleo",
       "location": "network",
       "network": "mainnet"
+    },
+    {
+      "name": "squash_v001.aleo",
+      "location": "network",
+      "network": "mainnet"
     }
   ]
 }

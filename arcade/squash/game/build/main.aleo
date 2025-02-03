@@ -1,5 +1,6 @@
 import squash_timestamp.aleo;
 import puzzle_arcade_ticket_v002.aleo;
+import squash_v001.aleo;
 program squash_v002.aleo;
 
 record Squash:
@@ -114,3 +115,13 @@ function water_and_level_up:
 finalize water_and_level_up:
     input r0 as puzzle_arcade_ticket_v002.aleo/mint.future;
     await r0;
+
+function migrate_from_v1:
+    input r0 as squash_v001.aleo/Squash.record;
+    input r1 as u32.private;
+    input r2 as squash_timestamp.aleo/Timestamp.record;
+    assert.eq self.caller aleo12e0yyyqw0lfff8nufdss94k5hml9d9jl45rlfwu5l3e73wpu9s8sdznsev;
+    div r0.kg 10000000u64 into r3;
+    cast r3 into r4 as u8;
+    cast r0.owner r0.kg r2.time r4 r0.squash_name r1 into r5 as Squash.record;
+    output r5 as Squash.record;

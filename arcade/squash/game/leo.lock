@@ -11,3 +11,10 @@ network = "mainnet"
 location = "network"
 checksum = "57a6dd0337f1036933fb846720ac51bf3987e0293ced5d7ffd53e083d54aa005"
 dependencies = []
+
+[[package]]
+name = "squash_v001.aleo"
+network = "mainnet"
+location = "network"
+checksum = "8c05e4caa92acb30a2b84002cfa04508f8a307a6f25074f71936411c1f885d53"
+dependencies = ["squash_timestamp.aleo", "puzzle_arcade_ticket_v002.aleo"]
