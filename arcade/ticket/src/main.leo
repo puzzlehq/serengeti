@@ -41,6 +41,9 @@ program puzzle_arcade_ticket_v002.aleo {
     };
   }
 
+  // todo in v3 potentially
+  // transition burn(ticket: PuzzleArcadeTicket) {}
+
   transition join(
     ticket1: PuzzleArcadeTicket,
     ticket2: PuzzleArcadeTicket
