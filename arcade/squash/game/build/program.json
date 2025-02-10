@@ -1,6 +1,28 @@
 {
-    "program": "squash_v3.aleo",
-    "version": "0.0.0",
-    "description": "",
-    "license": "MIT"
+  "program": "squash_v3.aleo",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "squash_timestamp.aleo",
+      "location": "network",
+      "network": "mainnet"
+    },
+    {
+      "name": "puzzle_arcade_ticket_v002.aleo",
+      "location": "network",
+      "network": "mainnet"
+    },
+    {
+      "name": "puzzle_arcade_coin_v002.aleo",
+      "location": "network",
+      "network": "mainnet"
+    },
+    {
+      "name": "squash_v2.aleo",
+      "location": "network",
+      "network": "mainnet"
+    }
+  ]
 }

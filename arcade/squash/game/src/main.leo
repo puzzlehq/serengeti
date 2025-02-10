@@ -1,3 +1,10 @@
+// testnet
+// import timestamp_testing.aleo;
+// import squash_testing.aleo;
+// import puzzle_arcade_ticket_v001.aleo;
+// import puzzle_arcade_coin_v001.aleo;
+
+// mainnet
 import squash_timestamp.aleo;
 import squash_v2.aleo;
 import puzzle_arcade_ticket_v002.aleo;
