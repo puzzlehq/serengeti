@@ -66,15 +66,17 @@ program par_store_inventory_v5.aleo {
   }
 
   // fn used only in case of contract upgrades
-  async transition shutdown () -> Future {
+  async transition shutdown (starting_idx: u16) -> Future {
     assert_eq(self.caller, OPERATOR);
-    return finalize_shutdown ();
+    return finalize_shutdown(starting_idx);
   }
 
-  // can only remove 16 at a time
-  async function finalize_shutdown () {
-    for i:u16 in 0u16..16u16 {
-      Mapping::remove(sku_stock, i);
+  async function finalize_shutdown (starting_idx: u16) {
+    let idx: u16 = starting_idx;
+
+    for i: u16 in 0u16..15u16 {
+      Mapping::remove(sku_stock, idx);
+      idx = idx + 1u16;
     }
   }
 }

@@ -73,24 +73,40 @@ function fulfill:
     output r2 as Product.record;
 
 function shutdown:
+    input r0 as u16.private;
     assert.eq self.caller aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
-    async shutdown into r0;
-    output r0 as par_store_inventory_v5.aleo/shutdown.future;
+    async shutdown r0 into r1;
+    output r1 as par_store_inventory_v5.aleo/shutdown.future;
 
 finalize shutdown:
-    remove sku_stock[0u16];
-    remove sku_stock[1u16];
-    remove sku_stock[2u16];
-    remove sku_stock[3u16];
-    remove sku_stock[4u16];
-    remove sku_stock[5u16];
-    remove sku_stock[6u16];
-    remove sku_stock[7u16];
-    remove sku_stock[8u16];
-    remove sku_stock[9u16];
-    remove sku_stock[10u16];
-    remove sku_stock[11u16];
-    remove sku_stock[12u16];
-    remove sku_stock[13u16];
-    remove sku_stock[14u16];
-    remove sku_stock[15u16];
+    input r0 as u16.public;
+    remove sku_stock[r0];
+    add r0 1u16 into r1;
+    remove sku_stock[r1];
+    add r1 1u16 into r2;
+    remove sku_stock[r2];
+    add r2 1u16 into r3;
+    remove sku_stock[r3];
+    add r3 1u16 into r4;
+    remove sku_stock[r4];
+    add r4 1u16 into r5;
+    remove sku_stock[r5];
+    add r5 1u16 into r6;
+    remove sku_stock[r6];
+    add r6 1u16 into r7;
+    remove sku_stock[r7];
+    add r7 1u16 into r8;
+    remove sku_stock[r8];
+    add r8 1u16 into r9;
+    remove sku_stock[r9];
+    add r9 1u16 into r10;
+    remove sku_stock[r10];
+    add r10 1u16 into r11;
+    remove sku_stock[r11];
+    add r11 1u16 into r12;
+    remove sku_stock[r12];
+    add r12 1u16 into r13;
+    remove sku_stock[r13];
+    add r13 1u16 into r14;
+    remove sku_stock[r14];
+    add r14 1u16 into r15;
