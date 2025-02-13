@@ -71,3 +71,26 @@ function fulfill:
     assert.eq r1.owner aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
     cast r0 r1.sku_id r1.code into r2 as Product.record;
     output r2 as Product.record;
+
+function shutdown:
+    assert.eq self.caller aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
+    async shutdown into r0;
+    output r0 as par_store_inventory_v5.aleo/shutdown.future;
+
+finalize shutdown:
+    remove sku_stock[0u16];
+    remove sku_stock[1u16];
+    remove sku_stock[2u16];
+    remove sku_stock[3u16];
+    remove sku_stock[4u16];
+    remove sku_stock[5u16];
+    remove sku_stock[6u16];
+    remove sku_stock[7u16];
+    remove sku_stock[8u16];
+    remove sku_stock[9u16];
+    remove sku_stock[10u16];
+    remove sku_stock[11u16];
+    remove sku_stock[12u16];
+    remove sku_stock[13u16];
+    remove sku_stock[14u16];
+    remove sku_stock[15u16];

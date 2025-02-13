@@ -46,7 +46,7 @@ program par_store_inventory_v5.aleo {
     // assert sku_id has stock
     let stock: u32 = Mapping::get_or_use(sku_stock, sku_id, 0u32);
     assert(stock > 0u32);
-    
+
     // assert the price is correct
     assert_eq(price, Mapping::get(sku_prices, sku_id));
 
@@ -63,5 +63,18 @@ program par_store_inventory_v5.aleo {
       sku_id: product.sku_id,
       code: product.code
     };
+  }
+
+  // fn used only in case of contract upgrades
+  async transition shutdown () -> Future {
+    assert_eq(self.caller, OPERATOR);
+    return finalize_shutdown ();
+  }
+
+  // can only remove 16 at a time
+  async function finalize_shutdown () {
+    for i:u16 in 0u16..16u16 {
+      Mapping::remove(sku_stock, i);
+    }
   }
 }
