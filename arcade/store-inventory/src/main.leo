@@ -66,17 +66,19 @@ program par_store_inventory_v5.aleo {
   }
 
   // fn used only in case of contract upgrades
-  async transition shutdown (starting_idx: u16) -> Future {
+  async transition shutdown(sku_ids: [u16; 8]) -> Future {
     assert_eq(self.caller, OPERATOR);
-    return finalize_shutdown(starting_idx);
+    return finalize_shutdown(sku_ids);
   }
 
-  async function finalize_shutdown (starting_idx: u16) {
-    let idx: u16 = starting_idx;
-
-    for i: u16 in 0u16..15u16 {
-      Mapping::remove(sku_stock, idx);
-      idx = idx + 1u16;
+  async function finalize_shutdown(sku_ids: [u16; 8]) {
+    for i: u8 in 0u8..7u8 {
+      let sku_id: u16 = sku_ids[i];
+        // Process only valid SKUs (ignore 0u16)
+      if sku_id != 0u16 {
+          Mapping::remove(sku_stock, sku_id);
+          Mapping::remove(sku_prices, sku_id);
+      }
     }
   }
 }

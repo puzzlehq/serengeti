@@ -9,5 +9,5 @@ dependencies = []
 name = "par_store_inventory_v5.aleo"
 location = "local"
 path = "/Users/asharma/code/medici/serengeti/arcade/store/../store-inventory"
-checksum = "a48d18ac8de9def6d45055498bdcd3b864fa54f4f2184e83dc1ad9eac87673f1"
+checksum = "7101c05f283cb33f5c2c18e3d09636bf168d1a6b920cbb3487da3a525e1da557"
 dependencies = []
