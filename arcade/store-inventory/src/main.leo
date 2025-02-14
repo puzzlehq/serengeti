@@ -28,7 +28,7 @@ program par_store_inventory_v5.aleo {
     Mapping::set(sku_prices, sku_id, price);
   }
 
-  async transition mint(sku_id: u16, code: Code, price: u64) -> (Product, Future) {
+  async transition mint(sku_id: u16, code: Code) -> (Product, Future) {
     assert_eq(self.caller, OPERATOR);
     let product: Product = Product { owner: OPERATOR, sku_id, code };
     return (product, finalize_mint(sku_id));
@@ -74,7 +74,7 @@ program par_store_inventory_v5.aleo {
   async function finalize_shutdown(sku_ids: [u16; 8]) {
     for i: u8 in 0u8..7u8 {
       let sku_id: u16 = sku_ids[i];
-        // Process only valid SKUs (ignore 0u16)
+        // can pass in 0u16 to skip if skus left is less than 8
       if sku_id != 0u16 {
           Mapping::remove(sku_stock, sku_id);
           Mapping::remove(sku_prices, sku_id);
