@@ -35,12 +35,11 @@ finalize set_sku_price:
 function mint:
     input r0 as u16.private;
     input r1 as Code.private;
-    input r2 as u64.private;
     assert.eq self.caller aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
-    cast aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4 r0 r1 into r3 as Product.record;
-    async mint r0 into r4;
-    output r3 as Product.record;
-    output r4 as par_store_inventory_v5.aleo/mint.future;
+    cast aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4 r0 r1 into r2 as Product.record;
+    async mint r0 into r3;
+    output r2 as Product.record;
+    output r3 as par_store_inventory_v5.aleo/mint.future;
 
 finalize mint:
     input r0 as u16.public;

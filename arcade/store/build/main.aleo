@@ -1,6 +1,6 @@
 import puzzle_arcade_ticket_v001.aleo;
 import par_store_inventory_v5.aleo;
-program par_store_v7.aleo;
+program par_store_v8.aleo;
 
 struct Code:
     pt1 as u128;
@@ -13,12 +13,11 @@ function purchase:
     input r0 as u16.private;
     input r1 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
     input r2 as u64.private;
-    sub r1.amount r2 into r3;
-    call puzzle_arcade_ticket_v001.aleo/spend r1 r3 into r4;
-    call par_store_inventory_v5.aleo/validate_purchase r0 r2 into r5;
-    async purchase r5 into r6;
-    output r4 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r6 as par_store_v7.aleo/purchase.future;
+    call puzzle_arcade_ticket_v001.aleo/spend r1 r2 into r3;
+    call par_store_inventory_v5.aleo/validate_purchase r0 r2 into r4;
+    async purchase r4 into r5;
+    output r3 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r5 as par_store_v8.aleo/purchase.future;
 
 finalize purchase:
     input r0 as par_store_inventory_v5.aleo/validate_purchase.future;
@@ -37,7 +36,7 @@ function purchase2:
     call par_store_inventory_v5.aleo/validate_purchase r0 r3 into r9;
     async purchase2 r9 into r10;
     output r8 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r10 as par_store_v7.aleo/purchase2.future;
+    output r10 as par_store_v8.aleo/purchase2.future;
 
 finalize purchase2:
     input r0 as par_store_inventory_v5.aleo/validate_purchase.future;
@@ -59,7 +58,7 @@ function purchase3:
     call par_store_inventory_v5.aleo/validate_purchase r0 r4 into r12;
     async purchase3 r12 into r13;
     output r11 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r13 as par_store_v7.aleo/purchase3.future;
+    output r13 as par_store_v8.aleo/purchase3.future;
 
 finalize purchase3:
     input r0 as par_store_inventory_v5.aleo/validate_purchase.future;
@@ -84,7 +83,7 @@ function purchase4:
     call par_store_inventory_v5.aleo/validate_purchase r0 r5 into r15;
     async purchase4 r15 into r16;
     output r14 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r16 as par_store_v7.aleo/purchase4.future;
+    output r16 as par_store_v8.aleo/purchase4.future;
 
 finalize purchase4:
     input r0 as par_store_inventory_v5.aleo/validate_purchase.future;
@@ -112,7 +111,7 @@ function purchase5:
     call par_store_inventory_v5.aleo/validate_purchase r0 r6 into r18;
     async purchase5 r18 into r19;
     output r17 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r19 as par_store_v7.aleo/purchase5.future;
+    output r19 as par_store_v8.aleo/purchase5.future;
 
 finalize purchase5:
     input r0 as par_store_inventory_v5.aleo/validate_purchase.future;
@@ -143,7 +142,7 @@ function purchase6:
     call par_store_inventory_v5.aleo/validate_purchase r0 r7 into r21;
     async purchase6 r21 into r22;
     output r20 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r22 as par_store_v7.aleo/purchase6.future;
+    output r22 as par_store_v8.aleo/purchase6.future;
 
 finalize purchase6:
     input r0 as par_store_inventory_v5.aleo/validate_purchase.future;
@@ -177,7 +176,7 @@ function purchase7:
     call par_store_inventory_v5.aleo/validate_purchase r0 r8 into r24;
     async purchase7 r24 into r25;
     output r23 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r25 as par_store_v7.aleo/purchase7.future;
+    output r25 as par_store_v8.aleo/purchase7.future;
 
 finalize purchase7:
     input r0 as par_store_inventory_v5.aleo/validate_purchase.future;
@@ -214,7 +213,7 @@ function purchase8:
     call par_store_inventory_v5.aleo/validate_purchase r0 r9 into r27;
     async purchase8 r27 into r28;
     output r26 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r28 as par_store_v7.aleo/purchase8.future;
+    output r28 as par_store_v8.aleo/purchase8.future;
 
 finalize purchase8:
     input r0 as par_store_inventory_v5.aleo/validate_purchase.future;
@@ -254,7 +253,7 @@ function purchase9:
     call par_store_inventory_v5.aleo/validate_purchase r0 r10 into r30;
     async purchase9 r30 into r31;
     output r29 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r31 as par_store_v7.aleo/purchase9.future;
+    output r31 as par_store_v8.aleo/purchase9.future;
 
 finalize purchase9:
     input r0 as par_store_inventory_v5.aleo/validate_purchase.future;

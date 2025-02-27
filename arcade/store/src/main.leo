@@ -1,7 +1,7 @@
 import puzzle_arcade_ticket_v001.aleo;
 import par_store_inventory_v5.aleo;
 
-program par_store_v7.aleo {
+program par_store_v8.aleo {
   async transition purchase(
     sku_id: u16,
     ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
@@ -9,7 +9,7 @@ program par_store_v7.aleo {
   ) -> (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future)
   {
     return (
-      puzzle_arcade_ticket_v001.aleo/spend(ticket, ticket.amount - price),
+      puzzle_arcade_ticket_v001.aleo/spend(ticket, price),
       finalize_purchase(par_store_inventory_v5.aleo/validate_purchase(sku_id, price))
     );
   }
