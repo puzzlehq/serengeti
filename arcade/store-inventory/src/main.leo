@@ -1,4 +1,4 @@
-program par_store_inventory_v5.aleo {
+program par_store_inventory_v6.aleo {
   const OPERATOR: address = aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
 
   // sku_id => price

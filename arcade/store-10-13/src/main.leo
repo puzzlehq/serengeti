@@ -1,7 +1,7 @@
 import puzzle_arcade_ticket_v001.aleo;
-import par_store_inventory_v5.aleo;
+import par_store_inventory_v6.aleo;
 
-program par_store_10_13_v1.aleo {
+program par_store_10_13_v2.aleo {
   async transition purchase10(
     sku_id: u16,
     ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
@@ -39,7 +39,7 @@ program par_store_10_13_v1.aleo {
     puzzle_arcade_ticket_v001.aleo/spend(ticket9, ticket9.amount);
     return (
       puzzle_arcade_ticket_v001.aleo/spend(partialTicket, partialTicket.amount - change),
-      finalize_purchase10(par_store_inventory_v5.aleo/validate_purchase(sku_id, price))
+      finalize_purchase10(par_store_inventory_v6.aleo/validate_purchase(sku_id, price))
     );
   }
   async function finalize_purchase10(future: Future) {
@@ -86,7 +86,7 @@ program par_store_10_13_v1.aleo {
     puzzle_arcade_ticket_v001.aleo/spend(ticket10, ticket10.amount);
     return (
       puzzle_arcade_ticket_v001.aleo/spend(partialTicket, partialTicket.amount - change),
-      finalize_purchase11(par_store_inventory_v5.aleo/validate_purchase(sku_id, price))
+      finalize_purchase11(par_store_inventory_v6.aleo/validate_purchase(sku_id, price))
     );
   }
   async function finalize_purchase11(future: Future) {
@@ -136,7 +136,7 @@ program par_store_10_13_v1.aleo {
     puzzle_arcade_ticket_v001.aleo/spend(ticket11, ticket11.amount);
     return (
       puzzle_arcade_ticket_v001.aleo/spend(partialTicket, partialTicket.amount - change),
-      finalize_purchase12(par_store_inventory_v5.aleo/validate_purchase(sku_id, price))
+      finalize_purchase12(par_store_inventory_v6.aleo/validate_purchase(sku_id, price))
     );
   }
   async function finalize_purchase12(future: Future) {
@@ -189,7 +189,7 @@ program par_store_10_13_v1.aleo {
     puzzle_arcade_ticket_v001.aleo/spend(ticket12, ticket12.amount);
     return (
       puzzle_arcade_ticket_v001.aleo/spend(partialTicket, partialTicket.amount - change),
-      finalize_purchase13(par_store_inventory_v5.aleo/validate_purchase(sku_id, price))
+      finalize_purchase13(par_store_inventory_v6.aleo/validate_purchase(sku_id, price))
     );
   }
   async function finalize_purchase13(future: Future) {
