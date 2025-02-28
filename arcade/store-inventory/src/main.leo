@@ -1,5 +1,5 @@
-program par_store_inventory_v6.aleo {
-  const OPERATOR: address = aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
+program par_store_inventory_v1.aleo {
+  const OPERATOR: address = aleo1ra85lxj9dduc940rzq83nvk6fcfdgtye9t4j5wl6wkg5x42jaqqsdczpyc;
 
   // sku_id => price
   mapping sku_prices: u16 => u64;

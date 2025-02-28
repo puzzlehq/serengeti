@@ -1,6 +1,6 @@
 import puzzle_arcade_ticket_v001.aleo;
-import par_store_inventory_v6.aleo;
-program par_store_14_v2.aleo;
+import par_store_inventory_v1.aleo;
+program par_store_14_v1.aleo;
 
 struct Code:
     pt1 as u128;
@@ -55,11 +55,11 @@ function purchase14:
     call puzzle_arcade_ticket_v001.aleo/spend r13 r13.amount into r42;
     sub r14.amount r29 into r43;
     call puzzle_arcade_ticket_v001.aleo/spend r14 r43 into r44;
-    call par_store_inventory_v6.aleo/validate_purchase r0 r15 into r45;
+    call par_store_inventory_v1.aleo/validate_purchase r0 r15 into r45;
     async purchase14 r45 into r46;
     output r44 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r46 as par_store_14_v2.aleo/purchase14.future;
+    output r46 as par_store_14_v1.aleo/purchase14.future;
 
 finalize purchase14:
-    input r0 as par_store_inventory_v6.aleo/validate_purchase.future;
+    input r0 as par_store_inventory_v1.aleo/validate_purchase.future;
     await r0;

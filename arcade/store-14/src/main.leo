@@ -1,7 +1,7 @@
 import puzzle_arcade_ticket_v001.aleo;
-import par_store_inventory_v6.aleo;
+import par_store_inventory_v1.aleo;
 
-program par_store_14_v2.aleo {
+program par_store_14_v1.aleo {
   async transition purchase14(
     sku_id: u16,
     ticket1: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
@@ -51,7 +51,7 @@ program par_store_14_v2.aleo {
     puzzle_arcade_ticket_v001.aleo/spend(ticket13, ticket13.amount);
     return (
       puzzle_arcade_ticket_v001.aleo/spend(partialTicket, partialTicket.amount - change),
-      finalize_purchase14(par_store_inventory_v6.aleo/validate_purchase(sku_id, price))
+      finalize_purchase14(par_store_inventory_v1.aleo/validate_purchase(sku_id, price))
     );
   }
   async function finalize_purchase14(future: Future) {
