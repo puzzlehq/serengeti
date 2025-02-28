@@ -1,5 +1,5 @@
 {
-  "program": "par_store_14_v1.aleo",
+  "program": "par_store_14_v2.aleo",
   "version": "0.1.0",
   "description": "",
   "license": "MIT",
@@ -11,7 +11,7 @@
       "path": null
     },
     {
-      "name": "par_store_inventory_v1.aleo",
+      "name": "par_store_inventory_v6.aleo",
       "location": "local",
       "path": "../store-inventory"
     }

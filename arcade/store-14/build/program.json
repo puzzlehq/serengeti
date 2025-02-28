@@ -1,6 +1,19 @@
 {
-    "program": "par_store_14_v1.aleo",
-    "version": "0.0.0",
-    "description": "",
-    "license": "MIT"
+  "program": "par_store_14_v2.aleo",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "puzzle_arcade_ticket_v001.aleo",
+      "location": "network",
+      "network": "testnet",
+      "path": null
+    },
+    {
+      "name": "par_store_inventory_v6.aleo",
+      "location": "local",
+      "path": "../store-inventory"
+    }
+  ]
 }

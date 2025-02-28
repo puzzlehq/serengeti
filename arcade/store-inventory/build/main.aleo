@@ -1,4 +1,4 @@
-program par_store_inventory_v1.aleo;
+program par_store_inventory_v6.aleo;
 
 struct Code:
     pt1 as u128;
@@ -23,9 +23,9 @@ mapping sku_stock:
 function set_sku_price:
     input r0 as u16.private;
     input r1 as u64.private;
-    assert.eq self.caller aleo1ra85lxj9dduc940rzq83nvk6fcfdgtye9t4j5wl6wkg5x42jaqqsdczpyc;
+    assert.eq self.caller aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
     async set_sku_price r0 r1 into r2;
-    output r2 as par_store_inventory_v1.aleo/set_sku_price.future;
+    output r2 as par_store_inventory_v6.aleo/set_sku_price.future;
 
 finalize set_sku_price:
     input r0 as u16.public;
@@ -35,11 +35,11 @@ finalize set_sku_price:
 function mint:
     input r0 as u16.private;
     input r1 as Code.private;
-    assert.eq self.caller aleo1ra85lxj9dduc940rzq83nvk6fcfdgtye9t4j5wl6wkg5x42jaqqsdczpyc;
-    cast aleo1ra85lxj9dduc940rzq83nvk6fcfdgtye9t4j5wl6wkg5x42jaqqsdczpyc r0 r1 into r2 as Product.record;
+    assert.eq self.caller aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
+    cast aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4 r0 r1 into r2 as Product.record;
     async mint r0 into r3;
     output r2 as Product.record;
-    output r3 as par_store_inventory_v1.aleo/mint.future;
+    output r3 as par_store_inventory_v6.aleo/mint.future;
 
 finalize mint:
     input r0 as u16.public;
@@ -51,7 +51,7 @@ function validate_purchase:
     input r0 as u16.private;
     input r1 as u64.private;
     async validate_purchase r0 r1 into r2;
-    output r2 as par_store_inventory_v1.aleo/validate_purchase.future;
+    output r2 as par_store_inventory_v6.aleo/validate_purchase.future;
 
 finalize validate_purchase:
     input r0 as u16.public;
@@ -67,15 +67,15 @@ finalize validate_purchase:
 function fulfill:
     input r0 as address.private;
     input r1 as Product.record;
-    assert.eq r1.owner aleo1ra85lxj9dduc940rzq83nvk6fcfdgtye9t4j5wl6wkg5x42jaqqsdczpyc;
+    assert.eq r1.owner aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
     cast r0 r1.sku_id r1.code into r2 as Product.record;
     output r2 as Product.record;
 
 function shutdown:
     input r0 as [u16; 8u32].private;
-    assert.eq self.caller aleo1ra85lxj9dduc940rzq83nvk6fcfdgtye9t4j5wl6wkg5x42jaqqsdczpyc;
+    assert.eq self.caller aleo1raehunvfm6jvgnycefevwlhdau0577mucqg3c68vwpld2dmyyv9qhl59p4;
     async shutdown r0 into r1;
-    output r1 as par_store_inventory_v1.aleo/shutdown.future;
+    output r1 as par_store_inventory_v6.aleo/shutdown.future;
 
 finalize shutdown:
     input r0 as [u16; 8u32].public;
