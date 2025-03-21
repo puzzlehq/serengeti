@@ -11,3 +11,24 @@ network = "mainnet"
 location = "network"
 checksum = "57a6dd0337f1036933fb846720ac51bf3987e0293ced5d7ffd53e083d54aa005"
 dependencies = []
+
+[[package]]
+name = "puzzle_arcade_coin_v002.aleo"
+network = "mainnet"
+location = "network"
+checksum = "1d4706a514504a59469385726005f36a9c4cbb8b3b1ee004076d9322b6cc74d9"
+dependencies = []
+
+[[package]]
+name = "squash_v001.aleo"
+network = "mainnet"
+location = "network"
+checksum = "8c05e4caa92acb30a2b84002cfa04508f8a307a6f25074f71936411c1f885d53"
+dependencies = ["squash_timestamp.aleo", "puzzle_arcade_ticket_v002.aleo"]
+
+[[package]]
+name = "squash_v2.aleo"
+network = "mainnet"
+location = "network"
+checksum = "08d3c322f3a8fc0f394d3f19f2343a586ed512e8c85eed94a079c0c581182058"
+dependencies = ["squash_timestamp.aleo", "puzzle_arcade_ticket_v002.aleo", "squash_v001.aleo"]
