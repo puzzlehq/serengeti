@@ -138,6 +138,7 @@ program squash_v4.aleo {
 
     // is this expected level is greater than the squash's current level?
     assert(new_level > squash.level);
+    assert(new_level < 5u8);
 
     // mint the PART
     let (tickets, future): (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v002.aleo/mint (

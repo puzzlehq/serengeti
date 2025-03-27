@@ -109,14 +109,16 @@ function water_and_level_up:
     cast r19 into r20 as u8;
     gt r20 r0.level into r21;
     assert.eq r21 true;
-    cast r20 into r22 as u64;
-    mul r22 10000000u64 into r23;
-    call puzzle_arcade_ticket_v002.aleo/mint r0.owner r23 into r24 r25;
-    cast r0.owner r18 r2 r20 r0.squash_name r0.squash_id into r26 as Squash.record;
-    async water_and_level_up r1 r25 into r27;
-    output r26 as Squash.record;
-    output r24 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
-    output r27 as squash_v4.aleo/water_and_level_up.future;
+    lt r20 5u8 into r22;
+    assert.eq r22 true;
+    cast r20 into r23 as u64;
+    mul r23 10000000u64 into r24;
+    call puzzle_arcade_ticket_v002.aleo/mint r0.owner r24 into r25 r26;
+    cast r0.owner r18 r2 r20 r0.squash_name r0.squash_id into r27 as Squash.record;
+    async water_and_level_up r1 r26 into r28;
+    output r27 as Squash.record;
+    output r25 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
+    output r28 as squash_v4.aleo/water_and_level_up.future;
 
 finalize water_and_level_up:
     input r0 as u64.public;
