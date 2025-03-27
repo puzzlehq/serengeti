@@ -3,6 +3,7 @@ import puzzle_arcade_ticket_v002.aleo;
 import puzzle_arcade_coin_v002.aleo;
 import squash_v001.aleo;
 import squash_v2.aleo;
+
 program squash_v3.aleo;
 
 record Squash:
@@ -29,11 +30,11 @@ function water:
     input r2 as u64.public;
     input r3 as u64.public;
     gte r2 r1.time into r4;
-    assert.eq r4 true;
+    assert.eq r4 true ;
     gte r2 r0.last_water into r5;
-    assert.eq r5 true;
+    assert.eq r5 true ;
     gte r1.time r0.last_water into r6;
-    assert.eq r6 true;
+    assert.eq r6 true ;
     sub r1.time r3 into r7;
     lt r0.last_water r7 into r8;
     sub r1.time r0.last_water into r9;
@@ -61,7 +62,7 @@ function water:
     or r8 r27 into r31;
     or false r30 into r32;
     or r32 r31 into r33;
-    assert.eq r33 true;
+    assert.eq r33 true ;
     ternary r27 r26.owner r0.owner into r34;
     ternary r27 r26.kg r0.kg into r35;
     ternary r27 r26.last_water r0.last_water into r36;
@@ -84,29 +85,29 @@ function water_and_level_up:
     input r2 as u64.public;
     input r3 as u64.public;
     gte r2 r1.time into r4;
-    assert.eq r4 true;
+    assert.eq r4 true ;
     gte r2 r0.last_water into r5;
-    assert.eq r5 true;
+    assert.eq r5 true ;
     gte r1.time r0.last_water into r6;
-    assert.eq r6 true;
+    assert.eq r6 true ;
     sub r1.time r3 into r7;
     sub r7 r3 into r8;
     lt r0.last_water r8 into r9;
     not r9 into r10;
     or false r10 into r11;
-    assert.eq r11 true;
+    assert.eq r11 true ;
     not r9 into r12;
     lt r0.last_water r1.time into r13;
     not r13 into r14;
     and r12 r14 into r15;
     not r15 into r16;
     or false r16 into r17;
-    assert.eq r17 true;
+    assert.eq r17 true ;
     add r0.kg 1000000u64 into r18;
     div r18 10000000u64 into r19;
     cast r19 into r20 as u8;
     gt r20 r0.level into r21;
-    assert.eq r21 true;
+    assert.eq r21 true ;
     cast r20 into r22 as u64;
     mul r22 10000000u64 into r23;
     call puzzle_arcade_ticket_v002.aleo/mint r0.owner r23 into r24 r25;
@@ -124,7 +125,7 @@ function migrate_from_v2:
     input r0 as squash_v2.aleo/Squash.record;
     input r1 as u32.private;
     input r2 as squash_timestamp.aleo/Timestamp.record;
-    assert.eq self.caller aleo12e0yyyqw0lfff8nufdss94k5hml9d9jl45rlfwu5l3e73wpu9s8sdznsev;
+    assert.eq self.caller aleo12e0yyyqw0lfff8nufdss94k5hml9d9jl45rlfwu5l3e73wpu9s8sdznsev ;
     div r0.kg 10000000u64 into r3;
     cast r3 into r4 as u8;
     cast r0.owner r0.kg r2.time r4 r0.squash_name r1 into r5 as Squash.record;
