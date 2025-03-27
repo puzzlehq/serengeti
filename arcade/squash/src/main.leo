@@ -165,4 +165,25 @@ program squash_v4.aleo {
     assert_eq(timestamp, current_timestamp);
     f.await();
   }
+
+  // mints a squash with yesterday's timestamp so you can water today
+  async transition mint_arbitrary_squash (owner: address, squash_name: u128, squash_id: u32, yesterday: u64, kg: u64, level: u8) -> (Squash, Future) {
+    assert_eq(self.caller, OPERATOR);
+    assert(level < 5u8);
+
+    let squash: Squash = Squash {
+      owner,
+      kg,
+      last_water: yesterday,
+      level,
+      squash_name,
+      squash_id
+    };
+    return (squash, finalize_mint_arbitrary_squash(yesterday));
+  }
+  async function finalize_mint_arbitrary_squash(timestamp: u64) {
+    let current_timestamp: u64 = Mapping::get_or_use(day_start, 0u8, 0u64);
+    let yesterday: u64 = current_timestamp - 86400u64;
+    assert_eq(timestamp, yesterday);
+  }
 }

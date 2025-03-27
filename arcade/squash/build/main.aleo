@@ -141,3 +141,24 @@ function migrate_from_v3:
     assert.eq self.caller aleo12e0yyyqw0lfff8nufdss94k5hml9d9jl45rlfwu5l3e73wpu9s8sdznsev;
     cast r0.owner r0.kg r0.last_water r0.level r0.squash_name r0.squash_id into r1 as Squash.record;
     output r1 as Squash.record;
+
+function mint_arbitrary_squash:
+    input r0 as address.private;
+    input r1 as u128.private;
+    input r2 as u32.private;
+    input r3 as u64.private;
+    input r4 as u64.private;
+    input r5 as u8.private;
+    assert.eq self.caller aleo12e0yyyqw0lfff8nufdss94k5hml9d9jl45rlfwu5l3e73wpu9s8sdznsev;
+    lt r5 5u8 into r6;
+    assert.eq r6 true;
+    cast r0 r4 r3 r5 r1 r2 into r7 as Squash.record;
+    async mint_arbitrary_squash r3 into r8;
+    output r7 as Squash.record;
+    output r8 as squash_v4.aleo/mint_arbitrary_squash.future;
+
+finalize mint_arbitrary_squash:
+    input r0 as u64.public;
+    get.or_use day_start[0u8] 0u64 into r1;
+    sub r1 86400u64 into r2;
+    assert.eq r0 r2;
