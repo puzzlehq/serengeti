@@ -138,6 +138,7 @@ program squash_v4.aleo {
 
     // is this expected level is greater than the squash's current level?
     assert(new_level > squash.level);
+    // max squash level is 4u8
     assert(new_level < 5u8);
 
     // mint the PART
