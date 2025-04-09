@@ -22,6 +22,7 @@ program squash_v4.aleo {
   }
 
   async transition set_day_start(timestamp: u64) -> Future {
+    assert_eq(self.caller, OPERATOR);
     return finalize_set_day_start(timestamp);
   }
   async function finalize_set_day_start(timestamp: u64) {
