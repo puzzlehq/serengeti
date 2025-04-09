@@ -1,4 +1,4 @@
-# puzzle_spinner_v002.aleo
+# par_spinner_v3.aleo
 
 ## Build Guide
 
