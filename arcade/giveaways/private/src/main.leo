@@ -21,12 +21,6 @@ program giveaway_private.aleo {
     // total number of winners
     mapping winner_count: u64 => u64;
 
-    transition mint_prize (id: u64, code: Code, price: u64) -> par_store_inventory_v1.aleo/Product {
-        assert_eq(self.signer, OPERATOR); // todo: needs to be store operator
-
-        return par_store_inventory_v1.aleo/mint(id, code, price);
-    }
-
     async transition buy_one_entry (ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket) -> (
       puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket,
       Future
@@ -269,7 +263,7 @@ program giveaway_private.aleo {
 
     transition send_prize_to_winner (public winner_addr: address, public prize: par_store_inventory_v1.aleo/Product) -> par_store_inventory_v1.aleo/Product {
         assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, OPERATOR);  // todo: needs to be store operator
+        assert_eq(self.caller, OPERATOR);
 
         return par_store_inventory_v1.aleo/fulfill(winner_addr, prize);
     }
