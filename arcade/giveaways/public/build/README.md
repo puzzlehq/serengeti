@@ -1,4 +1,4 @@
-# puzzle_arcade_ticket_testing.aleo
+# giveaway_public.aleo
 
 ## Build Guide
 

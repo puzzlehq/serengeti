@@ -1,4 +1,4 @@
-# puzzle_arcade_ticket_testing.aleo
+# par_store_v1.aleo
 
 ## Build Guide
 

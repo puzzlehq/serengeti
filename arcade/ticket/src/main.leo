@@ -1,5 +1,5 @@
-program puzzle_arcade_ticket_v002.aleo {
-  const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
+program puzzle_arcade_ticket_testing.aleo {
+  const OPERATOR: address = aleo1pkuty394j0000uedtqpazp4qejwmn2yshaac6qjr6wll25m9a5psuggt6d;
 
   // game programs that can mint tickets
   mapping registry: address => bool;
