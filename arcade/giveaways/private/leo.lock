@@ -8,6 +8,6 @@ dependencies = []
 [[package]]
 name = "par_store_inventory_v1.aleo"
 location = "local"
-path = "/Users/asharma/code/medici/serengeti/arcade/giveaways/private/../../store-inventory"
+path = "/Users/lucas/code/puzzle/serengeti/arcade/giveaways/private/../../store-inventory"
 checksum = "d6ba0c449fdc4830c254af8c624c56bb4bd7d5c57903a871619baaef814adab2"
 dependencies = []
