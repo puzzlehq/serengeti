@@ -3,7 +3,12 @@ import par_store_inventory_v1.aleo;
 
 program par_giveaways.aleo {
     const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
-    const MAX_ENTRIES: u64 = 50u64;
+    
+    // whether or not a giveaway_id should accept entries
+    mapping is_open: field => bool;
+
+    // max number of entries allowed for a giveaway_id
+    mapping max_entries: field => u64;
 
     // used to namespace mapping keys by giveaway_id
     struct Index {
@@ -18,7 +23,7 @@ program par_giveaways.aleo {
 
     // used for storing the number of entries a user has
     //   i.e. aleo1...asdf -> 5
-    // keys are hash(UserEntry)
+    // keys are hash(Entrant)
     struct Entrant {
       giveaway_id: field,
       user: address
@@ -42,6 +47,16 @@ program par_giveaways.aleo {
     // keys are giveaway_ids
     mapping total_winners: field => u64;
 
+    async transition configure(giveaway_id: field, open: bool, maxentries: u64) -> Future {
+      assert_eq(self.caller, self.signer);
+      assert_eq(self.caller, OPERATOR);
+      return finalize_configure(giveaway_id, open, maxentries);
+    }
+    async function finalize_configure(giveaway_id: field, open: bool, maxentries: u64) {
+      Mapping::set(is_open, giveaway_id, open);
+      Mapping::set(max_entries, giveaway_id, maxentries);
+    }
+
     async transition buy_one_entry (
       giveaway_id: field,
       ticket: puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket
@@ -53,11 +68,14 @@ program par_giveaways.aleo {
         return (spent_ticket, add_one_entry(ticket.owner, giveaway_id));
     }
     async function add_one_entry (public user: address, public giveaway_id: field) {
+        // ensure the giveaway is open
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+
         // get current entries (default to 0)
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
 
-        // ensure we won't go over the MAX_ENTRIES for this entry
-        assert(current_entries + 1u64 < MAX_ENTRIES);
+        // ensure we won't go over the Mapping::get_or_use(max_entries, giveaway_id, 0u64) for this entry
+        assert(current_entries + 1u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         // add entrant's entry to entries
         let entry_index: Index = Index {
@@ -90,8 +108,10 @@ program par_giveaways.aleo {
         return (spent_ticket, add_two_entries(ticket.owner, giveaway_id));
     }
     async function add_two_entries (public user: address, public giveaway_id: field) {
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
-        assert(current_entries + 2u64 < MAX_ENTRIES);
+        assert(current_entries + 2u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         for i: u64 in 0u64..2u64 {
             let entry_index: Index = Index {
@@ -123,8 +143,10 @@ program par_giveaways.aleo {
         return (spent_ticket, add_three_entries(ticket.owner, giveaway_id));
     }
     async function add_three_entries (public user: address, public giveaway_id: field) {
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+        
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
-        assert(current_entries + 3u64 < MAX_ENTRIES);
+        assert(current_entries + 3u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         for i: u64 in 0u64..3u64 {
             let entry_index: Index = Index {
@@ -156,8 +178,10 @@ program par_giveaways.aleo {
         return (spent_ticket, add_four_entries(ticket.owner, giveaway_id));
     }
     async function add_four_entries(public user: address, public giveaway_id: field) {
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+        
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
-        assert(current_entries + 4u64 < MAX_ENTRIES);
+        assert(current_entries + 4u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         for i: u64 in 0u64..4u64 {
             let entry_index: Index = Index {
@@ -189,8 +213,10 @@ program par_giveaways.aleo {
         return (spent_ticket, add_five_entries(ticket.owner, giveaway_id));
     }
     async function add_five_entries(public user: address, public giveaway_id: field) {
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+        
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
-        assert(current_entries + 5u64 < MAX_ENTRIES);
+        assert(current_entries + 5u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         for i: u64 in 0u64..5u64 {
             let entry_index: Index = Index {
@@ -222,8 +248,10 @@ program par_giveaways.aleo {
         return (spent_ticket, add_six_entries(ticket.owner, giveaway_id));
     }
     async function add_six_entries(public user: address, public giveaway_id: field) {
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+        
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
-        assert(current_entries + 6u64 < MAX_ENTRIES);
+        assert(current_entries + 6u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         for i: u64 in 0u64..6u64 {
             let entry_index: Index = Index {
@@ -255,8 +283,10 @@ program par_giveaways.aleo {
         return (spent_ticket, add_seven_entries(ticket.owner, giveaway_id));
     }
     async function add_seven_entries(public user: address, public giveaway_id: field) {
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+        
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
-        assert(current_entries + 7u64 < MAX_ENTRIES);
+        assert(current_entries + 7u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         for i: u64 in 0u64..7u64 {
             let entry_index: Index = Index {
@@ -288,8 +318,10 @@ program par_giveaways.aleo {
         return (spent_ticket, add_eight_entries(ticket.owner, giveaway_id));
     }
     async function add_eight_entries(public user: address, public giveaway_id: field) {
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+        
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
-        assert(current_entries + 8u64 < MAX_ENTRIES);
+        assert(current_entries + 8u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         for i: u64 in 0u64..8u64 {
             let entry_index: Index = Index {
@@ -321,8 +353,10 @@ program par_giveaways.aleo {
         return (spent_ticket, add_nine_entries(ticket.owner, giveaway_id));
     }
     async function add_nine_entries(public user: address, public giveaway_id: field) {
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+        
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
-        assert(current_entries + 9u64 < MAX_ENTRIES);
+        assert(current_entries + 9u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         for i: u64 in 0u64..9u64 {
             let entry_index: Index = Index {
@@ -354,8 +388,10 @@ program par_giveaways.aleo {
         return (spent_ticket, add_ten_entries(ticket.owner, giveaway_id));
     }
     async function add_ten_entries(public user: address, public giveaway_id: field) {
+        assert(Mapping::get_or_use(is_open, giveaway_id, false));
+        
         let current_entries: u64 = Mapping::get_or_use(total_entries, giveaway_id, 0u64);
-        assert(current_entries + 10u64 < MAX_ENTRIES);
+        assert(current_entries + 10u64 < Mapping::get_or_use(max_entries, giveaway_id, 0u64));
 
         for i: u64 in 0u64..10u64 {
             let entry_index: Index = Index {
