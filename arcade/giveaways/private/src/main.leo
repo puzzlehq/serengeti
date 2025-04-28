@@ -1,10 +1,10 @@
 import puzzle_arcade_ticket_v001.aleo;
 import par_store_inventory_v1.aleo;
 
-program par_giveaways.aleo {
+program par_giveaways_v1.aleo {
     const OPERATOR: address = aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
     
-    // whether or not a giveaway_id should accept entries
+    // whether or not a giveaway_id is accepting entries
     mapping is_open: field => bool;
 
     // max number of entries allowed for a giveaway_id
@@ -47,14 +47,68 @@ program par_giveaways.aleo {
     // keys are giveaway_ids
     mapping total_winners: field => u64;
 
-    async transition configure(giveaway_id: field, open: bool, maxentries: u64) -> Future {
+    async transition open(giveaway_id: field, maxentries: u64) -> Future {
       assert_eq(self.caller, self.signer);
       assert_eq(self.caller, OPERATOR);
-      return finalize_configure(giveaway_id, open, maxentries);
+      return finalize_open(giveaway_id, maxentries);
     }
-    async function finalize_configure(giveaway_id: field, open: bool, maxentries: u64) {
-      Mapping::set(is_open, giveaway_id, open);
+    async function finalize_open(giveaway_id: field, maxentries: u64) {
+      Mapping::set(is_open, giveaway_id, true);
       Mapping::set(max_entries, giveaway_id, maxentries);
+    }
+    async transition close(giveaway_id: field) -> Future {
+      assert_eq(self.caller, self.signer);
+      assert_eq(self.caller, OPERATOR);
+      return finalize_close(giveaway_id);
+    }
+    async function finalize_close(giveaway_id: field) {
+      Mapping::set(is_open, giveaway_id, false);
+    }
+    async transition draw_winner (giveaway_id: field) -> (Future) {
+        assert_eq(self.caller, self.signer);
+        assert_eq(self.caller, OPERATOR);
+        return await_draw_winner(giveaway_id);
+    }
+    async function await_draw_winner (giveaway_id: field) {
+        // ensure the giveaway is closed
+        assert_eq(Mapping::get_or_use(is_open, giveaway_id, false), false);
+
+        // get total entries
+        let num_entries: u64 = Mapping::get(total_entries, giveaway_id);
+        // grab random number
+        let random_number: u64 = ChaCha::rand_u64();
+        // select winning index
+        let winner_index: u64 = random_number % num_entries;
+        // construct winning Index
+        let winning_entry: Index = Index {
+          giveaway_id,
+          index: winner_index
+        };
+        let winning_entry_hash: field = BHP256::hash_to_field(winning_entry);
+        // get address of winning entry
+        let winner_address: address = Mapping::get(entries, winning_entry_hash);
+        let winner: Entrant = Entrant {
+          giveaway_id,
+          user: winner_address
+        };
+        // true if addr has already won, false if not
+        let has_addr_won: bool = Mapping::get_or_use(has_won, BHP256::hash_to_field(winner), false);
+
+        // if the drawn address has already won, fail
+        assert_eq(has_addr_won, false);
+
+        // get the winner_count
+        let current_winner_count: u64 = Mapping::get_or_use(total_winners, giveaway_id, 0u64);
+        // set addr to true {aleo1...: true}
+        Mapping::set(has_won, BHP256::hash_to_field(winner), true);
+        // increment winner count for this giveaway
+        Mapping::set(total_winners, giveaway_id, current_winner_count + 1u64);
+        // record winner for this giveaway
+        let current_winner_count_index: Index = Index {
+          giveaway_id,
+          index: current_winner_count
+        };
+        Mapping::set(winners, BHP256::hash_to_field(current_winner_count_index), winner_address);
     }
 
     async transition buy_one_entry (
@@ -410,56 +464,5 @@ program par_giveaways.aleo {
         let entrant_hash: field = BHP256::hash_to_field(entrant);
         let current_user_entries: u16 = Mapping::get_or_use(user_entries, entrant_hash, 0u16);
         Mapping::set(user_entries, entrant_hash, current_user_entries + 10u16);
-    }
-
-    async transition draw_winner (giveaway_id: field) -> (Future) {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, OPERATOR);
-        return await_draw_winner(giveaway_id);
-    }
-    async function await_draw_winner (giveaway_id: field) {
-        // get total entries
-        let num_entries: u64 = Mapping::get(total_entries, giveaway_id);
-        // grab random number
-        let random_number: u64 = ChaCha::rand_u64();
-        // select winning index
-        let winner_index: u64 = random_number % num_entries;
-        // construct winning Index
-        let winning_entry: Index = Index {
-          giveaway_id,
-          index: winner_index
-        };
-        let winning_entry_hash: field = BHP256::hash_to_field(winning_entry);
-        // get address of winning entry
-        let winner_address: address = Mapping::get(entries, winning_entry_hash);
-        let winner: Entrant = Entrant {
-          giveaway_id,
-          user: winner_address
-        };
-        // true if addr has already won, false if not
-        let has_addr_won: bool = Mapping::get_or_use(has_won, BHP256::hash_to_field(winner), false);
-
-        // if the drawn address has already won, fail
-        assert_eq(has_addr_won, false);
-
-        // get the winner_count
-        let current_winner_count: u64 = Mapping::get_or_use(total_winners, giveaway_id, 0u64);
-        // set addr to true {aleo1...: true}
-        Mapping::set(has_won, BHP256::hash_to_field(winner), true);
-        // increment winner count for this giveaway
-        Mapping::set(total_winners, giveaway_id, current_winner_count + 1u64);
-        // record winner for this giveaway
-        let current_winner_count_index: Index = Index {
-          giveaway_id,
-          index: current_winner_count
-        };
-        Mapping::set(winners, BHP256::hash_to_field(current_winner_count_index), winner_address);
-    }
-
-    transition send_prize_to_winner (public winner_addr: address, public prize: par_store_inventory_v1.aleo/Product) -> par_store_inventory_v1.aleo/Product {
-        assert_eq(self.caller, self.signer);
-        assert_eq(self.caller, OPERATOR);
-
-        return par_store_inventory_v1.aleo/fulfill(winner_addr, prize);
     }
 }

@@ -1,6 +1,6 @@
 import puzzle_arcade_ticket_v001.aleo;
 import par_store_inventory_v1.aleo;
-program par_giveaways.aleo;
+program par_giveaways_v1.aleo;
 
 struct Code:
     pt1 as u128;
@@ -49,21 +49,60 @@ mapping total_winners:
     key as field.public;
     value as u64.public;
 
-function configure:
+function open:
     input r0 as field.private;
-    input r1 as boolean.private;
-    input r2 as u64.private;
+    input r1 as u64.private;
     assert.eq self.caller self.signer;
     assert.eq self.caller aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
-    async configure r0 r1 r2 into r3;
-    output r3 as par_giveaways.aleo/configure.future;
+    async open r0 r1 into r2;
+    output r2 as par_giveaways_v1.aleo/open.future;
 
-finalize configure:
+finalize open:
     input r0 as field.public;
-    input r1 as boolean.public;
-    input r2 as u64.public;
-    set r1 into is_open[r0];
-    set r2 into max_entries[r0];
+    input r1 as u64.public;
+    set true into is_open[r0];
+    set r1 into max_entries[r0];
+
+function close:
+    input r0 as field.private;
+    assert.eq self.caller self.signer;
+    assert.eq self.caller aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
+    async close r0 into r1;
+    output r1 as par_giveaways_v1.aleo/close.future;
+
+finalize close:
+    input r0 as field.public;
+    set false into is_open[r0];
+
+function draw_winner:
+    input r0 as field.private;
+    assert.eq self.caller self.signer;
+    assert.eq self.caller aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
+    async draw_winner r0 into r1;
+    output r1 as par_giveaways_v1.aleo/draw_winner.future;
+
+finalize draw_winner:
+    input r0 as field.public;
+    get.or_use is_open[r0] false into r1;
+    assert.eq r1 false;
+    get total_entries[r0] into r2;
+    rand.chacha into r3 as u64;
+    rem r3 r2 into r4;
+    cast r0 r4 into r5 as Index;
+    hash.bhp256 r5 into r6 as field;
+    get entries[r6] into r7;
+    cast r0 r7 into r8 as Entrant;
+    hash.bhp256 r8 into r9 as field;
+    get.or_use has_won[r9] false into r10;
+    assert.eq r10 false;
+    get.or_use total_winners[r0] 0u64 into r11;
+    hash.bhp256 r8 into r12 as field;
+    set true into has_won[r12];
+    add r11 1u64 into r13;
+    set r13 into total_winners[r0];
+    cast r0 r11 into r14 as Index;
+    hash.bhp256 r14 into r15 as field;
+    set r7 into winners[r15];
 
 function buy_one_entry:
     input r0 as field.private;
@@ -71,7 +110,7 @@ function buy_one_entry:
     call puzzle_arcade_ticket_v001.aleo/spend r1 1000000u64 into r2;
     async buy_one_entry r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_one_entry.future;
+    output r3 as par_giveaways_v1.aleo/buy_one_entry.future;
 
 finalize buy_one_entry:
     input r0 as address.public;
@@ -100,7 +139,7 @@ function buy_two_entries:
     call puzzle_arcade_ticket_v001.aleo/spend r1 2000000u64 into r2;
     async buy_two_entries r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_two_entries.future;
+    output r3 as par_giveaways_v1.aleo/buy_two_entries.future;
 
 finalize buy_two_entries:
     input r0 as address.public;
@@ -134,7 +173,7 @@ function buy_three_entries:
     call puzzle_arcade_ticket_v001.aleo/spend r1 3000000u64 into r2;
     async buy_three_entries r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_three_entries.future;
+    output r3 as par_giveaways_v1.aleo/buy_three_entries.future;
 
 finalize buy_three_entries:
     input r0 as address.public;
@@ -172,7 +211,7 @@ function buy_four_entries:
     call puzzle_arcade_ticket_v001.aleo/spend r1 4000000u64 into r2;
     async buy_four_entries r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_four_entries.future;
+    output r3 as par_giveaways_v1.aleo/buy_four_entries.future;
 
 finalize buy_four_entries:
     input r0 as address.public;
@@ -214,7 +253,7 @@ function buy_five_entries:
     call puzzle_arcade_ticket_v001.aleo/spend r1 5000000u64 into r2;
     async buy_five_entries r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_five_entries.future;
+    output r3 as par_giveaways_v1.aleo/buy_five_entries.future;
 
 finalize buy_five_entries:
     input r0 as address.public;
@@ -260,7 +299,7 @@ function buy_six_entries:
     call puzzle_arcade_ticket_v001.aleo/spend r1 6000000u64 into r2;
     async buy_six_entries r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_six_entries.future;
+    output r3 as par_giveaways_v1.aleo/buy_six_entries.future;
 
 finalize buy_six_entries:
     input r0 as address.public;
@@ -310,7 +349,7 @@ function buy_seven_entries:
     call puzzle_arcade_ticket_v001.aleo/spend r1 7000000u64 into r2;
     async buy_seven_entries r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_seven_entries.future;
+    output r3 as par_giveaways_v1.aleo/buy_seven_entries.future;
 
 finalize buy_seven_entries:
     input r0 as address.public;
@@ -364,7 +403,7 @@ function buy_eight_entries:
     call puzzle_arcade_ticket_v001.aleo/spend r1 8000000u64 into r2;
     async buy_eight_entries r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_eight_entries.future;
+    output r3 as par_giveaways_v1.aleo/buy_eight_entries.future;
 
 finalize buy_eight_entries:
     input r0 as address.public;
@@ -422,7 +461,7 @@ function buy_nine_entries:
     call puzzle_arcade_ticket_v001.aleo/spend r1 9000000u64 into r2;
     async buy_nine_entries r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_nine_entries.future;
+    output r3 as par_giveaways_v1.aleo/buy_nine_entries.future;
 
 finalize buy_nine_entries:
     input r0 as address.public;
@@ -484,7 +523,7 @@ function buy_ten_entries:
     call puzzle_arcade_ticket_v001.aleo/spend r1 10000000u64 into r2;
     async buy_ten_entries r1.owner r0 into r3;
     output r2 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
-    output r3 as par_giveaways.aleo/buy_ten_entries.future;
+    output r3 as par_giveaways_v1.aleo/buy_ten_entries.future;
 
 finalize buy_ten_entries:
     input r0 as address.public;
@@ -543,39 +582,3 @@ finalize buy_ten_entries:
     get.or_use user_entries[r39] 0u16 into r40;
     add r40 10u16 into r41;
     set r41 into user_entries[r39];
-
-function draw_winner:
-    input r0 as field.private;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
-    async draw_winner r0 into r1;
-    output r1 as par_giveaways.aleo/draw_winner.future;
-
-finalize draw_winner:
-    input r0 as field.public;
-    get total_entries[r0] into r1;
-    rand.chacha into r2 as u64;
-    rem r2 r1 into r3;
-    cast r0 r3 into r4 as Index;
-    hash.bhp256 r4 into r5 as field;
-    get entries[r5] into r6;
-    cast r0 r6 into r7 as Entrant;
-    hash.bhp256 r7 into r8 as field;
-    get.or_use has_won[r8] false into r9;
-    assert.eq r9 false;
-    get.or_use total_winners[r0] 0u64 into r10;
-    hash.bhp256 r7 into r11 as field;
-    set true into has_won[r11];
-    add r10 1u64 into r12;
-    set r12 into total_winners[r0];
-    cast r0 r10 into r13 as Index;
-    hash.bhp256 r13 into r14 as field;
-    set r6 into winners[r14];
-
-function send_prize_to_winner:
-    input r0 as address.public;
-    input r1 as par_store_inventory_v1.aleo/Product.record;
-    assert.eq self.caller self.signer;
-    assert.eq self.caller aleo196a39wq9q8ea779cmlmff0c9pj2gl4f5e8fhjpvmufe5utuq7y8snz4h2l;
-    call par_store_inventory_v1.aleo/fulfill r0 r1 into r2;
-    output r2 as par_store_inventory_v1.aleo/Product.record;
