@@ -1,20 +1,20 @@
 {
-  "program": "giveaway_private.aleo",
+  "program": "par_giveaways_v1.aleo",
   "version": "0.0.0",
   "description": "",
   "license": "MIT",
   "dependencies": [
     {
-      "name": "puzzle_arcade_ticket_v001.aleo",
+      "name": "puzzle_arcade_ticket_v002.aleo",
       "location": "network",
-      "network": "testnet",
+      "network": "mainnet",
       "path": null
     },
     {
       "name": "par_store_inventory_v1.aleo",
-      "location": "local",
-      "network": null,
-      "path": "../../store-inventory"
+      "location": "network",
+      "network": "mainnet",
+      "path": null
     }
   ]
 }

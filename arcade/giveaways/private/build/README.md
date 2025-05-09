@@ -1,4 +1,4 @@
-# giveaway_private.aleo
+# par_giveaways_v1.aleo
 
 ## Build Guide
 
