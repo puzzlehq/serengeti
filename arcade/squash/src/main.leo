@@ -1,15 +1,15 @@
 // testnet
-// import squash_testing.aleo;
-// import puzzle_arcade_ticket_v001.aleo;
-// import puzzle_arcade_coin_v001.aleo;
+import squash_v3.aleo;
+import puzzle_arcade_ticket_v001.aleo;
+import puzzle_arcade_coin_v001.aleo;
 
 // mainnet
-import squash_v3.aleo;
-import puzzle_arcade_ticket_v002.aleo;
-import puzzle_arcade_coin_v002.aleo;
+// import squash_v3.aleo;
+// import puzzle_arcade_ticket_v001.aleo;
+// import puzzle_arcade_coin_v002.aleo;
 
 program squash_v4.aleo {
-  const OPERATOR: address = aleo12e0yyyqw0lfff8nufdss94k5hml9d9jl45rlfwu5l3e73wpu9s8sdznsev;
+  const OPERATOR: address = aleo18xacl585anaqc06320r3yw8yjx9u3278l7vlrjj7nkpznz667gxq3kr2ev;
   mapping day_start: u8 => u64;
 
   record Squash {
@@ -31,13 +31,13 @@ program squash_v4.aleo {
 
   // fee: ??? (old 0.001505)
   async transition mint (
-    parc: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
+    parc: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
     owner: address,
     squash_name: u128,
     squash_id: u32,
     timestamp: u64
   ) -> (Squash, Future) {
-    puzzle_arcade_coin_v002.aleo/spend(parc, parc.amount);
+    puzzle_arcade_coin_v001.aleo/spend(parc, parc.amount);
     let squash: Squash = Squash {
       owner,
       kg: 1000000u64,
@@ -75,6 +75,9 @@ program squash_v4.aleo {
     assert(now >= timestamp);
     assert(now >= squash.last_water);
     assert(timestamp >= squash.last_water);
+    // can't water endgame squash
+    assert(squash.level < 5u8);
+
 
     let new_kg: u64 = squash.kg;
 
@@ -116,7 +119,7 @@ program squash_v4.aleo {
     timestamp: u64,
     public now: u64,
     public delta: u64
-  ) -> (Squash, puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) {
+  ) -> (Squash, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
     assert(now >= timestamp);
     assert(now >= squash.last_water);
     assert(timestamp >= squash.last_water);
@@ -139,11 +142,12 @@ program squash_v4.aleo {
 
     // is this expected level is greater than the squash's current level?
     assert(new_level > squash.level);
-    // max squash level is 4u8
-    assert(new_level < 5u8);
+    // max squash level is 5u8
+    // can't water past 4u8
+    assert(new_level <= 5u8);
 
     // mint the PART
-    let (tickets, future): (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v002.aleo/mint (
+    let (tickets, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
       squash.owner,
       (new_level as u64) * 10000000u64
     );
@@ -170,7 +174,7 @@ program squash_v4.aleo {
   // mints a squash with yesterday's timestamp so you can water today
   async transition mint_arbitrary_squash (owner: address, squash_name: u128, squash_id: u32, yesterday: u64, kg: u64, level: u8) -> (Squash, Future) {
     assert_eq(self.caller, OPERATOR);
-    assert(level < 5u8);
+    assert(level <= 5u8);
 
     let squash: Squash = Squash {
       owner,
