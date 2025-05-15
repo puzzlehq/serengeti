@@ -1,0 +1,34 @@
+[[package]]
+name = "puzzle_arcade_ticket_v001.aleo"
+network = "testnet"
+location = "network"
+checksum = "cdc6997cbeba912b2bd3e258b21bdc1576f60e05d8573d7e01788aee9163bcd7"
+dependencies = []
+
+[[package]]
+name = "puzzle_arcade_coin_v001.aleo"
+network = "testnet"
+location = "network"
+checksum = "f383e663b66c47342fd6330d438b48c1e7a73149755b5341f12847bdd1225d0c"
+dependencies = []
+
+[[package]]
+name = "timestamp_testing.aleo"
+network = "testnet"
+location = "network"
+checksum = "94fc5f659e953816b648a9cce8746e65b91adab582934febd072ba0884a5d935"
+dependencies = []
+
+[[package]]
+name = "squash_testing.aleo"
+network = "testnet"
+location = "network"
+checksum = "1315a1f6188aa524e8854d7402d06a72731fdef1dfac1f92a659bea1ad0891fa"
+dependencies = ["timestamp_testing.aleo"]
+
+[[package]]
+name = "squash_v3.aleo"
+network = "testnet"
+location = "network"
+checksum = "c6d67e7a8451922ca75ab5dab09c175a4c6125bb17269a5df50f5ac6fa54743d"
+dependencies = ["timestamp_testing.aleo", "puzzle_arcade_ticket_v001.aleo", "puzzle_arcade_coin_v001.aleo", "squash_testing.aleo"]
