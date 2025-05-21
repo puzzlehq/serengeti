@@ -1,6 +1,8 @@
+import puzzle_arcade_ticket_v002.aleo;
+import puzzle_arcade_coin_v002.aleo;
+import timestamp_testing.aleo;
 import puzzle_arcade_ticket_v001.aleo;
 import puzzle_arcade_coin_v001.aleo;
-import timestamp_testing.aleo;
 import squash_testing.aleo;
 import squash_v3.aleo;
 program squash_v4.aleo;
@@ -18,12 +20,12 @@ mapping day_start:
     value as u64.public;
 
 function mint:
-    input r0 as puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin.record;
+    input r0 as puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin.record;
     input r1 as address.private;
     input r2 as u128.private;
     input r3 as u32.private;
     input r4 as u64.private;
-    call puzzle_arcade_coin_v001.aleo/spend r0 r0.amount into r5;
+    call puzzle_arcade_coin_v002.aleo/spend r0 r0.amount into r5;
     cast r1 1000000u64 r4 0u8 r2 r3 into r6 as Squash.record;
     async mint r4 into r7;
     output r6 as Squash.record;
@@ -114,16 +116,16 @@ function water_and_level_up:
     assert.eq r22 true;
     cast r20 into r23 as u64;
     mul r23 10000000u64 into r24;
-    call puzzle_arcade_ticket_v001.aleo/mint r0.owner r24 into r25 r26;
+    call puzzle_arcade_ticket_v002.aleo/mint r0.owner r24 into r25 r26;
     cast r0.owner r18 r2 r20 r0.squash_name r0.squash_id into r27 as Squash.record;
     async water_and_level_up r1 r26 into r28;
     output r27 as Squash.record;
-    output r25 as puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket.record;
+    output r25 as puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket.record;
     output r28 as squash_v4.aleo/water_and_level_up.future;
 
 finalize water_and_level_up:
     input r0 as u64.public;
-    input r1 as puzzle_arcade_ticket_v001.aleo/mint.future;
+    input r1 as puzzle_arcade_ticket_v002.aleo/mint.future;
     get.or_use day_start[0u8] 0u64 into r2;
     assert.eq r0 r2;
     await r1;

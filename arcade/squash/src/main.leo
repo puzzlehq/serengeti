@@ -1,15 +1,19 @@
 // testnet
-import squash_v3.aleo;
-import puzzle_arcade_ticket_v001.aleo;
-import puzzle_arcade_coin_v001.aleo;
-
-// mainnet
 // import squash_v3.aleo;
-// import puzzle_arcade_ticket_v001.aleo;
+// import puzzle_arcade_ticket_v002.aleo;
 // import puzzle_arcade_coin_v002.aleo;
 
+// mainnet
+import squash_v3.aleo;
+import puzzle_arcade_ticket_v002.aleo;
+import puzzle_arcade_coin_v002.aleo;
+
 program squash_v4.aleo {
-  const OPERATOR: address = aleo18xacl585anaqc06320r3yw8yjx9u3278l7vlrjj7nkpznz667gxq3kr2ev;
+  // testnet
+  // const OPERATOR: address = aleo18xacl585anaqc06320r3yw8yjx9u3278l7vlrjj7nkpznz667gxq3kr2ev;
+
+  // mainnet
+  const OPERATOR: address = aleo12e0yyyqw0lfff8nufdss94k5hml9d9jl45rlfwu5l3e73wpu9s8sdznsev;
   mapping day_start: u8 => u64;
 
   record Squash {
@@ -31,13 +35,13 @@ program squash_v4.aleo {
 
   // fee: ??? (old 0.001505)
   async transition mint (
-    parc: puzzle_arcade_coin_v001.aleo/PuzzleArcadeCoin,
+    parc: puzzle_arcade_coin_v002.aleo/PuzzleArcadeCoin,
     owner: address,
     squash_name: u128,
     squash_id: u32,
     timestamp: u64
   ) -> (Squash, Future) {
-    puzzle_arcade_coin_v001.aleo/spend(parc, parc.amount);
+    puzzle_arcade_coin_v002.aleo/spend(parc, parc.amount);
     let squash: Squash = Squash {
       owner,
       kg: 1000000u64,
@@ -77,7 +81,6 @@ program squash_v4.aleo {
     assert(timestamp >= squash.last_water);
     // can't water endgame squash
     assert(squash.level < 5u8);
-
 
     let new_kg: u64 = squash.kg;
 
@@ -119,7 +122,7 @@ program squash_v4.aleo {
     timestamp: u64,
     public now: u64,
     public delta: u64
-  ) -> (Squash, puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) {
+  ) -> (Squash, puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) {
     assert(now >= timestamp);
     assert(now >= squash.last_water);
     assert(timestamp >= squash.last_water);
@@ -147,7 +150,7 @@ program squash_v4.aleo {
     assert(new_level <= 5u8);
 
     // mint the PART
-    let (tickets, future): (puzzle_arcade_ticket_v001.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v001.aleo/mint (
+    let (tickets, future): (puzzle_arcade_ticket_v002.aleo/PuzzleArcadeTicket, Future) = puzzle_arcade_ticket_v002.aleo/mint (
       squash.owner,
       (new_level as u64) * 10000000u64
     );
@@ -188,7 +191,13 @@ program squash_v4.aleo {
   }
   async function finalize_mint_arbitrary_squash(timestamp: u64) {
     let current_timestamp: u64 = Mapping::get_or_use(day_start, 0u8, 0u64);
+
+    // testnet
+    // let yesterday: u64 = current_timestamp - 600u64;
+
+    // mainnet
     let yesterday: u64 = current_timestamp - 86400u64;
+    
     assert_eq(timestamp, yesterday);
   }
 }
