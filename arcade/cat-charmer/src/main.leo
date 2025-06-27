@@ -2,6 +2,7 @@ import puzzle_arcade_coin_v001.aleo;
 import puzzle_arcade_ticket_v001.aleo;
 
 program cat_charmer_testing.aleo {
+  // TODO: change to mainnet operator address
   const OPERATOR: address = aleo1lvcratjds9m4cyq099at825x8076jlrcw5jj39kwk6ja5l2ktsqqz5v83a;
   mapping used_nonces: field => bool;
 
