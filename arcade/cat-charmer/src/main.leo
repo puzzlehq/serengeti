@@ -19,22 +19,7 @@ program cat_charmer_testing.aleo {
     assert(sig.verify(OPERATOR, result));
 
     // verify tickets is valid amount
-    let valid_tickets: bool =
-      result.tickets == 1000000u64 ||
-      result.tickets == 2000000u64 ||
-      result.tickets == 3000000u64 ||
-      result.tickets == 4000000u64 ||
-      result.tickets == 5000000u64 ||
-      result.tickets == 6000000u64 ||
-      result.tickets == 7000000u64 ||
-      result.tickets == 8000000u64 ||
-      result.tickets == 9000000u64 ||
-      result.tickets == 10000000u64 ||
-      result.tickets == 11000000u64 ||
-      result.tickets == 12000000u64 ||
-      result.tickets == 13000000u64 ||
-      result.tickets == 14000000u64 ||
-      result.tickets == 15000000u64;
+    let valid_tickets: bool = result.tickets <= 15000000u64;
 
     assert(valid_tickets);
 
