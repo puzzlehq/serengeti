@@ -1,0 +1,19 @@
+{
+  "program": "cat_charmer_testing.aleo",
+  "version": "0.1.0",
+  "description": "Cat Charmer",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "puzzle_arcade_coin_v001.aleo",
+      "location": "network",
+      "network": "mainnet"
+    },
+    {
+      "name": "puzzle_arcade_ticket_v001.aleo",
+      "location": "network",
+      "network": "mainnet"
+    }
+  ],
+  "dev_dependencies": null
+}
