@@ -1,0 +1,14 @@
+{
+  "program": "par_digital_assets_11_14_v1.aleo",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "puzzle_arcade_ticket_v002.aleo",
+      "location": "network",
+      "path": null
+    }
+  ],
+  "dev_dependencies": null
+}
